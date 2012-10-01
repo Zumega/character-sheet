@@ -25,9 +25,9 @@ var jQ = jQuery,
         sheet.functions.getCharacterInfo();
         sheet.functions.getAttributes();
         sheet.functions.getDerivdTraits();
-//        sheet.functions.gitSkills()
-//        sheet.functions.skills.getSkillsChanges();
-//        sheet.functions.skills.getSubSkillsChanges();
+        sheet.functions.getSkills();
+//        sheet.functions.skillsChanges.getSkillsChanges();
+//        sheet.functions.skillsChanges.getSubSkillsChanges();
 
         sheet.functions.setStunWoundClicks();
         sheet.functions.getChanges();
@@ -252,9 +252,22 @@ var jQ = jQuery,
         });
       },
 
-      getSkills: function(){
 
+
+      getSkills: function(){
+        jQ('#skillsContainer').find('select, input').each(function(){
+          var $this = jQ(this);
+
+          if(sheet.data.skills[$this.attr('name')] !== $this.val()) {
+            sheet.data.hasChanged = true;
+          }
+          sheet.data.skills[$this.attr('name')] = $this.val();
+        });
+
+        return sheet.data.hasChanged;
       },
+
+
 
       skillsChanges: {
         getSkillsChanges: function() {
@@ -323,6 +336,18 @@ var jQ = jQuery,
             sheet.functions.save('attributes');
           }
         });
+        jQ('#skillsContainer').find('select').change(function(){
+          if(sheet.functions.getSkills()){
+            sheet.data.hasChanged = false;
+            sheet.functions.save('skills');
+          }
+        });
+        jQ('#skillsContainer').find('input[type=text]').blur(function(){
+          if(sheet.functions.getSkills()){
+            sheet.data.hasChanged = false;
+            sheet.functions.save('skills');
+          }
+        });
       },
       save: function(saveArea){
         var values = '';
@@ -335,6 +360,9 @@ var jQ = jQuery,
             break;
           case 'rolledTraits':
             values = sheet.data.rolledTraits;
+            break;
+          case 'skills':
+            values = sheet.data.skills;
             break;
 
         }
