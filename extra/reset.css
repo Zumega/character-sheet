@@ -1,0 +1,60 @@
+html,body,
+header,footer, nav,
+div,span,
+h1, h2, h3, h4, h5, h6,
+p, pre, q, blockquote,
+a, img,
+dl, dt, dd, ol, ul, li,menu,
+caption, label, legend, fieldset, form,
+input, select, textarea,
+em, bold, strong, i, small, b, sub, sup, tt,
+object, iframe, applet,
+abbr, acronym, address, big, cite, code,
+del, dfn, ins, kbd, samp, var,
+table, tbody, tfoot, thead, tr, th, td {
+	border: 0 none;
+	font-weight: inherit;
+	font-style: inherit;
+	font-size: 100%;
+	font-family: inherit;
+	vertical-align: baseline;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+	line-height: 1.24;/* what is IGN's default line height? */
+	color: #ddd;
+	background: transparent;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 12px;
+}
+
+/* removed once everything has been refactored this has been moved to network level defualt.css */
+a:link, a:visited {
+  color: #004D97;/* this color is a set standard for IGN */
+  text-decoration: none;
+}
+a:hover, a:active {
+  color: #004D97;
+  text-decoration: underline;
+}
+/* removed once everything has been refactored this has been moved to network level defualt.css */
+
+
+a, input, select, textarea {
+  outline: 0; /* disables the selected shadowing in newer browsers like safari and chrome */
+  resize: none; /* disables the ability to resize textareas and other inputs in newer browsers like safari and chrome */
+}
+ol, ul, menu {
+	list-style: none outside;
+}
+li{list-style-position: outside;}
+table {/* tables still need 'cellspacing="0"' in the markup */
+	border-collapse: separate;
+	border-spacing: 0;
+}
+caption, th, td {
+	text-align: left;
+	font-weight: normal;
+}

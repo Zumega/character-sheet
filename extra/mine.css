@@ -1,0 +1,320 @@
+/*universal*/
+html, body,
+header, footer, nav,
+div, span,
+h1, h2, h3, h4, h5, h6,
+p, pre, q, blockquote,
+a, img,
+dl, dt, dd, ol, ul, li, menu,
+caption, label, legend, fieldset, form,
+input, select, textarea,
+em, bold, strong, i, small, b, sub, sup, tt,
+object, iframe, applet,
+abbr, acronym, address, big, cite, code,
+del, dfn, ins, kbd, samp, var,
+table, tbody, tfoot, thead, tr, th, td {
+	border: 0 none;
+	font-weight: inherit;
+	font-style: inherit;
+	font-family: inherit;
+	vertical-align: baseline;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+	line-height: 1.24;
+	color: #000;
+	background: #ddd;
+  font-family: 'Krona One', sans-serif;
+  font-size: 10px;
+}
+
+h2{font-size: 16px; margin-bottom: 5px;position:relative;}
+ul{list-style-type: none;}
+
+input{border-bottom:1px solid #000;border-top:none;border-left:1px solid #fff;border-right:1px solid #fff;text-align:center;color:#ff0000;float: right;width: 150px;}
+input[type="button"],input[type="radio"]{border:0px none;float:none;}
+a,input,textarea,select{outline: none;}
+textarea {border:1px solid #000;resize:none; padding:5px;}
+
+.clear:after {
+    clear: both;
+    content: ' ';
+    display: block;
+    font-size: 0;
+    line-height: 0;
+    visibility: hidden;
+    width: 0;
+    height: 0
+}
+/*universal*/
+
+/*global*/
+.smallInput{width: 30px;}
+.noFloat{float:none;}
+.column {float:left;width:50%;}
+.column2 {float:left;width:40%;}
+.rightAlign,
+.rightAlign div {text-align: right;}
+.btnUpDown{cursor:pointer; height: 11px; width: 10px;}
+.btnUp{background: transparent url(./img/up_down.png) no-repeat left top;}
+.btnDown{background: transparent url(./img/up_down.png) no-repeat right top;}
+.hide {visibility:hidden;}
+.selected{display:block;}
+.unSelected{display:none;}
+/*global*/
+
+/*body*/
+.bodyContainer {background:#fff;width: 900px;margin: 0px auto;padding:10px;}
+/*body*/
+
+/*jump menu*/
+.jumpMenu{background: #000;padding: 2px 6px;margin-bottom: 10px;clear: both;}
+.jumpMenu li{display:inline;}
+.smallLink{font-size:10px;font-weight:bold;text-decoration: none;color: #fff;margin-right: 3px;padding-right: 3px;border-right: 1px solid #fff;}
+.end{
+  border:none;
+  padding-right: 0;
+  margin-right: 0;
+}
+/*jump menu*/
+
+/*section*/
+.module{margin-bottom: 10px;}
+.close{
+  background: #fff;
+  padding: 2px 5px;
+  color:#000;
+  position:absolute;
+  left:-25px;
+  top:0px;
+  border-radius: 4px 0 0 4px;
+  font-size: 10px;
+  font-weight: bold;
+  box-shadow: -2px 1px 3px black;
+}
+.row{float: left;margin: 3px 0px 7px;}
+.cell{float: left;width: 280px;padding-right: 20px;}
+/*section*/
+
+/*Character Info*/
+.barContainer{
+  background: #888;
+  width:900px;
+  position: relative;
+}
+.wpspBars{
+  border:none;
+  width:0%;
+  height: 15px;
+}
+.wpBar{
+  border:1px solid #f00;
+  float:left;
+}
+.spBar{
+  border:1px solid #f0f;
+  float: right;
+}
+/*Character Info*/
+
+/*base control elements*/
+.controlsContainer{
+  position: fixed;
+  left: 0px;
+  top:0px;
+  background: #fff;
+  border: 1px solid #ccc;
+  width: auto;
+  padding: 10px;
+  display:block;
+  z-index: 100;
+}
+.controlsContainer li {
+  margin-bottom:5px;
+}
+.controlsContainer li ul {
+  margin-left: 20px;
+  margin-bottom:20px;
+}
+.controlsContainer input{
+  width: 50px;
+  margin-left: 10px;
+  float:none;
+}
+/*base control elements*/
+
+/*Attributes*/
+/*Attributes*/
+
+/*Derived Traits*/
+/*Derived Traits*/
+
+/*Skills and Specialties*/
+.skilColum_1{
+  float:left;
+  width: 218px;
+}
+.skilColum_2{
+  float:left;
+  width:160px;
+  padding-left:10px;
+}
+.skilColum_3{
+  float:left;
+  width:40px;
+}
+.skilColum_1 input,
+.skilColum_2 input,
+.skilColum_3 input,
+.skilColum_1 select,
+.skilColum_2 select,
+.skilColum_3 select {
+  margin-bottom: 5px;
+}
+.skillsInput{
+  margin-top:15px;
+}
+.skilColum_2 select{
+  width:100%;
+}
+/*Skills and Specialties*/
+
+/*Equipment*/
+.equipTabs ul{
+}
+.equipTabs li{
+  border:1px solid #000;
+  background:#cecece;
+  background:-moz-linear-gradient(90deg, #aaa, #cecece);
+  background:-webkit-gradient(linear,left bottom, left top, from(#aaa), to(#cecece));
+  padding: 3px 5px 0px;
+  cursor:pointer;
+  display: inline-block;
+  margin-bottom: -1px;
+  position: relative;
+  top: 3px;
+}
+.equipTabs label{
+  cursor:pointer;
+  height: .75em;
+  display: block;
+  overflow: hidden;
+  font-weight: bold;
+}
+.equipTabs .active{
+  background:#fff;
+  border-bottom:none;
+  padding-bottom:1px;
+  cursor:auto;
+  top: 0px;
+  left: 0px;
+}
+.equipTabs .active label{
+  margin:0px;
+  height: 1em;
+  overflow: auto;
+  display: inline;
+}
+.equipTabs label.first{
+  margin:0px;
+}
+.equipInput textarea{
+  width:100%;
+  height:337px;
+}
+/*Equipment*/
+
+/*Complications & Assets*/
+.comp_asset_column {
+  width:50%;
+}
+.smallTextArea{
+  color: #ccc;
+  height: 100px;
+  width: 100%;
+}
+.comp_asset{
+  margin-left:30px;
+}
+.comp_asset select{
+  margin-bottom: 10px;
+}
+.comp_asset select {
+  float:none;
+  width:100%;
+}
+.comp_asset .radioBttn{
+  width:20px;
+}
+.comp_asset input{
+  margin-bottom: 10px;
+}
+.comp_asset .section{
+  padding-bottom: 10px;
+  border-bottom:1px dashed #666;
+  margin-bottom: 20px;
+}
+.compField{
+  background: red;
+}
+/*Complications & Assets*/
+
+/*Skill Competency*/
+/*Skill Competency*/
+
+/*Plot Points & Dice Steps*/
+/*Plot Points & Dice Steps*/
+
+/*Dice*/
+.diceUI{
+  margin-bottom:10px;
+}
+.diceUI li{
+  float:left;
+  margin-right: 10px;
+}
+ul.diceSum {
+  float:right;
+}
+.diceSum li{
+  text-align: right;
+  line-height: 1.5em;
+}
+.diceSumLabel{
+  font-weight: bold;
+  line-height: 1em;
+}
+#diceDisplay input{
+  line-height:2em;
+  border:none;
+  color:#000;
+  display: block;
+  text-align: left;
+  float: none;
+  width: 100px;
+}
+.diceSumArea{
+  width: 20px;
+  display: inline-block;
+}
+/*Dice*/
+
+.saveMessage{
+  position: fixed;
+  top: 0;
+  right: 0;
+  margin-top: -50px;
+  border-bottom: 1px solid #000;
+  border-left: 1px solid #000;
+  border-radius: 0 0 0 8px;
+  background: #fff;
+  background: -webkit-linear-gradient(top, #eee, #bbb);
+  background: -moz-linear-gradient(top, #eee, #bbb);
+  background: -ms-linear-gradient(top, #eee, #bbb);
+  background: -o-linear-gradient(top, #eee, #bbb);
+  color: #000;
+  font-weight: bold;
+  padding: 4px;
+}

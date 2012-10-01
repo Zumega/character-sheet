@@ -1,0 +1,39 @@
+<?php
+require 'includes/connection_Open.php';
+  $query = "SELECT * FROM  `sheet_dice` WHERE id=". $_SESSION['id'];
+  $result = mysql_query($query) or die('Query failed: ' . mysql_error());
+  $line = mysql_fetch_array($result, MYSQL_ASSOC);
+require 'includes/connection_Close.php';
+
+$diceDisplay = "";
+$aryMath = array();
+if ($line['intDice_0'] != ""){
+  foreach($line as $k=>$roll){
+    if ($k!="id" && $roll!=""){
+      $diceDisplay .= "<input readonly='readonly' type='text' id='". str_replace("intD", "d", $k) ."' name='". str_replace("intD", "d", $k) ."' value='". $roll ."' tabindex=\"-1\" />\n";
+      $aryMath[] = preg_replace('/(D[0-9]{1,2} = )/', "", $roll);
+    }
+  }
+}
+
+
+?>
+<div class="module dice clear">
+  <input type="hidden" name="area" value="dice" />
+  <ul class="diceSum">
+    <li class="diceSumLabel">Sum of rolls:</li>
+    <li>two rolls: <span id="diceNum_2" class="diceSumArea"><?= $aryMath[0] + $aryMath[1]; ?></span></li>
+    <li>three rolls: <span id="diceNum_3" class="diceSumArea"><?= $aryMath[0] + $aryMath[1] + $aryMath[2]; ?></span></li>
+    <li>four rolls: <span id="diceNum_4" class="diceSumArea"><?= $aryMath[0] + $aryMath[1] + $aryMath[2] + $aryMath[3]; ?></span></li>
+    <li>five rolls: <span id="diceNum_5" class="diceSumArea"><?= $aryMath[0] + $aryMath[1] + $aryMath[2] + $aryMath[3] + $aryMath[4]; ?></span></li>
+  </ul>
+  <ul class="diceUI clear">
+    <li><a href="javascript:DICE(0);" tabindex="-1">Clear the dice</a></li>
+    <?php
+      for ($i=2; $i<=$highDice;$i=$i+2){
+        echo '<li><a href="javascript:DICE('. $i .');" tabindex="-1">D'. $i .'</a></li>';
+      }
+    ?>
+  </ul>
+  <div id="diceDisplay"><?= $diceDisplay; ?></div>
+</div>
