@@ -11,10 +11,9 @@ require 'includes/connection_Close.php';
   <div class="equipTabs">
     <ul>
       <?php
-        $items = array("All Items", "Weapons", "Gear", "Armor", "Money", "Notes");
         $fields = "";
         $i = 0;
-        foreach($items as $value){
+        foreach($equipTabs as $value){
           $first = ($i == 0) ? " active|first|" : "||un" ;
           $first = explode("|", $first);
           $i++;

@@ -8,4 +8,5 @@
   $plotPoints = 4;
   $startCompAsset = 1;
   $comp_asset = ''; //variable so page can be used for Complications and Assets
+  $equipTabs = array("All Items", "Weapons", "Gear", "Armor", "Money", "Notes");
 ?>

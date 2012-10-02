@@ -12,6 +12,7 @@ var jQ = jQuery,
       derivedTraits: {},
       rolledTraits: {},
       skills: {},
+      equipment: {},
       hasChanged: false
     },
     functions: {
@@ -28,12 +29,14 @@ var jQ = jQuery,
 //        sheet.functions.gitSkills()
 //        sheet.functions.skills.getSkillsChanges();
 //        sheet.functions.skills.getSubSkillsChanges();
+        sheet.functions.getEquipment();
 
         sheet.functions.setStunWoundClicks();
         sheet.functions.getChanges();
         sheet.functions.ouchCheck();
         sheet.functions.checkAttributeInputs();
         sheet.functions.rolledTraits();
+        sheet.functions.setEquipmentTabs();
 
       },
       getDefalutPoints: function(){
@@ -307,7 +310,38 @@ var jQ = jQuery,
         }
       },
 
+      getEquipment: function(){
+        jQ(document).find('.equipInput textarea').each(function(){
+          var $this = jQ(this);
 
+          sheet.data.equipment[$this.attr('id')] = $this.val();
+
+        });
+      },
+      setEquipmentTabs: function(){
+        jQ(document).find('.equipTab').click(function(){
+          var $this = jQ(this);
+
+          jQ(document).find('.equipTab').each(function(){
+            if(jQ(this).hasClass('active')){
+              jQ(this).removeClass('active');
+            }
+          });
+          $this.addClass('active');
+          sheet.functions.setEquipmentFields($this.children('label').attr('for'));
+        });
+      },
+      setEquipmentFields: function(id){
+        jQ(document).find('.equipInput textarea').each(function(){
+          var $this = jQ(this);
+          if($this.hasClass('selected')){
+            $this.removeClass('selected')
+          }
+          if($this.attr('id') === id){
+            $this.addClass('selected');
+          }
+        });
+      },
       getChanges: function() {
 //        attache the BLUR listener
         jQ(document).find('.characterInfo').find('input[type=text]').blur(function(){
