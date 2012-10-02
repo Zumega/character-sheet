@@ -8,8 +8,8 @@ $json = json_decode($_POST['data']['content'], true);
 
 //echo $_POST['data']['saveArea'];
 //exit();
-//
-//
+
+
 switch ($_POST['data']['saveArea']){
   case 'characterInfo':
     $isMany = false;
@@ -130,6 +130,7 @@ require_once 'connection_Open.php';
     $result = mysql_fetch_array($result, MYSQL_ASSOC);
 
     if (count($content) == $result['count']){
+      $the = ' same';
       foreach($content as $num=>$item){
         $pairs="";
         foreach($item as $k=>$v){
@@ -142,6 +143,7 @@ require_once 'connection_Open.php';
       }
       unset($query, $result, $num, $item);
     }elseif($result['count'] == 0){
+      $the = ' zero';
       foreach($content as $num=>$item){
         foreach($item as $k=>$v){
            $keys .=  "`". $k ."`, ";
@@ -154,6 +156,7 @@ require_once 'connection_Open.php';
       }
       unset($query, $result, $num, $item);
     }else{
+      $the = ' other';
       $query = "DELETE FROM  ". $dataBaseTable ." WHERE id = ". $_SESSION["id"];
       $result = mysql_query($query) or die($_POST['callback'] .'({"status":"'. mysql_error() .'"})');
 
@@ -177,6 +180,6 @@ require_once 'connection_Open.php';
     $query = "UPDATE ". $dataBaseTable ." SET ". preg_replace('/, $/', "", $pairs) ." WHERE id = " . $_SESSION["id"] . "";
     $result = mysql_query($query) or die($_POST['callback'] .'({"status":"'. mysql_error() .'"})');
   }
-  echo $_POST['callback'] .'({"status":"done"})';
+  echo $_GET['callback'] .'({"status":"done"})';
 require_once 'connection_Close.php';
 ?>
