@@ -13,6 +13,7 @@ var jQ = jQuery,
       rolledTraits: {},
       skills: {},
       equipment: {},
+      allItems: '',
       hasChanged: false
     },
     functions: {
@@ -326,7 +327,7 @@ var jQ = jQuery,
       setEquipmentTabs: function(){
         jQ(document).find('.equipTab').click(function(){
           var $this = jQ(this),
-              tabid = $this.children('label').attr('for');;
+              tabid = $this.children('label').attr('for');
 
           jQ(document).find('.equipTab').each(function(){
             if(jQ(this).hasClass('active')){
@@ -371,14 +372,33 @@ var jQ = jQuery,
 
         jQ(document).find('.equipInput textarea').blur(function(){
           if(jQ(this).attr('id') !== 'allitems'){
+            sheet.functions.updateAllItemsField();
+
             if(sheet.functions.getEquipment()){
               sheet.data.hasChanged = false;
               sheet.functions.save('equipment');
             }
           }
         });
+      },
+      updateAllItemsField: function(){
+        var content = {};
+
+//        jQ('#allitems').val('');
+        jQ(document).find('.equipInput textarea').each(function(){
+          content[jQ(this).attr('id')] = jQ(this).val();
+        });
+        delete content.allitems;
+        delete content.notes;
+
+        sheet.data.allItems = '';
+        for(var el in content){
+          console.log(el);
+          sheet.data.allItems += el.charAt(0).toUpperCase() + el.slice(1) +':\n'+ content[el] +'\n\n\n';
+        }
 
 
+        jQ('#allitems').val(sheet.data.allItems);
       },
       save: function(saveArea){
         var values = sheet.data[saveArea];
