@@ -314,13 +314,19 @@ var jQ = jQuery,
         jQ(document).find('.equipInput textarea').each(function(){
           var $this = jQ(this);
 
-          sheet.data.equipment[$this.attr('id')] = $this.val();
-
+          if($this.attr('id') !== 'allitems'){
+            if(sheet.data.equipment[$this.attr('id')] !== $this.val()){
+              sheet.data.hasChanged = true;
+            }
+            sheet.data.equipment[$this.attr('id')] = $this.val();
+          }
         });
+        return sheet.data.hasChanged;
       },
       setEquipmentTabs: function(){
         jQ(document).find('.equipTab').click(function(){
-          var $this = jQ(this);
+          var $this = jQ(this),
+              tabid = $this.children('label').attr('for');;
 
           jQ(document).find('.equipTab').each(function(){
             if(jQ(this).hasClass('active')){
@@ -328,7 +334,9 @@ var jQ = jQuery,
             }
           });
           $this.addClass('active');
-          sheet.functions.setEquipmentFields($this.children('label').attr('for'));
+
+          sheet.data.equipment.activeTab = tabid;
+          sheet.functions.setEquipmentFields(tabid);
         });
       },
       setEquipmentFields: function(id){
@@ -344,34 +352,34 @@ var jQ = jQuery,
       },
       getChanges: function() {
 //        attache the BLUR listener
-        jQ(document).find('.characterInfo').find('input[type=text]').blur(function(){
+        jQ(document).find('.characterInfo input[type=text]').blur(function(){
           if(sheet.functions.getCharacterInfo()){
             sheet.data.hasChanged = false;
             sheet.functions.ouchCheck();
             sheet.functions.save('characterInfo');
           }
         });
-        jQ(document).find('.attributes').find('input[type=text]').blur(function(){
+
+        jQ(document).find('.attributes input[type=text]').blur(function(){
           if(sheet.functions.getAttributes()){
             sheet.data.hasChanged = false;
             sheet.functions.save('attributes');
           }
         });
+
+        jQ(document).find('.equipInput textarea').blur(function(){
+          if(jQ(this).attr('id') !== 'allitems'){
+            if(sheet.functions.getEquipment()){
+              sheet.data.hasChanged = false;
+              sheet.functions.save('equipment');
+            }
+          }
+        });
+
+
       },
       save: function(saveArea){
-        var values = '';
-        switch(saveArea){
-          case 'characterInfo':
-            values = sheet.data.characterInfo;
-            break;
-          case 'attributes':
-            values = sheet.data.attributes;
-            break;
-          case 'rolledTraits':
-            values = sheet.data.rolledTraits;
-            break;
-
-        }
+        var values = sheet.data[saveArea];
 
         jQ.ajax({
           url: sheet.settings.saveUrl,
