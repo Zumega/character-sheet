@@ -22,9 +22,9 @@
   </div>
 
   <div class="column">
-    <h2>Plot Points & Dice Steps</h2>
+    <h2>Plot Points & </br>Dice Steps</h2>
     <div class="column2">
-      <div>Plotpoins used:</div>
+      <div>Plot points used:</div>
       <div>1</div>
       <div>2</div>
       <div>3</div>

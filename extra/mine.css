@@ -36,7 +36,7 @@ ul{list-style-type: none;}
 input{border-bottom:1px solid #000;border-top:none;border-left:1px solid #fff;border-right:1px solid #fff;text-align:center;color:#ff0000;float: right;width: 150px;}
 input[type="button"],input[type="radio"]{border:0px none;float:none;}
 a,input,textarea,select{outline: none;}
-textarea {border:1px solid #000;resize:none; padding:5px;}
+textarea{border:1px solid #000;resize:none; padding:5px;}
 
 .clear:after {
     clear: both;
@@ -51,12 +51,12 @@ textarea {border:1px solid #000;resize:none; padding:5px;}
 /*universal*/
 
 /*global*/
+.bodyContainer{background:#fff;width: 940px;margin: 0px auto;padding:10px;}
 .smallInput{width: 30px;}
 .noFloat{float:none;}
-.column {float:left;width:50%;}
-.column2 {float:left;width:40%;}
-.rightAlign,
-.rightAlign div {text-align: right;}
+.column{float:left;width:50%;}
+.column2{float:left;width:46%;}
+.rightAlign,.rightAlign div{text-align: right;}
 .btnUpDown{cursor:pointer; height: 11px; width: 10px;}
 .btnUp{background: transparent url(./img/up_down.png) no-repeat left top;}
 .btnDown{background: transparent url(./img/up_down.png) no-repeat right top;}
@@ -65,10 +65,6 @@ textarea {border:1px solid #000;resize:none; padding:5px;}
 .unSelected{display:none;}
 .noEdit{color:#000;}
 /*global*/
-
-/*body*/
-.bodyContainer {background:#fff;width: 900px;margin: 0px auto;padding:10px;}
-/*body*/
 
 /*jump menu*/
 .jumpMenu{background: #000;padding: 2px 6px;margin-bottom: 10px;clear: both;}
@@ -102,7 +98,7 @@ textarea {border:1px solid #000;resize:none; padding:5px;}
 /*Character Info*/
 .barContainer{
   background: #888;
-  width:900px;
+  width:940px;
   position: relative;
 }
 .wpspBars{
