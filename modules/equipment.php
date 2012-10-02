@@ -1,10 +1,10 @@
 <?php
 require 'includes/connection_Open.php';
   $query = 'SELECT '.
-          'CONCAT("Weapons:\n\t", `blbWeapons`, '.
-          '"\n\nGear:\n\t", `blbGear`, '.
-          '"\n\nArmor:\n\t", `blbArmor`, '.
-          '"\n\nMoney:\n\t", `blbMoney`'.
+          'CONCAT("Weapons:\n", `blbWeapons`, '.
+          '"\n\n\nGear:\n", `blbGear`, '.
+          '"\n\n\nArmor:\n", `blbArmor`, '.
+          '"\n\n\nMoney:\n", `blbMoney`'.
           ') AS "blbAllItems", '.
           '`tnytxtActiveTab`, `blbWeapons`, `blbGear`, `blbArmor`, `blbMoney`, `blbNotes`'.
           'FROM  `sheet_equipment` WHERE id='. $_SESSION['id'];
@@ -34,9 +34,9 @@ require 'includes/connection_Close.php';
     </ul>
   </div>
   <?php
-  echo "<pre>";
-  print_r($line);
-  echo "</pre>";
+//  echo "<pre>";
+//  print_r($line);
+//  echo "</pre>";
   ?>
 
   <div class="equipInput">

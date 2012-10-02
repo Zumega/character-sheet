@@ -337,6 +337,8 @@ var jQ = jQuery,
 
           sheet.data.equipment.activeTab = tabid;
           sheet.functions.setEquipmentFields(tabid);
+          sheet.data.hasChanged = false;
+          sheet.functions.save('equipment');
         });
       },
       setEquipmentFields: function(id){
