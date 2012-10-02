@@ -342,11 +342,11 @@ var jQ = jQuery,
       setEquipmentFields: function(id){
         jQ(document).find('.equipInput textarea').each(function(){
           var $this = jQ(this);
-          if($this.hasClass('selected')){
-            $this.removeClass('selected')
+          if($this.hasClass('active')){
+            $this.removeClass('active')
           }
           if($this.attr('id') === id){
-            $this.addClass('selected');
+            $this.addClass('active');
           }
         });
       },

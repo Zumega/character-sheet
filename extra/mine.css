@@ -231,7 +231,7 @@ textarea {border:1px solid #000;resize:none; padding:5px;}
   height:337px;
   display:none;
 }
-.equipInput textarea.selected{
+.equipInput textarea.active{
   display:block;
 }
 /*Equipment*/
