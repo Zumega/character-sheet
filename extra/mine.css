@@ -63,6 +63,7 @@ textarea {border:1px solid #000;resize:none; padding:5px;}
 .hide {visibility:hidden;}
 .selected{display:block;}
 .unSelected{display:none;}
+.noEdit{color:#000;}
 /*global*/
 
 /*body*/

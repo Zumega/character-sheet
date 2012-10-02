@@ -12,18 +12,18 @@ require_once 'connection_Close.php';
     <li>
       <label for="attrPoints">Attribute Points:</label>
       <ul>
-        <li>Max: <input type="text" value="<?= $attrPoints ?>" id="attrPoints" name="attrPoints" readonly="readonly" tabindex="-1" />
-        <li>Used: <input type="text" value="<?= $line['usedPoints'] ?>" id="usedAttrPoints" name="usedAttrPoints" readonly="readonly" tabindex="-1" />
+        <li>Max: <input type="text" value="<?= $attrPoints ?>" id="attrPoints" name="attrPoints" readonly="readonly" class="noEdit" tabindex="-1" />
+        <li>Used: <input type="text" value="<?= $line['usedPoints'] ?>" id="usedAttrPoints" name="usedAttrPoints" readonly="readonly" class="noEdit" tabindex="-1" />
       </ul>
     </li>
     <li>
       <label for="skillPoints">Skill Points:</label>
       <ul>
         <li>
-          Max: <input type="text" value="<?= $skillPoints ?>" id="skillPoints" name="skillPoints" readonly="readonly" tabindex="-1" />
-          <input type="hidden" value="<?= $skillPoints ?>" id="hiddenSkillPoints" name="hiddenSkillPoints" readonly="readonly" tabindex="-1" />
+          Max: <input type="text" value="<?= $skillPoints ?>" id="skillPoints" name="skillPoints" readonly="readonly" class="noEdit" tabindex="-1" />
+          <input type="hidden" value="<?= $skillPoints ?>" id="hiddenSkillPoints" name="hiddenSkillPoints" readonly="readonly" class="noEdit" tabindex="-1" />
         </li>
-        <li>Used: <input type="text" value="0" id="usedSkillPoints" name="usedSkillPoints" readonly="readonly" tabindex="-1" /></li>
+        <li>Used: <input type="text" value="0" id="usedSkillPoints" name="usedSkillPoints" readonly="readonly" class="noEdit" tabindex="-1" /></li>
       </ul>
     </li>
     <li><a href="javascript:SaveArea();">Save</a></li>
