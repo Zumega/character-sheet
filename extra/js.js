@@ -19,12 +19,14 @@ var jQ = jQuery,
         sheet.settings.saveObj = jQ('#saveMessage');
         sheet.settings.woundBarObj = jQ('#woundPointBar');
         sheet.settings.stunBarObj = jQ('#stunPointBar');
+        sheet.settings.woundCounterBarObj = jQ('#woundCounterBar');
+        sheet.settings.stunCounterBarObj = jQ('#stunCounterBar');
         sheet.settings.usedAttrPointsObj = jQ('#usedAttrPoints');
 
         sheet.functions.getDefalutPoints();
         sheet.functions.getCharacterInfo();
         sheet.functions.getAttributes();
-        sheet.functions.getDerivdTraits();
+        sheet.functions.getDerivedTraits();
 //        sheet.functions.gitSkills()
 //        sheet.functions.skills.getSkillsChanges();
 //        sheet.functions.skills.getSubSkillsChanges();
@@ -33,6 +35,7 @@ var jQ = jQuery,
         sheet.functions.getChanges();
         sheet.functions.ouchCheck();
         sheet.functions.checkAttributeInputs();
+        sheet.functions.setDerivedTraits();
         sheet.functions.rolledTraits();
 
       },
@@ -108,13 +111,16 @@ var jQ = jQuery,
       },
       ouchCheck: function(){
         var totalPoints = sheet.data.characterInfo.woundPoints + sheet.data.characterInfo.stunPoints,
-          WPercent = (100 / sheet.data.derivedTraits.lifePoints) * sheet.data.characterInfo.woundPoints,
-          SPercent = (100 / sheet.data.derivedTraits.lifePoints) * sheet.data.characterInfo.stunPoints,
-          WndColor = 100 - (100 / sheet.data.derivedTraits.lifePoints) * totalPoints,
-          StnColor = 100 - (100 / sheet.data.derivedTraits.lifePoints) * totalPoints;
+          wounPercent = (100 / sheet.data.derivedTraits.lifePoints) * sheet.data.characterInfo.woundPoints,
+          stunPercent = (100 / sheet.data.derivedTraits.lifePoints) * sheet.data.characterInfo.stunPoints,
+          barColor = ((100 / sheet.data.derivedTraits.lifePoints) * totalPoints) / 100,
+          woundCounterBar = 100 - wounPercent,
+          stunCounterBar = 100 - stunPercent;
 
-        sheet.settings.woundBarObj.css({"width": WPercent +'%', "background": 'rgb(100%, '+ WndColor +'%, '+ WndColor +'%)'});
-        sheet.settings.stunBarObj.css({"width": SPercent + '%', "background": 'rgb(100%, '+ StnColor +'%, 100%)'});
+        sheet.settings.woundBarObj.css({"width": wounPercent +'%', "background": 'rgba(255, 0, 0, '+ barColor +')'});
+        sheet.settings.stunBarObj.css({"width": stunPercent + '%', "background": 'rgba(255, 0, 255, '+ barColor +')'});
+        sheet.settings.woundCounterBarObj.css({"width": woundCounterBar +'%'});
+        sheet.settings.stunCounterBarObj.css({"width": stunCounterBar + '%'});
 
         sheet.functions.deathCheck();
       },
@@ -180,56 +186,59 @@ var jQ = jQuery,
           }
         });
       },
-      getDerivdTraits: function() {
-        jQ("#agl, #alert, #vit, #willpower").blur(function(){
-          var d1 = d2 = d3 = d4 = 0;
-
-          switch (this.id){
-            case "agl":
-            case "alert":
-              d1 = parseInt(jQ("#agl").val());
-              d2 = parseInt(jQ("#alert").val());
-              if(d1 > 12){
-                d3 = d1%12;
-                d1 = 12;
-              }
-              if(d2 > 12){
-                d4 = d2%12;
-                d2 = 12;
-              }
-
-              initiative = "D"+ d1 +" + D"+ d2;
-              initiative += (d3 != 0)? " + D"+ d3 : '' ;
-              initiative += (d4 != 0)? " + D"+ d4 : '' ;
-              jQ("#int").val(initiative);
-              sheet.data.derivedTraits.initiative = initiative;
-              break;
-            case "vit":
-            case "willpower":
-              d1 = parseInt(jQ("#vit").val());
-              d2 = parseInt(jQ("#willpower").val());
-              if(d1 > 12){
-                d3 = d1%12;
-                d1 = 12;
-              }
-              if(d2 > 12){
-                d4 = d2%12;
-                d2 = 12;
-              }
-
-              lifePoints = d1+d2;
-              jQ("#lifePoints").val(lifePoints);
-              sheet.data.derivedTraits.lifePoints = lifePoints;
-              sheet.functions.ouchCheck();
-
-              endurance = "D"+ d1 +" + D"+ d2;
-              endurance += (d3 != 0)? " + D"+ d3 : '' ;
-              endurance += (d4 != 0)? " + D"+ d4 : '' ;
-
-              jQ("#endur").val(endurance);
-              sheet.data.derivedTraits.endurance = endurance;
-              break;
+      getDerivedTraits: function() {
+        var init = {
+          d1: parseInt(jQ("#agl").val()),
+          d2: parseInt(jQ("#alert").val()),
+          d3: 0,
+          d4: 0,
+          initiative: 0
+        },
+        life = {
+          d1: parseInt(jQ("#vit").val()),
+          d2: parseInt(jQ("#willpower").val()),
+          d3: 0,
+          d4: 0,
+          lifePoints: 0,
+          endurance: 0
+        },
+        rollBreakdown = function(data){
+          if(data.d1 > 12){
+            data.d3 = data.d1 % 12;
+            data.d1 = 12;
           }
+          if(data.d2 > 12){
+            data.d4 = data.d2 % 12;
+            data.d2 = 12;
+          }
+          return data;
+        }
+
+        init = rollBreakdown(init);
+        life.lifePoints = life.d1 + life.d2;
+        life = rollBreakdown(life);
+
+        init.initiative = "D"+ init.d1 +" + D" + init.d2;
+        init.initiative += (init.d3 != 0)? " + D"+ init.d3 : '';
+        init.initiative += (init.d4 != 0)? " + D"+ init.d4 : '' ;
+
+        life.endurance = "D"+ life.d1 +" + D"+ life.d2;
+        life.endurance += (life.d3 != 0)? " + D"+ life.d3 : '' ;
+        life.endurance += (life.d4 != 0)? " + D"+ life.d4 : '' ;
+
+        jQ("#int").val(init.initiative);
+        jQ("#lifePoints").val(life.lifePoints);
+        jQ("#endur").val(life.endurance);
+
+        sheet.data.derivedTraits.initiative = init.initiative;
+        sheet.data.derivedTraits.lifePoints = life.lifePoints;
+        sheet.data.derivedTraits.endurance = life.endurance;
+
+        sheet.functions.ouchCheck();
+      },
+      setDerivedTraits: function() {
+        jQ("#agl, #alert, #vit, #willpower").blur(function(){
+          sheet.functions.getDerivedTraits();
         });
       },
       rolledTraits: function() {

@@ -100,22 +100,41 @@ textarea {border:1px solid #000;resize:none; padding:5px;}
 
 /*Character Info*/
 .barContainer{
-  background: #888;
   width:900px;
   position: relative;
 }
 .wpspBars{
-  border:none;
   width:0%;
   height: 15px;
+  position: relative;
+  z-index: 100;
 }
 .wpBar{
-  border:1px solid #f00;
+  border-top:1px solid #f00;
+  border-right:1px solid #f00;
+  border-bottom:1px solid #f00;
+  border-left: none;
   float:left;
 }
 .spBar{
-  border:1px solid #f0f;
+  border-top:1px solid #f0f;
+  border-right: none;
+  border-bottom:1px solid #f0f;
+  border-left:1px solid #f0f;
   float: right;
+}
+.counterBar{
+  background: #888;
+  width: 100%;
+  height: 17px;
+  position: absolute;
+  z-index: 90;
+}
+.wcBar{
+  right: 0;
+}
+.scBar{
+  left: 0;
 }
 /*Character Info*/
 
