@@ -6,23 +6,25 @@
 
 while ($row = mysql_fetch_assoc($result)) {
   $fieldCntr = 0;
+  $rowValues = (array) $row;
 ?>
 <div class="column skillsInput">
   <div class="skilColum_1">
     <select name="Skill_<?= $i; ?>" id="Skill_<?= $i; ?>" tabindex="-1">
     <?php
 
-    foreach($arySkills as $k => $value){
-      if($row['varSkill'] === strtolower($k)) {
+    foreach($arySkills as $currentValue => $subSkills){
+      if($row['varSkill'] === strtolower($currentValue)) {
         $selected = 'selected="selected"';
-        $arySubSkill = $value;
+        $arySubSkill = $subSkills;
       } else {
         $selected = '';
       }
+      $disabled = (in_array(strtolower($currentValue), $rowValues)) ? ' disabled="disabled"' : '' ;
       ?>
-      <option value="<?= strtolower($k) ?>"<?= $selected ?>><?= $k; ?></option>
+      <option value="<?= strtolower($currentValue) ?>"<?= $selected; ?><?= $disabled; ?>><?= $currentValue; ?></option>
     <?php }
-    unset($k, $value);
+    unset($currentValue, $value);
     ?>
     </select>
     <span><input type="text" value="<?= $row['intSkillDice']; ?>" id="Skill_<?= $i ?>_<?= $fieldCntr; ?>" name="Field_<?= $i ?>_<?= $fieldCntr++; ?>" class="smallInput" /></span>
@@ -32,16 +34,21 @@ while ($row = mysql_fetch_assoc($result)) {
     <select id="Skill_<?= $i ?>_<?= $fieldCntr; ?>" name="Field_<?= $i ?>_<?= $fieldCntr++; ?>" tabindex="-1">
       <option value="0">==========</option>
       <?php
+
+
+
+//          if();
+//          $disabled = ' disabled="disabled"';
+
+
+
       if(!empty($arySubSkill)){
         foreach($arySubSkill as $value){
           $key = 'varSubSkill_'.($a-1);
-          if ($row[$key] === strtolower($value)) {
-            $selected = ' selected="selected"';
-          } else {
-            $selected = '';
-          }
+          $selected = ($row[$key] === strtolower($value)) ? ' selected="selected"' : '' ;
+          $disabled = (in_array(strtolower($value), $rowValues)) ? ' disabled="disabled"' : '' ;
       ?>
-      <option value="<?= strtolower($value) ?>"<?= $selected ?>><?= ucwords($value); ?></option>
+      <option value="<?= strtolower($value) ?>"<?= $selected; ?><?= $disabled; ?>><?= ucwords($value); ?></option>
   <?php }
       }?>
     </select>
