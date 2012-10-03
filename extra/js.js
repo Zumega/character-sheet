@@ -3,8 +3,6 @@ var jQ = jQuery,
     settings: {
       saveUrl: './includes/save.php',
       newSkillUrl: './includes/single_skill.php'
-//      maxAttrPoints: 42,
-//      maxSkillPoints: 20,
     },
     data: {
       defaultPoints: {},
@@ -47,8 +45,8 @@ var jQ = jQuery,
     functions: {
       init: function(){
         sheet.functions.setObjects();
-        
         sheet.functions.getDefalutPoints();
+
         sheet.functions.getCharacterInfo();
         sheet.functions.getAttributes();
         sheet.functions.getDerivedTraits();
@@ -60,7 +58,10 @@ var jQ = jQuery,
         sheet.functions.setStunWoundClicks();
         sheet.functions.getChanges();
         sheet.functions.ouchCheck();
-        sheet.functions.checkAttributeInputs();
+
+        sheet.functions.checkInputs.attribute();
+        sheet.functions.checkInputs.skill();
+
         sheet.functions.setDerivedTraits();
         sheet.functions.rolledTraits();
         sheet.functions.skillCountChanger();
@@ -70,19 +71,20 @@ var jQ = jQuery,
 
       },
       setObjects: function(){
+//        store dom in obj
         sheet.settings.saveObj = jQ('#saveMessage');
         sheet.settings.woundBarObj = jQ('#woundPointBar');
         sheet.settings.stunBarObj = jQ('#stunPointBar');
         sheet.settings.woundCounterBarObj = jQ('#woundCounterBar');
         sheet.settings.stunCounterBarObj = jQ('#stunCounterBar');
         sheet.settings.usedAttrPointsObj = jQ('#usedAttrPoints');
+        sheet.settings.usedSkillPointsObj = jQ('#usedSkillPoints');
       },
       getDefalutPoints: function(){
 //        store data in obj
         sheet.data.defaultPoints.maxAttrPoints = parseInt(jQ('#attrPoints').val());
         sheet.data.defaultPoints.usedAttrPoints = parseInt(jQ('#usedAttrPoints').val());
         sheet.data.defaultPoints.maxSkillPoints = parseInt(jQ('#skillPoints').val());
-        sheet.data.defaultPoints.hiddenSkillPoints = parseInt(jQ('#hiddenSkillPoints').val());
         sheet.data.defaultPoints.usedSkillPoints = parseInt(jQ('#usedSkillPoints').val());
       },
       getCharacterInfo: function(){
@@ -190,39 +192,43 @@ var jQ = jQuery,
 
         return sheet.data.hasChanged;
       },
-      checkAttributeInputs: function(){
-        sheet.data.defaultPoints.usedAttrPoints = jQ("#usedAttrPoints");
-
-        jQ(document).find(".attributes").find("input[type!=hidden]").blur(function(){
-          var $this = jQuery(this);
+      checkInputs: {
+        attribute: function(){
+          jQ(document).find(".attributes input[type!=hidden]").blur(function(){
+            sheet.functions.checkInputs.generic(jQuery(this), jQ(document).find(".attributes input"), 'Attr');
+          });
+        },
+        skill: function(){
+          jQ('#skillsContainer').on('blur', 'input',  function(){
+            sheet.functions.checkInputs.generic(jQuery(this), jQ('#skillsContainer').find('input'), 'Skill');
+          });
+        },
+        generic: function($this, $inputs, type){
+          var sum = 0;
 
           if($this.val() === ""){
             $this.val(0);
           }
-
-          if ($this.val() % 2){
+          if ($this.val() % 2 || isNaN($this.val())){
             alert("The number needs to corispond to a dice number\nMeaning it needs to be even.");
             $this.select();
             $this.focus();
             return;
           }
 
-          var aryFields = jQ(document).find(".attributes").find("input"),
-          sum = 0;
+          $inputs.each(function(){
+            sum += parseInt(jQ(this).val());
+          });
 
-          for (i = 0; i < aryFields.length; i++){
-            sum += parseInt(aryFields[i].value);
-          }
+          sheet.data.defaultPoints['used'+ type +'Points'] = sum;
+          sheet.settings['used'+ type +'PointsObj'].val(sum);
 
-          sheet.data.defaultPoints.usedAttrPoints = sum;
-          sheet.settings.usedAttrPointsObj.val(sum);
-
-          if (sum > sheet.data.defaultPoints.maxAttrPoints){
-            alert('You have use to many points\nYou only have '+ sheet.data.defaultPoints.maxAttrPoints +' points to use.\nAnd you have used '+ sum +' so far.');
+          if (sum > sheet.data.defaultPoints['max'+ type +'Points']){
+            alert('You have use to many points\nYou only have '+ sheet.data.defaultPoints['max'+ type +'Points'] +' points to use.\nAnd you have used '+ sum +' so far.');
             $this.select();
             $this.focus();
           }
-        });
+        }
       },
       getDerivedTraits: function() {
         var init = {

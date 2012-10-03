@@ -19,14 +19,11 @@ require_once 'connection_Close.php';
     <li>
       <label for="skillPoints">Skill Points:</label>
       <ul>
-        <li>
-          Max: <input type="text" value="<?= $skillPoints ?>" id="skillPoints" name="skillPoints" readonly="readonly" class="noEdit" tabindex="-1" />
-          <input type="hidden" value="<?= $skillPoints ?>" id="hiddenSkillPoints" name="hiddenSkillPoints" readonly="readonly" class="noEdit" tabindex="-1" />
-        </li>
+        <li>Max: <input type="text" value="<?= $skillPoints ?>" id="skillPoints" name="skillPoints" readonly="readonly" class="noEdit" tabindex="-1" /></li>
         <li>Used: <input type="text" value="0" id="usedSkillPoints" name="usedSkillPoints" readonly="readonly" class="noEdit" tabindex="-1" /></li>
       </ul>
     </li>
-    <li><a href="javascript:SaveArea();">Save</a></li>
-    <li><a href="<?= $siteURL ?>logout">Log out</a></li>
+<!--    <li><a href="javascript:SaveArea();">Save</a></li>
+    <li><a href="<?= $siteURL ?>logout">Log out</a></li>-->
   </ul>
 </div>
