@@ -256,9 +256,12 @@ textarea{border:1px solid #000;resize:none; padding:5px;}
   width:50%;
 }
 .smallTextArea{
-  color: #ccc;
+  color: #000;
   height: 100px;
   width: 100%;
+}
+.smallTextArea.new{
+  color:#ccc;
 }
 .comp_asset{
   margin-left:30px;

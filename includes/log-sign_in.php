@@ -38,7 +38,7 @@
           $line = mysql_fetch_array($result, MYSQL_ASSOC);
 					session_start();
 					$_SESSION["id"] = $line[id];
-					header("location:".$siteURL);
+					header("location:". $siteURL);
 				}	else {
 					echo "<h4>Wrong Username, Password or your sheet has been deleted.</h4>";
 				}
@@ -52,24 +52,26 @@
 					echo "<h4>Email address already registered.</h4>";
 				}	else {
 					$query = "INSERT INTO sheet_users( `txtName` , `txtPass` , `txtEmail` ) VALUES ('". $values['name'] ."', '". $values['pass'] ."', '". $values['email'] ."')";
-					$result = mysql_query($query) or die('Query failed: ' . mysql_error());
+					mysql_query($query) or die('Query failed: ' . mysql_error());
 
           $query = "SELECT id FROM `sheet_users` WHERE txtEmail='". $values['email'] ."'";
           $result = mysql_query($query) or die('Query failed: ' . mysql_error());
           $line = mysql_fetch_array($result, MYSQL_ASSOC);
 
-					$query = "INSERT INTO sheet_character_info (id) VALUES ($line[id])";
-					$result = mysql_query($query) or die('Query failed: ' . mysql_error());
-					$query = "INSERT INTO sheet_attributes (id) VALUES ($line[id])";
-					$result = mysql_query($query) or die('Query failed: ' . mysql_error());
-					$query = "INSERT INTO sheet_equipment (id) VALUES ($line[id])";
-					$result = mysql_query($query) or die('Query failed: ' . mysql_error());
-					$query = "INSERT INTO sheet_dice (id) VALUES ($line[id])";
-					$result = mysql_query($query) or die('Query failed: ' . mysql_error());
-					$query = "INSERT INTO sheet_roll_traits (id) VALUES ($line[id])";
-					$result = mysql_query($query) or die('Query failed: ' . mysql_error());
+					$queryInfo = "INSERT INTO sheet_character_info (id) VALUES ($line[id])";
+					mysql_query($queryInfo) or die('Query failed: ' . mysql_error());
+					$queryAttr = "INSERT INTO sheet_attributes (id) VALUES ($line[id])";
+					mysql_query($queryAttr) or die('Query failed: ' . mysql_error());
+					$queryEquip = "INSERT INTO sheet_equipment (id) VALUES ($line[id])";
+					mysql_query($queryEquip) or die('Query failed: ' . mysql_error());
+					$queryDice = "INSERT INTO sheet_dice (id) VALUES ($line[id])";
+					mysql_query($queryDice) or die('Query failed: ' . mysql_error());
+					$queryTraits = "INSERT INTO sheet_roll_traits (id) VALUES ($line[id])";
+					mysql_query($queryTraits) or die('Query failed: ' . mysql_error());
+          
+//          if i need more tables set up
 //					$query = "INSERT INTO sheet_dice (id) VALUES ($line[id])";
-//					$result = mysql_query($query) or die('Query failed: ' . mysql_error());
+//					mysql_query($query) or die('Query failed: ' . mysql_error());
 
 					require_once 'connection_Close.php';
 
