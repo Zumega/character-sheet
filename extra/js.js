@@ -44,6 +44,8 @@ var jQ = jQuery,
     },
     functions: {
       init: function(){
+//        todo: set up logic to NOT save after blur on derived traits
+
         sheet.functions.setObjects();
         sheet.functions.getDefalutPoints();
 
