@@ -70,6 +70,7 @@ var jQ = jQuery,
         sheet.functions.rolledTraits();
         sheet.functions.skillCountChanger();
         sheet.functions.skillUpdater();
+        sheet.functions.subSkillUpdater();
         sheet.functions.setEquipmentTabs();
 
       },
@@ -291,7 +292,6 @@ var jQ = jQuery,
           sheet.data.rolledTraits.resistance = jQ('#curntResist').val();
 
           sheet.functions.save('rolledTraits');
-
         });
       },
       getSkills: function(){
@@ -305,13 +305,12 @@ var jQ = jQuery,
             sheet.data.hasChanged = true;
           }
           sheet.data.skills[$this.attr('name')] = $this.val();
+
           if($this.attr('name').indexOf('S') === 0){
-            console.log('skill '+ $this.val());
             sheet.data.usedSkills[usedSkillCounter] = $this.val();
             usedSkillCounter += 1;
           }
           if($this.attr('name').indexOf('F') === 0 && isNaN($this.val())){
-            console.log('field '+ $this.val());
             sheet.data.usedSubSkills[usedSubSkillCounter] = $this.val();
             usedSubSkillCounter += 1;
           }
@@ -468,9 +467,39 @@ var jQ = jQuery,
 
 //          set new options
           jQ.each(options, function(key, value) {
-            jQ('#'+ thisId +'_1').append($("<option></option>").attr("value", key).text(value));
-            jQ('#'+ thisId +'_2').append($("<option></option>").attr("value", key).text(value));
-            jQ('#'+ thisId +'_3').append($("<option></option>").attr("value", key).text(value));
+            jQ('#'+ thisId +'_1').append(jQ("<option></option>").attr("value", key).text(value));
+            jQ('#'+ thisId +'_2').append(jQ("<option></option>").attr("value", key).text(value));
+            jQ('#'+ thisId +'_3').append(jQ("<option></option>").attr("value", key).text(value));
+          });
+
+        });
+      },
+      subSkillUpdater: function() {
+        jQ('#skillsContainer').on('change', '.skilColum_2 select', function(){
+          var $this = jQ(this),
+              $options = jQ('#skillsContainer .skilColum_2 option'),
+              usedSubSkillCounter = 0;
+
+//          reset used subkills
+          sheet.data.usedSubSkills = [];
+          jQ('#skillsContainer').find('.skilColum_2 select').each(function(){
+            var $el = jQ(this);
+            if($el.attr('name').indexOf('F') === 0 && isNaN($el.val())){
+              sheet.data.usedSubSkills[usedSubSkillCounter] = $el.val();
+              usedSubSkillCounter += 1;
+            }
+          });
+
+//          enable and disable used subskills
+          $options.each(function(){
+            jQ(this).removeAttr('disabled');
+          });
+          $options.each(function(){
+            for(var used in sheet.data.usedSubSkills){
+              if(sheet.data.usedSubSkills[used] === jQ(this).val()){
+                jQ(this).attr('disabled', 'disabled');
+              }
+            }
           });
 
         });
