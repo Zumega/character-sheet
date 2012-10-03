@@ -28,29 +28,25 @@
       ?>
       <h2 id="characterInfo"><span class="close">X</span>Character Info:</h2>
       <?php
-        include "./modules/character.php";
-        echo "\n";
+//        include "./modules/character.php";
         include $jumpMenu;
       ?>
       <a name='Attributes'></a>
       <h2 id="attributes"><span class="close">X</span>Attributes:</h2>
       <?php
-        include "./modules/attributes.php";
-        echo "\n";
+//        include "./modules/attributes.php";
         include $jumpMenu;
       ?>
       <a name='Derived_Traits'></a>
       <h2 id="derivedTraits"><span class="close">X</span>Derived Traits:</h2>
       <?php
-        include "./modules/derived_traits.php";
-        echo "\n";
+//        include "./modules/derived_traits.php";
         include $jumpMenu;
       ?>
       <a name='Skills_and_Specialties'></a>
       <h2 id="skillsSpecialties"><span class="close">X</span>Skills and Specialties:</h2>
       <?php
-        include "./modules/skills_specialties.php";
-        echo "\n";
+//        include "./modules/skills_specialties.php";
         include $jumpMenu;
       ?>
       <div class='column'>
@@ -58,14 +54,12 @@
         <h2 id="equipment"><span class="close">X</span>Equipment:</h2>
         <?php
           include "./modules/equipment.php";
-          echo "\n";
           include $jumpMenu;
         ?>
         <a name='Info'></a>
         <h2 id="info"><span class="close">X</span>Info:</h2>
         <?php
           include "./modules/info.php";
-          echo "\n";
           include $jumpMenu;
         ?>
         <a name='Dice'></a>
@@ -78,15 +72,15 @@
         <div class='column'>
           <h2 class="comp_asset" id="comp"><span class="close">X</span>Complications:</h2>
           <?php
-            $comp_asset = 'comp';
+            $comp_asset = 'complications';
             include "./modules/comp_asset.php";
           ?>
         </div>
         <div class='column'>
           <h2 class="comp_asset" id="asset"><span class="close">X</span>Assets:</h2>
           <?php
-            $comp_asset = 'asset';
-            include "./modules/comp_asset.php";
+//            $comp_asset = 'assets';
+//            include "./modules/comp_asset.php";
           ?>
         </div>
       </div>

@@ -2,10 +2,10 @@
 session_start();
 
 require 'includes/connection_Open.php';
-$query = "SELECT `intOrder`, `varSkill`, `intSkillDice`, `varSubSkill_0`, `intSubSkillDice_0`, `varSubSkill_1`, `intSubSkillDice_1`, `varSubSkill_2`, `intSubSkillDice_2` FROM `sheet_user_skills` where id = ". $_SESSION['id'] ." order by `intOrder`";
+$query = "SELECT * FROM `sheet_user_skills` where id = ". $_SESSION['id'] ." order by `intOrder`";
 $result = mysql_query($query) or die('Query failed: ' . mysql_error());
-$skillCount = mysql_num_rows($result);
 require 'includes/connection_Close.php';
+$skillCount = $amount = mysql_num_rows($result);
 ?>
 <div class="module skillsSpecialties clear">
   <input type="hidden" name="area" value="skillsSpecialties" />
