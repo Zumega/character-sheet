@@ -3,8 +3,15 @@
   require_once 'skill_types.php';
   $i = $fieldCntr = 0;
   $arySubSkill = $selected = '';
+  $skills = array();
+  $usedSkills = array();
 
 while ($row = mysql_fetch_assoc($result)) {
+  $skills[] = $row;
+  $usedSkills[] = $row['varSkill'];
+}
+
+foreach ($skills as $row) {
   $fieldCntr = 0;
   $rowValues = (array) $row;
 ?>
@@ -20,7 +27,7 @@ while ($row = mysql_fetch_assoc($result)) {
       } else {
         $selected = '';
       }
-      $disabled = (in_array(strtolower($currentValue), $rowValues)) ? ' disabled="disabled"' : '' ;
+      $disabled = (in_array(strtolower($currentValue), $usedSkills)) ? ' disabled="disabled"' : '' ;
       ?>
       <option value="<?= strtolower($currentValue) ?>"<?= $selected; ?><?= $disabled; ?>><?= $currentValue; ?></option>
     <?php }

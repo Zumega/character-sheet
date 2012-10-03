@@ -473,7 +473,6 @@ var jQ = jQuery,
           });
 
           sheet.functions.getSkills();
-
         });
       },
       subSkillUpdater: function() {
