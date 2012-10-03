@@ -13,6 +13,8 @@ var jQ = jQuery,
       derivedTraits: {},
       rolledTraits: {},
       skills: {},
+      equipment: {},
+      allItems: '',
       hasChanged: false
     },
     functions: {
@@ -27,6 +29,7 @@ var jQ = jQuery,
         sheet.functions.getAttributes();
         sheet.functions.getDerivdTraits();
         sheet.functions.getSkills();
+        sheet.functions.getEquipment();
 
         sheet.data.hasChanged = false;
 
@@ -36,6 +39,7 @@ var jQ = jQuery,
         sheet.functions.checkAttributeInputs();
         sheet.functions.rolledTraits();
         sheet.functions.skillCountChanger();
+        sheet.functions.setEquipmentTabs();
 
       },
       getDefalutPoints: function(){
@@ -325,16 +329,59 @@ var jQ = jQuery,
           }
         });
       },
+      getEquipment: function(){
+        jQ(document).find('.equipInput textarea').each(function(){
+          var $this = jQ(this);
+
+          if($this.attr('id') !== 'allitems'){
+            if(sheet.data.equipment[$this.attr('id')] !== $this.val()){
+              sheet.data.hasChanged = true;
+            }
+            sheet.data.equipment[$this.attr('id')] = $this.val();
+          }
+        });
+        return sheet.data.hasChanged;
+      },
+      setEquipmentTabs: function(){
+        jQ(document).find('.equipTab').click(function(){
+          var $this = jQ(this),
+              tabid = $this.children('label').attr('for');
+
+          jQ(document).find('.equipTab').each(function(){
+            if(jQ(this).hasClass('active')){
+              jQ(this).removeClass('active');
+            }
+          });
+          $this.addClass('active');
+
+          sheet.data.equipment.activeTab = tabid;
+          sheet.functions.setEquipmentFields(tabid);
+          sheet.data.hasChanged = false;
+          sheet.functions.save('equipment');
+        });
+      },
+      setEquipmentFields: function(id){
+        jQ(document).find('.equipInput textarea').each(function(){
+          var $this = jQ(this);
+          if($this.hasClass('active')){
+            $this.removeClass('active')
+          }
+          if($this.attr('id') === id){
+            $this.addClass('active');
+          }
+        });
+      },
       getChanges: function() {
 //        attache the BLUR listener
-        jQ(document).find('.characterInfo').find('input[type=text]').blur(function(){
+        jQ(document).find('.characterInfo input[type=text]').blur(function(){
           if(sheet.functions.getCharacterInfo()){
             sheet.data.hasChanged = false;
             sheet.functions.ouchCheck();
             sheet.functions.save('characterInfo');
           }
         });
-        jQ(document).find('.attributes').find('input[type=text]').blur(function(){
+
+        jQ(document).find('.attributes input[type=text]').blur(function(){
           if(sheet.functions.getAttributes()){
             sheet.data.hasChanged = false;
             sheet.functions.save('attributes');
@@ -353,23 +400,27 @@ var jQ = jQuery,
           }
         });
       },
-      save: function(saveArea){
-        var values = '';
-        switch(saveArea){
-          case 'characterInfo':
-            values = sheet.data.characterInfo;
-            break;
-          case 'attributes':
-            values = sheet.data.attributes;
-            break;
-          case 'rolledTraits':
-            values = sheet.data.rolledTraits;
-            break;
-          case 'skills':
-            values = sheet.data.skills;
-            break;
+      updateAllItemsField: function(){
+        var content = {};
 
+//        jQ('#allitems').val('');
+        jQ(document).find('.equipInput textarea').each(function(){
+          content[jQ(this).attr('id')] = jQ(this).val();
+        });
+        delete content.allitems;
+        delete content.notes;
+
+        sheet.data.allItems = '';
+        for(var el in content){
+          console.log(el);
+          sheet.data.allItems += el.charAt(0).toUpperCase() + el.slice(1) +':\n'+ content[el] +'\n\n\n';
         }
+
+
+        jQ('#allitems').val(sheet.data.allItems);
+      },
+      save: function(saveArea){
+        var values = sheet.data[saveArea];
 
         jQ.ajax({
           url: sheet.settings.saveUrl,

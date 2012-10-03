@@ -61,8 +61,6 @@ textarea{border:1px solid #000;resize:none; padding:5px;}
 .btnUp{background: transparent url(./img/up_down.png) no-repeat left top;}
 .btnDown{background: transparent url(./img/up_down.png) no-repeat right top;}
 .hide {visibility:hidden;}
-.selected{display:block;}
-.unSelected{display:none;}
 .noEdit{color:#000;}
 /*global*/
 
@@ -183,9 +181,13 @@ textarea{border:1px solid #000;resize:none; padding:5px;}
 }
 .equipTabs li{
   border:1px solid #000;
-  background:#cecece;
-  background:-moz-linear-gradient(90deg, #aaa, #cecece);
-  background:-webkit-gradient(linear,left bottom, left top, from(#aaa), to(#cecece));
+  border-radius: 4px 4px 0 0;
+  background: #cecece;
+  background: -webkit-linear-gradient(top, #dedede, #999);
+  background: -moz-linear-gradient(top, #dedede, #999);
+  background: -ms-linear-gradient(top, #dedede, #999);
+  background: -o-linear-gradient(top, #dedede, #999);
+  background: linear-gradient(top, #dedede, #999);
   padding: 3px 5px 0px;
   cursor:pointer;
   display: inline-block;
@@ -194,13 +196,14 @@ textarea{border:1px solid #000;resize:none; padding:5px;}
   top: 3px;
 }
 .equipTabs label{
-  cursor:pointer;
-  height: .75em;
+  cursor: pointer;
+  height: .8em;
   display: block;
   overflow: hidden;
   font-weight: bold;
 }
-.equipTabs .active{
+.equipTabs .active,
+.equipTabs .equipTab:hover{
   background:#fff;
   border-bottom:none;
   padding-bottom:1px;
@@ -208,18 +211,24 @@ textarea{border:1px solid #000;resize:none; padding:5px;}
   top: 0px;
   left: 0px;
 }
-.equipTabs .active label{
-  margin:0px;
+.equipTabs .active label,
+.equipTabs .equipTab:hover label{
+  margin: 0;
   height: 1em;
   overflow: auto;
   display: inline;
 }
+
 .equipTabs label.first{
   margin:0px;
 }
 .equipInput textarea{
   width:100%;
   height:337px;
+  display:none;
+}
+.equipInput textarea.active{
+  display:block;
 }
 /*Equipment*/
 
