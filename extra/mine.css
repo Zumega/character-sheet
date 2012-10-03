@@ -62,6 +62,10 @@ textarea{border:1px solid #000;resize:none; padding:5px;}
 .btnDown{background: transparent url(./img/up_down.png) no-repeat right top;}
 .hide {visibility:hidden;}
 .noEdit{color:#000;}
+select{
+  border: 1px solid #222;
+  border-radius: 4px;
+}
 /*global*/
 
 /*jump menu*/
@@ -192,6 +196,7 @@ textarea{border:1px solid #000;resize:none; padding:5px;}
 }
 .skilColum_2 select{
   width:100%;
+  text-transform: capitalize;
 }
 /*Skills and Specialties*/
 

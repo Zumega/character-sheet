@@ -1,4 +1,5 @@
 <?php
+// don't forget to update skills_input.php
   require_once 'skill_types.php';
   $skillNum = $_POST['data'];
   $fieldCntr = 0;
@@ -6,7 +7,7 @@
 
 <div class="column skillsInput">
   <div class="skilColum_1">
-    <select name="Skills_<?= $skillNum; ?>" id="Skills_<?= $skillNum; ?>" tabindex="-1">
+    <select name="Skill_<?= $skillNum; ?>" id="Skill_<?= $skillNum; ?>" tabindex="-1">
     <?php
 
     foreach($arySkills as $k => $value){

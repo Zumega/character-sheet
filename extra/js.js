@@ -7,25 +7,47 @@ var jQ = jQuery,
 //      maxSkillPoints: 20,
     },
     data: {
-      defalutPoints: {},
+      defaultPoints: {},
       characterInfo: {},
       attributes: {},
       derivedTraits: {},
       rolledTraits: {},
       skills: {},
+      allskills: {
+        animal_handaling: Array("Animal Training", "Riding", "Veterinary", "Zoology"),
+        medical_expertise: Array("dentistry", "forensics", "general practice", "genetics", "internal medicine", "neurology", "pharmaceuticals", "physiology", "psychiatry", "rehabilitation", "surgery", "toxicology", "veterinary medicine"),
+        artistry: Array("Appraisal", "Cooking", "Forgery", "Game Design", "Painting", "Photography", "Poetry", "Sculpting", "Writing"),
+        perception: Array("deduction", "empathy", "gambling", "hearing", "intuition", "investigation", "read lips", "search", "sight", "smell", "tactics", "taste", "tracking"),
+        covert: Array("camouflage", "disable devices", "forgery", "infiltration", "open locks", "sabotage", "sleight of hand", "stealth", "streetwise", "surveillance"),
+        performance: Array("acting", "dancing", "costuming", "keyboard instruments", "impersonation", "mimicry", "oratory", "percussion instruments", "singing", "stringed instruments", "wind instruments"),
+        craft: Array("architecture", "blacksmithing", "carpentry", "cooking", "leather working", "metalworking", "pottery", "sewing"),
+        pilot: Array("aerial navigation", "astrogation", "astronomy", "astrophysics", "space survival", "gunships", "hang glinders", "helicopters", "large cruisers", "mid-bulk transports", "patrol vessels", "rocket shuttles", "ultra-light aircraft", "short range shuttles"),
+        discipline: Array("concentration", "interrogation", "intimidation", "leadership", "mental resistance", "morale"),
+        planetary_vehicles: Array("aquatic navigation", "cars", "canoes", "equestrian", "ground vehicle repair", "horse-drawn conveyances", "hovercraft", "industrial vehicles", "land navigation", "large ground transports", "military combat vehicles", "powerboats", "sailing", "scooters", "scuba diving", "skiffs", "submarines", "yachts"),
+        guns: Array("assault rifles", "energy weapons", "grenade launchers", "gunsmithing", "machine guns", "pistols", "rifles", "shotguns"),
+        ranged_weapons: Array("Blowguns", "bows", "crossbows", "darts", "grenade", "javelin", "ranged weaponsmithing", "slings", "throwing axes", "throwing knives"),
+        heavy_weapons: Array("artillery", "catapults", "demolitions", "forward observer", "mounted guns", "repair heavy weapons", "rocket launchers", "ship's cannons", "siege weapons"),
+        scientific_expertise: Array("earth sciences", "historical sciences", "life sciences", "mathematical sciences"),
+        influence: Array("administration", "barter", "bureaucracy", "conversation", "counseling", "interrogation", "intimidation", "leadership", "marketing", "persuasion", "politics", "seduction", "streetwise"),
+        survival: Array("aerial survival", "aquatic survival", "general navigation", "land survival", "nature", "space survival", "specific environment survival", "specific condition survival", "tracking", "trapping"),
+        knowledge: Array("appraisal", "cultures", "history", "law", "literature", "philosophy", "religion", "sports"),
+        technical_eng: Array("Communication systems", "computer programming", "hacking", "create/alter technical devices", "demolitions", "electronics", "technical repair", "technical security systems"),
+        mechanical_eng: Array("create mechanical devices", "machinery maintenance", "mechanical repairs", "fix mechanical security systems", "plumbing"),
+        unarmed_combat: Array("boxing", "brawling", "judo", "karate", "kung fu", "savate", "wrestling"),
+        linguist: Array("Arabic", "Armenian", "French", "German", "Hindu", "Japanese", "Latin", "Portuguese", "Russian", "Tagalog", "Swahili", "Swedish"),
+        athletics: Array("climbing", "contortion", "dodge", "juggling", "jumping", "gymnastics", "parachuting", "parasailing", "pole vaulting", "riding", "running", "swimming", "weight lifting"),
+        melee_weapons: Array("clubs", "knives", "melee weaponsmithing", "nunchaku", "pole arms", "swords", "whips")
+      },
+      usedSkills: new Array(),
+      usedSubSkills:  new Array(),
       equipment: {},
       allItems: '',
       hasChanged: false
     },
     functions: {
       init: function(){
-        sheet.settings.saveObj = jQ('#saveMessage');
-        sheet.settings.woundBarObj = jQ('#woundPointBar');
-        sheet.settings.stunBarObj = jQ('#stunPointBar');
-        sheet.settings.woundCounterBarObj = jQ('#woundCounterBar');
-        sheet.settings.stunCounterBarObj = jQ('#stunCounterBar');
-        sheet.settings.usedAttrPointsObj = jQ('#usedAttrPoints');
-
+        sheet.functions.setObjects();
+        
         sheet.functions.getDefalutPoints();
         sheet.functions.getCharacterInfo();
         sheet.functions.getAttributes();
@@ -42,16 +64,26 @@ var jQ = jQuery,
         sheet.functions.setDerivedTraits();
         sheet.functions.rolledTraits();
         sheet.functions.skillCountChanger();
+        sheet.functions.skillUpdater();
+        sheet.functions.subSkillUpdater();
         sheet.functions.setEquipmentTabs();
 
       },
+      setObjects: function(){
+        sheet.settings.saveObj = jQ('#saveMessage');
+        sheet.settings.woundBarObj = jQ('#woundPointBar');
+        sheet.settings.stunBarObj = jQ('#stunPointBar');
+        sheet.settings.woundCounterBarObj = jQ('#woundCounterBar');
+        sheet.settings.stunCounterBarObj = jQ('#stunCounterBar');
+        sheet.settings.usedAttrPointsObj = jQ('#usedAttrPoints');
+      },
       getDefalutPoints: function(){
 //        store data in obj
-        sheet.data.defalutPoints.maxAttrPoints = parseInt(jQ('#attrPoints').val());
-        sheet.data.defalutPoints.usedAttrPoints = parseInt(jQ('#usedAttrPoints').val());
-        sheet.data.defalutPoints.maxSkillPoints = parseInt(jQ('#skillPoints').val());
-        sheet.data.defalutPoints.hiddenSkillPoints = parseInt(jQ('#hiddenSkillPoints').val());
-        sheet.data.defalutPoints.usedSkillPoints = parseInt(jQ('#usedSkillPoints').val());
+        sheet.data.defaultPoints.maxAttrPoints = parseInt(jQ('#attrPoints').val());
+        sheet.data.defaultPoints.usedAttrPoints = parseInt(jQ('#usedAttrPoints').val());
+        sheet.data.defaultPoints.maxSkillPoints = parseInt(jQ('#skillPoints').val());
+        sheet.data.defaultPoints.hiddenSkillPoints = parseInt(jQ('#hiddenSkillPoints').val());
+        sheet.data.defaultPoints.usedSkillPoints = parseInt(jQ('#usedSkillPoints').val());
       },
       getCharacterInfo: function(){
 //        check if there are any changes
@@ -159,7 +191,7 @@ var jQ = jQuery,
         return sheet.data.hasChanged;
       },
       checkAttributeInputs: function(){
-        sheet.data.defalutPoints.usedAttrPoints = jQ("#usedAttrPoints");
+        sheet.data.defaultPoints.usedAttrPoints = jQ("#usedAttrPoints");
 
         jQ(document).find(".attributes").find("input[type!=hidden]").blur(function(){
           var $this = jQuery(this);
@@ -182,11 +214,11 @@ var jQ = jQuery,
             sum += parseInt(aryFields[i].value);
           }
 
-          sheet.data.defalutPoints.usedAttrPoints = sum;
+          sheet.data.defaultPoints.usedAttrPoints = sum;
           sheet.settings.usedAttrPointsObj.val(sum);
 
-          if (sum > sheet.data.defalutPoints.maxAttrPoints){
-            alert('You have use to many points\nYou only have '+ sheet.data.defalutPoints.maxAttrPoints +' points to use.\nAnd you have used '+ sum +' so far.');
+          if (sum > sheet.data.defaultPoints.maxAttrPoints){
+            alert('You have use to many points\nYou only have '+ sheet.data.defaultPoints.maxAttrPoints +' points to use.\nAnd you have used '+ sum +' so far.');
             $this.select();
             $this.focus();
           }
@@ -263,11 +295,12 @@ var jQ = jQuery,
           sheet.data.rolledTraits.resistance = jQ('#curntResist').val();
 
           sheet.functions.save('rolledTraits');
-
         });
       },
       getSkills: function(){
-        var i=0;
+        var usedSkillCounter = 0,
+            usedSubSkillCounter = 0;
+
         jQ('#skillsContainer').find('select, input').each(function(){
           var $this = jQ(this);
 
@@ -275,8 +308,17 @@ var jQ = jQuery,
             sheet.data.hasChanged = true;
           }
           sheet.data.skills[$this.attr('name')] = $this.val();
+
+          if($this.attr('name').indexOf('S') === 0){
+            sheet.data.usedSkills[usedSkillCounter] = $this.val();
+            usedSkillCounter += 1;
+          }
+          if($this.attr('name').indexOf('F') === 0 && isNaN($this.val())){
+            sheet.data.usedSubSkills[usedSubSkillCounter] = $this.val();
+            usedSubSkillCounter += 1;
+          }
         });
-        i=0;
+
         return sheet.data.hasChanged;
       },
       skillCountChanger: function() {
@@ -315,7 +357,7 @@ var jQ = jQuery,
                 jQ(this).remove();
                 skillCount -= 1;
 
-                delete sheet.data.skills['Skills_'+ skillCount];
+                delete sheet.data.skills['Skill_'+ skillCount];
                 delete sheet.data.skills['Field_'+ skillCount +'_0'];
                 delete sheet.data.skills['Field_'+ skillCount +'_1'];
                 delete sheet.data.skills['Field_'+ skillCount +'_2'];
@@ -380,6 +422,100 @@ var jQ = jQuery,
           }
         });
       },
+      updateAllItemsField: function(){
+        var content = {};
+
+//        jQ('#allitems').val('');
+        jQ(document).find('.equipInput textarea').each(function(){
+          content[jQ(this).attr('id')] = jQ(this).val();
+        });
+
+        delete content.allitems;
+        delete content.notes;
+
+        sheet.data.allItems = '';
+        for(var el in content){
+          console.log(el);
+          sheet.data.allItems += el.charAt(0).toUpperCase() + el.slice(1) +':\n'+ content[el] +'\n\n\n';
+        }
+
+        jQ('#allitems').val(sheet.data.allItems);
+      },
+      skillUpdater: function(){
+        jQ('#skillsContainer').on('change', '.skilColum_1 select', function(){
+          var $this = jQ(this),
+              thisId = $this.attr('id'),
+              activeValue = $this.val(),
+              options = {};
+          activeValue = activeValue.replace(/[ ]/gi, '_');
+          activeValue = activeValue.replace(/[\.*]/gi, '');
+
+//          get new options
+          for(skills in sheet.data.allskills){
+            if(activeValue === skills){
+              for(var i=0; i<(sheet.data.allskills[skills]).length; i+=1){
+                var list = sheet.data.allskills[skills];
+
+                for(var a=0; a<list.length; a+=1){
+                  options[list[a].toLowerCase()] = list[a];
+                }
+              }
+            }
+          }
+
+//          remove old options
+          jQ('#'+ thisId +'_1 option:gt(0)').remove();
+          jQ('#'+ thisId +'_2 option:gt(0)').remove();
+          jQ('#'+ thisId +'_3 option:gt(0)').remove();
+
+//          set new options
+          jQ.each(options, function(key, value) {
+            jQ('#'+ thisId +'_1').append(jQ("<option></option>").attr("value", key).text(value));
+            jQ('#'+ thisId +'_2').append(jQ("<option></option>").attr("value", key).text(value));
+            jQ('#'+ thisId +'_3').append(jQ("<option></option>").attr("value", key).text(value));
+          });
+
+
+          sheet.functions.getSkillChanges();
+        });
+      },
+      subSkillUpdater: function() {
+        jQ('#skillsContainer').on('change', '.skilColum_2 select', function(){
+          var $this = jQ(this),
+              $options = jQ('#skillsContainer .skilColum_2 option'),
+              usedSubSkillCounter = 0;
+
+//          reset used subkills
+          sheet.data.usedSubSkills = [];
+          jQ('#skillsContainer').find('.skilColum_2 select').each(function(){
+            var $el = jQ(this);
+            if($el.attr('name').indexOf('F') === 0 && isNaN($el.val())){
+              sheet.data.usedSubSkills[usedSubSkillCounter] = $el.val();
+              usedSubSkillCounter += 1;
+            }
+          });
+
+//          enable and disable used subskills
+          $options.each(function(){
+            jQ(this).removeAttr('disabled');
+          });
+          $options.each(function(){
+            for(var used in sheet.data.usedSubSkills){
+              if(sheet.data.usedSubSkills[used] === jQ(this).val()){
+                jQ(this).attr('disabled', 'disabled');
+              }
+            }
+          });
+
+          sheet.functions.getSkillChanges();
+        });
+      },
+      getSkillChanges: function(){
+        if(sheet.functions.getSkills()){
+          sheet.data.hasChanged = false;
+          sheet.functions.save('skills');
+        }
+      },
       getChanges: function() {
 //        attache the BLUR listener
         jQ(document).find('.characterInfo input[type=text]').blur(function(){
@@ -397,13 +533,6 @@ var jQ = jQuery,
           }
         });
 
-        jQ('#skillsContainer').on("change", 'select', function(){
-          if(sheet.functions.getSkills()){
-            sheet.data.hasChanged = false;
-            sheet.functions.save('skills');
-          }
-        });
-        
         jQ('#skillsContainer').on("blur", "input[type=text]", function(){
           if(sheet.functions.getSkills()){
             sheet.data.hasChanged = false;
@@ -421,25 +550,6 @@ var jQ = jQuery,
             }
           }
         });
-      },
-      updateAllItemsField: function(){
-        var content = {};
-
-//        jQ('#allitems').val('');
-        jQ(document).find('.equipInput textarea').each(function(){
-          content[jQ(this).attr('id')] = jQ(this).val();
-        });
-        delete content.allitems;
-        delete content.notes;
-
-        sheet.data.allItems = '';
-        for(var el in content){
-          console.log(el);
-          sheet.data.allItems += el.charAt(0).toUpperCase() + el.slice(1) +':\n'+ content[el] +'\n\n\n';
-        }
-
-
-        jQ('#allitems').val(sheet.data.allItems);
       },
       save: function(saveArea){
         var values = sheet.data[saveArea];
