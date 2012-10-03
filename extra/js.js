@@ -7,7 +7,7 @@ var jQ = jQuery,
 //      maxSkillPoints: 20,
     },
     data: {
-      defalutPoints: {},
+      defaultPoints: {},
       characterInfo: {},
       attributes: {},
       derivedTraits: {},
@@ -76,11 +76,11 @@ var jQ = jQuery,
       },
       getDefalutPoints: function(){
 //        store data in obj
-        sheet.data.defalutPoints.maxAttrPoints = parseInt(jQ('#attrPoints').val());
-        sheet.data.defalutPoints.usedAttrPoints = parseInt(jQ('#usedAttrPoints').val());
-        sheet.data.defalutPoints.maxSkillPoints = parseInt(jQ('#skillPoints').val());
-        sheet.data.defalutPoints.hiddenSkillPoints = parseInt(jQ('#hiddenSkillPoints').val());
-        sheet.data.defalutPoints.usedSkillPoints = parseInt(jQ('#usedSkillPoints').val());
+        sheet.data.defaultPoints.maxAttrPoints = parseInt(jQ('#attrPoints').val());
+        sheet.data.defaultPoints.usedAttrPoints = parseInt(jQ('#usedAttrPoints').val());
+        sheet.data.defaultPoints.maxSkillPoints = parseInt(jQ('#skillPoints').val());
+        sheet.data.defaultPoints.hiddenSkillPoints = parseInt(jQ('#hiddenSkillPoints').val());
+        sheet.data.defaultPoints.usedSkillPoints = parseInt(jQ('#usedSkillPoints').val());
       },
       getCharacterInfo: function(){
 //        check if there are any changes
@@ -188,7 +188,7 @@ var jQ = jQuery,
         return sheet.data.hasChanged;
       },
       checkAttributeInputs: function(){
-        sheet.data.defalutPoints.usedAttrPoints = jQ("#usedAttrPoints");
+        sheet.data.defaultPoints.usedAttrPoints = jQ("#usedAttrPoints");
 
         jQ(document).find(".attributes").find("input[type!=hidden]").blur(function(){
           var $this = jQuery(this);
@@ -211,11 +211,11 @@ var jQ = jQuery,
             sum += parseInt(aryFields[i].value);
           }
 
-          sheet.data.defalutPoints.usedAttrPoints = sum;
+          sheet.data.defaultPoints.usedAttrPoints = sum;
           sheet.settings.usedAttrPointsObj.val(sum);
 
-          if (sum > sheet.data.defalutPoints.maxAttrPoints){
-            alert('You have use to many points\nYou only have '+ sheet.data.defalutPoints.maxAttrPoints +' points to use.\nAnd you have used '+ sum +' so far.');
+          if (sum > sheet.data.defaultPoints.maxAttrPoints){
+            alert('You have use to many points\nYou only have '+ sheet.data.defaultPoints.maxAttrPoints +' points to use.\nAnd you have used '+ sum +' so far.');
             $this.select();
             $this.focus();
           }
@@ -472,7 +472,8 @@ var jQ = jQuery,
             jQ('#'+ thisId +'_3').append(jQ("<option></option>").attr("value", key).text(value));
           });
 
-          sheet.functions.getSkills();
+
+          sheet.functions.getSkillChanges();
         });
       },
       subSkillUpdater: function() {
@@ -503,7 +504,14 @@ var jQ = jQuery,
             }
           });
 
+          sheet.functions.getSkillChanges();
         });
+      },
+      getSkillChanges: function(){
+        if(sheet.functions.getSkills()){
+          sheet.data.hasChanged = false;
+          sheet.functions.save('skills');
+        }
       },
       getChanges: function() {
 //        attache the BLUR listener
@@ -519,13 +527,6 @@ var jQ = jQuery,
           if(sheet.functions.getAttributes()){
             sheet.data.hasChanged = false;
             sheet.functions.save('attributes');
-          }
-        });
-
-        jQ('#skillsContainer').on("change", 'select', function(){
-          if(sheet.functions.getSkills()){
-            sheet.data.hasChanged = false;
-            sheet.functions.save('skills');
           }
         });
 
