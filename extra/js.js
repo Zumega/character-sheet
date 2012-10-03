@@ -13,6 +13,31 @@ var jQ = jQuery,
       derivedTraits: {},
       rolledTraits: {},
       skills: {},
+      allskills: {
+        animal_handaling: Array("Animal Training", "Riding", "Veterinary", "Zoology"),
+        medical_expertise: Array("dentistry", "forensics", "general practice", "genetics", "internal medicine", "neurology", "pharmaceuticals", "physiology", "psychiatry", "rehabilitation", "surgery", "toxicology", "veterinary medicine"),
+        artistry: Array("Appraisal", "Cooking", "Forgery", "Game Design", "Painting", "Photography", "Poetry", "Sculpting", "Writing"),
+        perception: Array("deduction", "empathy", "gambling", "hearing", "intuition", "investigation", "read lips", "search", "sight", "smell", "tactics", "taste", "tracking"),
+        covert: Array("camouflage", "disable devices", "forgery", "infiltration", "open locks", "sabotage", "sleight of hand", "stealth", "streetwise", "surveillance"),
+        performance: Array("acting", "dancing", "costuming", "keyboard instruments", "impersonation", "mimicry", "oratory", "percussion instruments", "singing", "stringed instruments", "wind instruments"),
+        craft: Array("architecture", "blacksmithing", "carpentry", "cooking", "leather working", "metalworking", "pottery", "sewing"),
+        pilot: Array("aerial navigation", "astrogation", "astronomy", "astrophysics", "space survival", "gunships", "hang glinders", "helicopters", "large cruisers", "mid-bulk transports", "patrol vessels", "rocket shuttles", "ultra-light aircraft", "short range shuttles"),
+        discipline: Array("concentration", "interrogation", "intimidation", "leadership", "mental resistance", "morale"),
+        planetary_vehicles: Array("aquatic navigation", "cars", "canoes", "equestrian", "ground vehicle repair", "horse-drawn conveyances", "hovercraft", "industrial vehicles", "land navigation", "large ground transports", "military combat vehicles", "powerboats", "sailing", "scooters", "scuba diving", "skiffs", "submarines", "yachts"),
+        guns: Array("assault rifles", "energy weapons", "grenade launchers", "gunsmithing", "machine guns", "pistols", "rifles", "shotguns"),
+        ranged_weapons: Array("Blowguns", "bows", "crossbows", "darts", "grenade", "javelin", "ranged weaponsmithing", "slings", "throwing axes", "throwing knives"),
+        heavy_weapons: Array("artillery", "catapults", "demolitions", "forward observer", "mounted guns", "repair heavy weapons", "rocket launchers", "ship's cannons", "siege weapons"),
+        scientific_expertise: Array("earth sciences", "historical sciences", "life sciences", "mathematical sciences"),
+        influence: Array("administration", "barter", "bureaucracy", "conversation", "counseling", "interrogation", "intimidation", "leadership", "marketing", "persuasion", "politics", "seduction", "streetwise"),
+        survival: Array("aerial survival", "aquatic survival", "general navigation", "land survival", "nature", "space survival", "specific environment survival", "specific condition survival", "tracking", "trapping"),
+        knowledge: Array("appraisal", "cultures", "history", "law", "literature", "philosophy", "religion", "sports"),
+        technical_eng: Array("Communication systems", "computer programming", "hacking", "create/alter technical devices", "demolitions", "electronics", "technical repair", "technical security systems"),
+        mechanical_eng: Array("create mechanical devices", "machinery maintenance", "mechanical repairs", "fix mechanical security systems", "plumbing"),
+        unarmed_combat: Array("boxing", "brawling", "judo", "karate", "kung fu", "savate", "wrestling"),
+        linguist: Array("Arabic", "Armenian", "French", "German", "Hindu", "Japanese", "Latin", "Portuguese", "Russian", "Tagalog", "Swahili", "Swedish"),
+        athletics: Array("climbing", "contortion", "dodge", "juggling", "jumping", "gymnastics", "parachuting", "parasailing", "pole vaulting", "riding", "running", "swimming", "weight lifting"),
+        melee_weapons: Array("clubs", "knives", "melee weaponsmithing", "nunchaku", "pole arms", "swords", "whips")
+      },
       equipment: {},
       allItems: '',
       hasChanged: false
@@ -42,6 +67,7 @@ var jQ = jQuery,
         sheet.functions.setDerivedTraits();
         sheet.functions.rolledTraits();
         sheet.functions.skillCountChanger();
+        sheet.functions.skillUpdater();
         sheet.functions.setEquipmentTabs();
 
       },
@@ -403,7 +429,7 @@ var jQ = jQuery,
             sheet.functions.save('skills');
           }
         });
-        
+
         jQ('#skillsContainer').on("blur", "input[type=text]", function(){
           if(sheet.functions.getSkills()){
             sheet.data.hasChanged = false;
@@ -438,8 +464,43 @@ var jQ = jQuery,
           sheet.data.allItems += el.charAt(0).toUpperCase() + el.slice(1) +':\n'+ content[el] +'\n\n\n';
         }
 
-
         jQ('#allitems').val(sheet.data.allItems);
+      },
+      skillUpdater: function(){
+        jQ('#skillsContainer').on('change', '.skilColum_1 select', function(){
+          var $this = jQ(this),
+              activeValue = $this.val(),
+              options = {},
+              thisId = $this.attr('id');
+          activeValue = activeValue.replace(/[ ]/gi, '_');
+          activeValue = activeValue.replace(/[\.*]/gi, '');
+
+//          get new options
+          for(skills in sheet.data.allskills){
+            if(activeValue === skills){
+              for(var i=0; i<(sheet.data.allskills[skills]).length; i+=1){
+                var list = sheet.data.allskills[skills];
+
+                for(var a=0; a<list.length; a+=1){
+                  options[list[a].toLowerCase()] = list[a];
+                }
+              }
+            }
+          }
+
+//          remove old options
+          jQ('#'+ thisId +'_1 option:gt(0)').remove();
+          jQ('#'+ thisId +'_2 option:gt(0)').remove();
+          jQ('#'+ thisId +'_3 option:gt(0)').remove();
+
+//          set new options
+          jQ.each(options, function(key, value) {
+            jQ('#'+ thisId +'_1').append($("<option></option>").attr("value", key).text(value));
+            jQ('#'+ thisId +'_2').append($("<option></option>").attr("value", key).text(value));
+            jQ('#'+ thisId +'_3').append($("<option></option>").attr("value", key).text(value));
+          });
+
+        });
       },
       save: function(saveArea){
         var values = sheet.data[saveArea];

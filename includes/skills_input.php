@@ -1,4 +1,5 @@
 <?php
+// don't forget to update single_skill.php
   require_once 'skill_types.php';
   $i = $fieldCntr = 0;
   $arySubSkill = $selected = '';
@@ -8,7 +9,7 @@ while ($row = mysql_fetch_assoc($result)) {
 ?>
 <div class="column skillsInput">
   <div class="skilColum_1">
-    <select name="Skills_<?= $i; ?>" id="Skills_<?= $i; ?>" tabindex="-1">
+    <select name="Skill_<?= $i; ?>" id="Skill_<?= $i; ?>" tabindex="-1">
     <?php
 
     foreach($arySkills as $k => $value){
@@ -31,16 +32,18 @@ while ($row = mysql_fetch_assoc($result)) {
     <select id="Skill_<?= $i ?>_<?= $fieldCntr; ?>" name="Field_<?= $i ?>_<?= $fieldCntr++; ?>" tabindex="-1">
       <option value="0">==========</option>
       <?php
-      foreach($arySubSkill as $value){
-        $key = 'varSubSkill_'.($a-1);
-        if ($row[$key] === strtolower($value)) {
-          $selected = ' selected="selected"';
-        } else {
-          $selected = '';
-        }
+      if(!empty($arySubSkill)){
+        foreach($arySubSkill as $value){
+          $key = 'varSubSkill_'.($a-1);
+          if ($row[$key] === strtolower($value)) {
+            $selected = ' selected="selected"';
+          } else {
+            $selected = '';
+          }
       ?>
       <option value="<?= strtolower($value) ?>"<?= $selected ?>><?= ucwords($value) ?></option>
-  <?php } ?>
+  <?php }
+      }?>
     </select>
   <?php }
   unset($value, $a);

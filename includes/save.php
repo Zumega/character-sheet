@@ -88,14 +88,9 @@ switch ($_POST['data']['saveArea']){
     $isMany = true;
     $dataBaseTable = 'sheet_user_skills';
     $content = array();
-
-//    echo '<pre>';
-//    print_r($json);
-//    echo '</pre>';
-//    die;
     for($i=0; $i<count($json)/8; $i+=1){
       $content[$i] = array(
-        'varSkill' => $json['Skills_'.$i],
+        'varSkill' => $json['Skill_'.$i],
         'intSkillDice' => $json['Field_'.$i.'_0'],
         'varSubSkill_0' => $json['Field_'.$i.'_1'],
         'varSubSkill_1' => $json['Field_'.$i.'_2'],
