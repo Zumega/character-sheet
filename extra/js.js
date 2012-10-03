@@ -82,6 +82,7 @@ var jQ = jQuery,
       },
       getDefalutPoints: function(){
 //        store data in obj
+        sheet.data.defaultPoints.maxLifePoints = parseInt(jQ('#maxLifePoints').val());
         sheet.data.defaultPoints.maxAttrPoints = parseInt(jQ('#attrPoints').val());
         sheet.data.defaultPoints.usedAttrPoints = parseInt(jQ('#usedAttrPoints').val());
         sheet.data.defaultPoints.maxSkillPoints = parseInt(jQ('#skillPoints').val());
@@ -230,7 +231,7 @@ var jQ = jQuery,
           }
         }
       },
-      getDerivedTraits: function() {
+      getDerivedTraits: function($this) {
         var init = {
           d1: parseInt(jQ("#agl").val()),
           d2: parseInt(jQ("#alert").val()),
@@ -278,11 +279,18 @@ var jQ = jQuery,
         sheet.data.derivedTraits.lifePoints = life.lifePoints;
         sheet.data.derivedTraits.endurance = life.endurance;
 
+
+        if(life.lifePoints > sheet.data.defaultPoints.maxLifePoints){
+          alert('You have to many life points.\nYou have '+ life.lifePoints +'\nYou can only have '+ sheet.data.defaultPoints.maxLifePoints);
+          $this.select();
+          $this.focus();
+        }
+
         sheet.functions.ouchCheck();
       },
       setDerivedTraits: function() {
         jQ("#agl, #alert, #vit, #willpower").blur(function(){
-          sheet.functions.getDerivedTraits();
+          sheet.functions.getDerivedTraits(jQ(this));
         });
       },
       rolledTraits: function() {
