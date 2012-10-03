@@ -1,7 +1,8 @@
 var jQ = jQuery,
   sheet = {
     settings: {
-      saveUrl: './includes/save.php'
+      saveUrl: './includes/save.php',
+      newSkillUrl: './includes/single_skill.php'
 //      maxAttrPoints: 42,
 //      maxSkillPoints: 20,
     },
@@ -25,15 +26,16 @@ var jQ = jQuery,
         sheet.functions.getCharacterInfo();
         sheet.functions.getAttributes();
         sheet.functions.getDerivdTraits();
-//        sheet.functions.gitSkills()
-//        sheet.functions.skills.getSkillsChanges();
-//        sheet.functions.skills.getSubSkillsChanges();
+        sheet.functions.getSkills();
+
+        sheet.data.hasChanged = false;
 
         sheet.functions.setStunWoundClicks();
         sheet.functions.getChanges();
         sheet.functions.ouchCheck();
         sheet.functions.checkAttributeInputs();
         sheet.functions.rolledTraits();
+        sheet.functions.skillCountChanger();
 
       },
       getDefalutPoints: function(){
@@ -72,7 +74,7 @@ var jQ = jQuery,
         return sheet.data.hasChanged;
       },
       setStunWoundClicks: function(){
-        jQ(document).find('.btnUpDown').click(function(){
+        jQ(document).find('.characterInfo .btnUpDown').click(function(){
           var $this = jQ(this);
 
           switch($this.attr('id')){
@@ -251,63 +253,78 @@ var jQ = jQuery,
 
         });
       },
-
       getSkills: function(){
+        var i=0;
+        jQ('#skillsContainer').find('select, input').each(function(){
+          var $this = jQ(this);
 
+          if(sheet.data.skills[$this.attr('name')] !== $this.val()) {
+            sheet.data.hasChanged = true;
+          }
+          sheet.data.skills[$this.attr('name')] = $this.val();
+        });
+        i=0;
+        return sheet.data.hasChanged;
       },
+      skillCountChanger: function() {
+        jQ(document).find('.skillsSpecialties .btnUpDown').click(function(){
+          var $this = jQ(this),
+              $countField = jQ('#SkillsCnt'),
+              skillCount = parseInt($countField.text());
 
-      skillsChanges: {
-        getSkillsChanges: function() {
-          var $parent = jQ(document).find('.skillsInput'),
-            contentId = $parent.find('select:first-child').attr('id');
+          switch($this.attr('id')){
+            case 'skillUp':
+              jQ.ajax({
+                url: sheet.settings.newSkillUrl,
+                type: 'POST',
+                data: {'data': skillCount },
+                dataType: 'html',
+                jsonpCallback: 'newSkill_callback',
+                success: function(response){
+                  jQ('#skillsContainer').append(response);
+                  if(sheet.functions.getSkills()){
+                    sheet.data.hasChanged = false;
+                    sheet.functions.save('skills');
+                  }
+                },
+                error: function(one, text, error){
+                  console.log(one);
+                  console.log(text);
+                  console.log(error);
+                }
+              });
 
-          $parent.find('.skilColum_1').find('select').change(function() {
-            var $this = jQ(this),
-                thisID = $this.attr('id').substr(7);
+              skillCount += 1;
+              $countField.text(skillCount);
+              break;
+            case 'skillDown':
+              jQ('#skillsContainer').find('.column:last-child').fadeOut('fast',function(){
+                jQ(this).remove();
+                skillCount -= 1;
 
-            if(typeof(sheet.data.skills[thisID]) === 'undefined') {
-              sheet.data.skills[thisID] = {
-                varSkill: $this.val()
-              }
-            } else {
-              sheet.data.skills[thisID]['varSkill'] = $this.val();
-            }
+                delete sheet.data.skills['Skills_'+ skillCount];
+                delete sheet.data.skills['Field_'+ skillCount +'_0'];
+                delete sheet.data.skills['Field_'+ skillCount +'_1'];
+                delete sheet.data.skills['Field_'+ skillCount +'_2'];
+                delete sheet.data.skills['Field_'+ skillCount +'_3'];
+                delete sheet.data.skills['Field_'+ skillCount +'_4'];
+                delete sheet.data.skills['Field_'+ skillCount +'_5'];
+                delete sheet.data.skills['Field_'+ skillCount +'_6'];
 
-          });
+                sheet.functions.getSkills()
+                sheet.functions.save('skills');
+                $countField.text(skillCount);
+              });
+              break;
+          }
 
-          $parent.find('.skilColum_1').find('input[type=text]').blur(function() {
-            var $this = jQ(this),
-                thisID = $this.attr('id').substr(contentId.length);
-
-            if(typeof(sheet.data.skills[thisID]) === 'undefined') {
-              sheet.data.skills[thisID] = {
-                intSkillDice: $this.val()
-              }
-            } else {
-              sheet.data.skills[thisID]['intSkillDice'] = parseInt($this.val());
-            }
-          });
-        },
-        getSubSkillsChanges: function() {
-          var $parent = jQ(document).find('.skillsInput'),
-            contentId = $parent.find('select:first-child').attr('id');
-
-          $parent.find('.skilColum_2').find('select').change(function() {
-            var $this = jQ(this),
-                thisID = $this.attr('id').substr(7);
-
-            if(typeof(sheet.data.skills[thisID]['subskills']) === 'undefined') {
-              sheet.data.skills[thisID]['subskills'] = {
-                intSkillDice: $this.val()
-              }
-            } else {
-              sheet.data.skills[thisID]['subskills']['intSkillDice'] = parseInt($this.val());
-            }
-          });
-        }
+          if(skillCount === 0){
+            jQ('#skillDown').addClass('hide');
+          }else{
+            jQ('#skillDown').removeClass('hide');
+          }
+        });
       },
-
-
       getChanges: function() {
 //        attache the BLUR listener
         jQ(document).find('.characterInfo').find('input[type=text]').blur(function(){
@@ -323,6 +340,18 @@ var jQ = jQuery,
             sheet.functions.save('attributes');
           }
         });
+        jQ('#skillsContainer').on("change", 'select', function(){
+          if(sheet.functions.getSkills()){
+            sheet.data.hasChanged = false;
+            sheet.functions.save('skills');
+          }
+        });
+        jQ('#skillsContainer').on("blur", "input[type=text]", function(){
+          if(sheet.functions.getSkills()){
+            sheet.data.hasChanged = false;
+            sheet.functions.save('skills');
+          }
+        });
       },
       save: function(saveArea){
         var values = '';
@@ -335,6 +364,9 @@ var jQ = jQuery,
             break;
           case 'rolledTraits':
             values = sheet.data.rolledTraits;
+            break;
+          case 'skills':
+            values = sheet.data.skills;
             break;
 
         }
