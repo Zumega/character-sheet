@@ -59,11 +59,13 @@ require 'includes/connection_Close.php';
   <div class="row">
     <div class="barContainer clear">
       <div id="woundPointBar" class="wpspBars wpBar"></div>
+      <div id="woundCounterBar" class="counterBar wcBar"></div>
     </div>
   </div>
   <div class="row">
     <div class="barContainer clear">
       <div id="stunPointBar" class="wpspBars spBar"></div>
+      <div id="stunCounterBar" class="counterBar scBar"></div>
     </div>
   </div>
 </div>

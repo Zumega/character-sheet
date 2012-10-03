@@ -23,24 +23,22 @@ table, tbody, tfoot, thead, tr, th, td {
 }
 
 body {
-	line-height: 1.24;/* what is IGN's default line height? */
+	line-height: 1.24;
 	color: #ddd;
 	background: transparent;
   font-family: Helvetica, Arial, sans-serif;
   font-size: 12px;
 }
 
-/* removed once everything has been refactored this has been moved to network level defualt.css */
+
 a:link, a:visited {
-  color: #004D97;/* this color is a set standard for IGN */
+  color: #004D97;
   text-decoration: none;
 }
 a:hover, a:active {
   color: #004D97;
   text-decoration: underline;
 }
-/* removed once everything has been refactored this has been moved to network level defualt.css */
-
 
 a, input, select, textarea {
   outline: 0; /* disables the selected shadowing in newer browsers like safari and chrome */

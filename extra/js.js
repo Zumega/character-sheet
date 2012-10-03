@@ -1,7 +1,8 @@
 var jQ = jQuery,
   sheet = {
     settings: {
-      saveUrl: './includes/save.php'
+      saveUrl: './includes/save.php',
+      newSkillUrl: './includes/single_skill.php'
 //      maxAttrPoints: 42,
 //      maxSkillPoints: 20,
     },
@@ -12,6 +13,8 @@ var jQ = jQuery,
       derivedTraits: {},
       rolledTraits: {},
       skills: {},
+      equipment: {},
+      allItems: '',
       hasChanged: false
     },
     functions: {
@@ -19,21 +22,27 @@ var jQ = jQuery,
         sheet.settings.saveObj = jQ('#saveMessage');
         sheet.settings.woundBarObj = jQ('#woundPointBar');
         sheet.settings.stunBarObj = jQ('#stunPointBar');
+        sheet.settings.woundCounterBarObj = jQ('#woundCounterBar');
+        sheet.settings.stunCounterBarObj = jQ('#stunCounterBar');
         sheet.settings.usedAttrPointsObj = jQ('#usedAttrPoints');
 
         sheet.functions.getDefalutPoints();
         sheet.functions.getCharacterInfo();
         sheet.functions.getAttributes();
-        sheet.functions.getDerivdTraits();
-//        sheet.functions.gitSkills()
-//        sheet.functions.skills.getSkillsChanges();
-//        sheet.functions.skills.getSubSkillsChanges();
+        sheet.functions.getDerivedTraits();
+        sheet.functions.getSkills();
+        sheet.functions.getEquipment();
+
+        sheet.data.hasChanged = false;
 
         sheet.functions.setStunWoundClicks();
         sheet.functions.getChanges();
         sheet.functions.ouchCheck();
         sheet.functions.checkAttributeInputs();
+        sheet.functions.setDerivedTraits();
         sheet.functions.rolledTraits();
+        sheet.functions.skillCountChanger();
+        sheet.functions.setEquipmentTabs();
 
       },
       getDefalutPoints: function(){
@@ -72,7 +81,7 @@ var jQ = jQuery,
         return sheet.data.hasChanged;
       },
       setStunWoundClicks: function(){
-        jQ(document).find('.btnUpDown').click(function(){
+        jQ(document).find('.characterInfo .btnUpDown').click(function(){
           var $this = jQ(this);
 
           switch($this.attr('id')){
@@ -108,13 +117,16 @@ var jQ = jQuery,
       },
       ouchCheck: function(){
         var totalPoints = sheet.data.characterInfo.woundPoints + sheet.data.characterInfo.stunPoints,
-          WPercent = (100 / sheet.data.derivedTraits.lifePoints) * sheet.data.characterInfo.woundPoints,
-          SPercent = (100 / sheet.data.derivedTraits.lifePoints) * sheet.data.characterInfo.stunPoints,
-          WndColor = 100 - (100 / sheet.data.derivedTraits.lifePoints) * totalPoints,
-          StnColor = 100 - (100 / sheet.data.derivedTraits.lifePoints) * totalPoints;
+          wounPercent = (100 / sheet.data.derivedTraits.lifePoints) * sheet.data.characterInfo.woundPoints,
+          stunPercent = (100 / sheet.data.derivedTraits.lifePoints) * sheet.data.characterInfo.stunPoints,
+          barColor = ((100 / sheet.data.derivedTraits.lifePoints) * totalPoints) / 100,
+          woundCounterBar = 100 - wounPercent,
+          stunCounterBar = 100 - stunPercent;
 
-        sheet.settings.woundBarObj.css({"width": WPercent +'%', "background": 'rgb(100%, '+ WndColor +'%, '+ WndColor +'%)'});
-        sheet.settings.stunBarObj.css({"width": SPercent + '%', "background": 'rgb(100%, '+ StnColor +'%, 100%)'});
+        sheet.settings.woundBarObj.css({"width": wounPercent +'%', "background": 'rgba(255, 0, 0, '+ barColor +')'});
+        sheet.settings.stunBarObj.css({"width": stunPercent + '%', "background": 'rgba(255, 0, 255, '+ barColor +')'});
+        sheet.settings.woundCounterBarObj.css({"width": woundCounterBar +'%'});
+        sheet.settings.stunCounterBarObj.css({"width": stunCounterBar + '%'});
 
         sheet.functions.deathCheck();
       },
@@ -180,56 +192,59 @@ var jQ = jQuery,
           }
         });
       },
-      getDerivdTraits: function() {
-        jQ("#agl, #alert, #vit, #willpower").blur(function(){
-          var d1 = d2 = d3 = d4 = 0;
-
-          switch (this.id){
-            case "agl":
-            case "alert":
-              d1 = parseInt(jQ("#agl").val());
-              d2 = parseInt(jQ("#alert").val());
-              if(d1 > 12){
-                d3 = d1%12;
-                d1 = 12;
-              }
-              if(d2 > 12){
-                d4 = d2%12;
-                d2 = 12;
-              }
-
-              initiative = "D"+ d1 +" + D"+ d2;
-              initiative += (d3 != 0)? " + D"+ d3 : '' ;
-              initiative += (d4 != 0)? " + D"+ d4 : '' ;
-              jQ("#int").val(initiative);
-              sheet.data.derivedTraits.initiative = initiative;
-              break;
-            case "vit":
-            case "willpower":
-              d1 = parseInt(jQ("#vit").val());
-              d2 = parseInt(jQ("#willpower").val());
-              if(d1 > 12){
-                d3 = d1%12;
-                d1 = 12;
-              }
-              if(d2 > 12){
-                d4 = d2%12;
-                d2 = 12;
-              }
-
-              lifePoints = d1+d2;
-              jQ("#lifePoints").val(lifePoints);
-              sheet.data.derivedTraits.lifePoints = lifePoints;
-              sheet.functions.ouchCheck();
-
-              endurance = "D"+ d1 +" + D"+ d2;
-              endurance += (d3 != 0)? " + D"+ d3 : '' ;
-              endurance += (d4 != 0)? " + D"+ d4 : '' ;
-
-              jQ("#endur").val(endurance);
-              sheet.data.derivedTraits.endurance = endurance;
-              break;
+      getDerivedTraits: function() {
+        var init = {
+          d1: parseInt(jQ("#agl").val()),
+          d2: parseInt(jQ("#alert").val()),
+          d3: 0,
+          d4: 0,
+          initiative: 0
+        },
+        life = {
+          d1: parseInt(jQ("#vit").val()),
+          d2: parseInt(jQ("#willpower").val()),
+          d3: 0,
+          d4: 0,
+          lifePoints: 0,
+          endurance: 0
+        },
+        rollBreakdown = function(data){
+          if(data.d1 > 12){
+            data.d3 = data.d1 % 12;
+            data.d1 = 12;
           }
+          if(data.d2 > 12){
+            data.d4 = data.d2 % 12;
+            data.d2 = 12;
+          }
+          return data;
+        }
+
+        init = rollBreakdown(init);
+        life.lifePoints = life.d1 + life.d2;
+        life = rollBreakdown(life);
+
+        init.initiative = "D"+ init.d1 +" + D" + init.d2;
+        init.initiative += (init.d3 != 0)? " + D"+ init.d3 : '';
+        init.initiative += (init.d4 != 0)? " + D"+ init.d4 : '' ;
+
+        life.endurance = "D"+ life.d1 +" + D"+ life.d2;
+        life.endurance += (life.d3 != 0)? " + D"+ life.d3 : '' ;
+        life.endurance += (life.d4 != 0)? " + D"+ life.d4 : '' ;
+
+        jQ("#int").val(init.initiative);
+        jQ("#lifePoints").val(life.lifePoints);
+        jQ("#endur").val(life.endurance);
+
+        sheet.data.derivedTraits.initiative = init.initiative;
+        sheet.data.derivedTraits.lifePoints = life.lifePoints;
+        sheet.data.derivedTraits.endurance = life.endurance;
+
+        sheet.functions.ouchCheck();
+      },
+      setDerivedTraits: function() {
+        jQ("#agl, #alert, #vit, #willpower").blur(function(){
+          sheet.functions.getDerivedTraits();
         });
       },
       rolledTraits: function() {
@@ -251,93 +266,183 @@ var jQ = jQuery,
 
         });
       },
-
       getSkills: function(){
+        var i=0;
+        jQ('#skillsContainer').find('select, input').each(function(){
+          var $this = jQ(this);
 
+          if(sheet.data.skills[$this.attr('name')] !== $this.val()) {
+            sheet.data.hasChanged = true;
+          }
+          sheet.data.skills[$this.attr('name')] = $this.val();
+        });
+        i=0;
+        return sheet.data.hasChanged;
       },
+      skillCountChanger: function() {
+        jQ(document).find('.skillsSpecialties .btnUpDown').click(function(){
+          var $this = jQ(this),
+              $countField = jQ('#SkillsCnt'),
+              skillCount = parseInt($countField.text());
 
-      skillsChanges: {
-        getSkillsChanges: function() {
-          var $parent = jQ(document).find('.skillsInput'),
-            contentId = $parent.find('select:first-child').attr('id');
+          switch($this.attr('id')){
+            case 'skillUp':
+              jQ.ajax({
+                url: sheet.settings.newSkillUrl,
+                type: 'POST',
+                data: {'data': skillCount },
+                dataType: 'html',
+                jsonpCallback: 'newSkill_callback',
+                success: function(response){
+                  jQ('#skillsContainer').append(response);
+                  if(sheet.functions.getSkills()){
+                    sheet.data.hasChanged = false;
+                    sheet.functions.save('skills');
+                  }
+                },
+                error: function(one, text, error){
+                  console.log(one);
+                  console.log(text);
+                  console.log(error);
+                }
+              });
 
-          $parent.find('.skilColum_1').find('select').change(function() {
-            var $this = jQ(this),
-                thisID = $this.attr('id').substr(7);
+              skillCount += 1;
+              $countField.text(skillCount);
+              break;
+            case 'skillDown':
+              jQ('#skillsContainer').find('.column:last-child').fadeOut('fast',function(){
+                jQ(this).remove();
+                skillCount -= 1;
 
-            if(typeof(sheet.data.skills[thisID]) === 'undefined') {
-              sheet.data.skills[thisID] = {
-                varSkill: $this.val()
-              }
-            } else {
-              sheet.data.skills[thisID]['varSkill'] = $this.val();
-            }
+                delete sheet.data.skills['Skills_'+ skillCount];
+                delete sheet.data.skills['Field_'+ skillCount +'_0'];
+                delete sheet.data.skills['Field_'+ skillCount +'_1'];
+                delete sheet.data.skills['Field_'+ skillCount +'_2'];
+                delete sheet.data.skills['Field_'+ skillCount +'_3'];
+                delete sheet.data.skills['Field_'+ skillCount +'_4'];
+                delete sheet.data.skills['Field_'+ skillCount +'_5'];
+                delete sheet.data.skills['Field_'+ skillCount +'_6'];
 
-          });
+                sheet.functions.getSkills()
+                sheet.functions.save('skills');
+                $countField.text(skillCount);
+              });
+              break;
+          }
 
-          $parent.find('.skilColum_1').find('input[type=text]').blur(function() {
-            var $this = jQ(this),
-                thisID = $this.attr('id').substr(contentId.length);
-
-            if(typeof(sheet.data.skills[thisID]) === 'undefined') {
-              sheet.data.skills[thisID] = {
-                intSkillDice: $this.val()
-              }
-            } else {
-              sheet.data.skills[thisID]['intSkillDice'] = parseInt($this.val());
-            }
-          });
-        },
-        getSubSkillsChanges: function() {
-          var $parent = jQ(document).find('.skillsInput'),
-            contentId = $parent.find('select:first-child').attr('id');
-
-          $parent.find('.skilColum_2').find('select').change(function() {
-            var $this = jQ(this),
-                thisID = $this.attr('id').substr(7);
-
-            if(typeof(sheet.data.skills[thisID]['subskills']) === 'undefined') {
-              sheet.data.skills[thisID]['subskills'] = {
-                intSkillDice: $this.val()
-              }
-            } else {
-              sheet.data.skills[thisID]['subskills']['intSkillDice'] = parseInt($this.val());
-            }
-          });
-        }
+          if(skillCount === 0){
+            jQ('#skillDown').addClass('hide');
+          }else{
+            jQ('#skillDown').removeClass('hide');
+          }
+        });
       },
+      getEquipment: function(){
+        jQ(document).find('.equipInput textarea').each(function(){
+          var $this = jQ(this);
 
+          if($this.attr('id') !== 'allitems'){
+            if(sheet.data.equipment[$this.attr('id')] !== $this.val()){
+              sheet.data.hasChanged = true;
+            }
+            sheet.data.equipment[$this.attr('id')] = $this.val();
+          }
+        });
+        return sheet.data.hasChanged;
+      },
+      setEquipmentTabs: function(){
+        jQ(document).find('.equipTab').click(function(){
+          var $this = jQ(this),
+              tabid = $this.children('label').attr('for');
 
+          jQ(document).find('.equipTab').each(function(){
+            if(jQ(this).hasClass('active')){
+              jQ(this).removeClass('active');
+            }
+          });
+          $this.addClass('active');
+
+          sheet.data.equipment.activeTab = tabid;
+          sheet.functions.setEquipmentFields(tabid);
+          sheet.data.hasChanged = false;
+          sheet.functions.save('equipment');
+        });
+      },
+      setEquipmentFields: function(id){
+        jQ(document).find('.equipInput textarea').each(function(){
+          var $this = jQ(this);
+          if($this.hasClass('active')){
+            $this.removeClass('active')
+          }
+          if($this.attr('id') === id){
+            $this.addClass('active');
+          }
+        });
+      },
       getChanges: function() {
 //        attache the BLUR listener
-        jQ(document).find('.characterInfo').find('input[type=text]').blur(function(){
+        jQ(document).find('.characterInfo input[type=text]').blur(function(){
           if(sheet.functions.getCharacterInfo()){
             sheet.data.hasChanged = false;
             sheet.functions.ouchCheck();
             sheet.functions.save('characterInfo');
           }
         });
-        jQ(document).find('.attributes').find('input[type=text]').blur(function(){
+
+        jQ(document).find('.attributes input[type=text]').blur(function(){
           if(sheet.functions.getAttributes()){
             sheet.data.hasChanged = false;
             sheet.functions.save('attributes');
           }
         });
+
+        jQ('#skillsContainer').on("change", 'select', function(){
+          if(sheet.functions.getSkills()){
+            sheet.data.hasChanged = false;
+            sheet.functions.save('skills');
+          }
+        });
+        
+        jQ('#skillsContainer').on("blur", "input[type=text]", function(){
+          if(sheet.functions.getSkills()){
+            sheet.data.hasChanged = false;
+            sheet.functions.save('skills');
+          }
+        });
+
+        jQ(document).find('.equipInput textarea').blur(function(){
+          if(jQ(this).attr('id') !== 'allitems'){
+            sheet.functions.updateAllItemsField();
+
+            if(sheet.functions.getEquipment()){
+              sheet.data.hasChanged = false;
+              sheet.functions.save('equipment');
+            }
+          }
+        });
+      },
+      updateAllItemsField: function(){
+        var content = {};
+
+//        jQ('#allitems').val('');
+        jQ(document).find('.equipInput textarea').each(function(){
+          content[jQ(this).attr('id')] = jQ(this).val();
+        });
+        delete content.allitems;
+        delete content.notes;
+
+        sheet.data.allItems = '';
+        for(var el in content){
+          console.log(el);
+          sheet.data.allItems += el.charAt(0).toUpperCase() + el.slice(1) +':\n'+ content[el] +'\n\n\n';
+        }
+
+
+        jQ('#allitems').val(sheet.data.allItems);
       },
       save: function(saveArea){
-        var values = '';
-        switch(saveArea){
-          case 'characterInfo':
-            values = sheet.data.characterInfo;
-            break;
-          case 'attributes':
-            values = sheet.data.attributes;
-            break;
-          case 'rolledTraits':
-            values = sheet.data.rolledTraits;
-            break;
-
-        }
+        var values = sheet.data[saveArea];
 
         jQ.ajax({
           url: sheet.settings.saveUrl,
