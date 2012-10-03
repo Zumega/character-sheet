@@ -46,13 +46,8 @@ var jQ = jQuery,
     },
     functions: {
       init: function(){
-        sheet.settings.saveObj = jQ('#saveMessage');
-        sheet.settings.woundBarObj = jQ('#woundPointBar');
-        sheet.settings.stunBarObj = jQ('#stunPointBar');
-        sheet.settings.woundCounterBarObj = jQ('#woundCounterBar');
-        sheet.settings.stunCounterBarObj = jQ('#stunCounterBar');
-        sheet.settings.usedAttrPointsObj = jQ('#usedAttrPoints');
-
+        sheet.functions.setObjects();
+        
         sheet.functions.getDefalutPoints();
         sheet.functions.getCharacterInfo();
         sheet.functions.getAttributes();
@@ -73,6 +68,14 @@ var jQ = jQuery,
         sheet.functions.subSkillUpdater();
         sheet.functions.setEquipmentTabs();
 
+      },
+      setObjects: function(){
+        sheet.settings.saveObj = jQ('#saveMessage');
+        sheet.settings.woundBarObj = jQ('#woundPointBar');
+        sheet.settings.stunBarObj = jQ('#stunPointBar');
+        sheet.settings.woundCounterBarObj = jQ('#woundCounterBar');
+        sheet.settings.stunCounterBarObj = jQ('#stunCounterBar');
+        sheet.settings.usedAttrPointsObj = jQ('#usedAttrPoints');
       },
       getDefalutPoints: function(){
 //        store data in obj
