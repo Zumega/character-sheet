@@ -396,16 +396,29 @@ var jQ = jQuery,
             sheet.functions.save('attributes');
           }
         });
+
         jQ('#skillsContainer').on("change", 'select', function(){
           if(sheet.functions.getSkills()){
             sheet.data.hasChanged = false;
             sheet.functions.save('skills');
           }
         });
+        
         jQ('#skillsContainer').on("blur", "input[type=text]", function(){
           if(sheet.functions.getSkills()){
             sheet.data.hasChanged = false;
             sheet.functions.save('skills');
+          }
+        });
+
+        jQ(document).find('.equipInput textarea').blur(function(){
+          if(jQ(this).attr('id') !== 'allitems'){
+            sheet.functions.updateAllItemsField();
+
+            if(sheet.functions.getEquipment()){
+              sheet.data.hasChanged = false;
+              sheet.functions.save('equipment');
+            }
           }
         });
       },
