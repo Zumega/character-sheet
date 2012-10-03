@@ -472,6 +472,8 @@ var jQ = jQuery,
             jQ('#'+ thisId +'_3').append(jQ("<option></option>").attr("value", key).text(value));
           });
 
+          sheet.functions.getSkills();
+
         });
       },
       subSkillUpdater: function() {

@@ -34,14 +34,6 @@ while ($row = mysql_fetch_assoc($result)) {
     <select id="Skill_<?= $i ?>_<?= $fieldCntr; ?>" name="Field_<?= $i ?>_<?= $fieldCntr++; ?>" tabindex="-1">
       <option value="0">==========</option>
       <?php
-
-
-
-//          if();
-//          $disabled = ' disabled="disabled"';
-
-
-
       if(!empty($arySubSkill)){
         foreach($arySubSkill as $value){
           $key = 'varSubSkill_'.($a-1);
