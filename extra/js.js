@@ -38,8 +38,8 @@ var jQ = jQuery,
         athletics: Array("climbing", "contortion", "dodge", "juggling", "jumping", "gymnastics", "parachuting", "parasailing", "pole vaulting", "riding", "running", "swimming", "weight lifting"),
         melee_weapons: Array("clubs", "knives", "melee weaponsmithing", "nunchaku", "pole arms", "swords", "whips")
       },
-      usedSkills: {},
-      usedSubSkills: {},
+      usedSkills: new Array(),
+      usedSubSkills:  new Array(),
       equipment: {},
       allItems: '',
       hasChanged: false
@@ -295,7 +295,9 @@ var jQ = jQuery,
         });
       },
       getSkills: function(){
-        var i=0;
+        var usedSkillCounter = 0,
+            usedSubSkillCounter = 0;
+
         jQ('#skillsContainer').find('select, input').each(function(){
           var $this = jQ(this);
 
@@ -303,8 +305,18 @@ var jQ = jQuery,
             sheet.data.hasChanged = true;
           }
           sheet.data.skills[$this.attr('name')] = $this.val();
+          if($this.attr('name').indexOf('S') === 0){
+            console.log('skill '+ $this.val());
+            sheet.data.usedSkills[usedSkillCounter] = $this.val();
+            usedSkillCounter += 1;
+          }
+          if($this.attr('name').indexOf('F') === 0 && isNaN($this.val())){
+            console.log('field '+ $this.val());
+            sheet.data.usedSubSkills[usedSubSkillCounter] = $this.val();
+            usedSubSkillCounter += 1;
+          }
         });
-        i=0;
+
         return sheet.data.hasChanged;
       },
       skillCountChanger: function() {
