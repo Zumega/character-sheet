@@ -38,6 +38,8 @@ var jQ = jQuery,
         athletics: Array("climbing", "contortion", "dodge", "juggling", "jumping", "gymnastics", "parachuting", "parasailing", "pole vaulting", "riding", "running", "swimming", "weight lifting"),
         melee_weapons: Array("clubs", "knives", "melee weaponsmithing", "nunchaku", "pole arms", "swords", "whips")
       },
+      usedSkills: {},
+      usedSubSkills: {},
       equipment: {},
       allItems: '',
       hasChanged: false
@@ -341,7 +343,7 @@ var jQ = jQuery,
                 jQ(this).remove();
                 skillCount -= 1;
 
-                delete sheet.data.skills['Skills_'+ skillCount];
+                delete sheet.data.skills['Skill_'+ skillCount];
                 delete sheet.data.skills['Field_'+ skillCount +'_0'];
                 delete sheet.data.skills['Field_'+ skillCount +'_1'];
                 delete sheet.data.skills['Field_'+ skillCount +'_2'];
@@ -406,6 +408,61 @@ var jQ = jQuery,
           }
         });
       },
+      updateAllItemsField: function(){
+        var content = {};
+
+//        jQ('#allitems').val('');
+        jQ(document).find('.equipInput textarea').each(function(){
+          content[jQ(this).attr('id')] = jQ(this).val();
+        });
+
+        delete content.allitems;
+        delete content.notes;
+
+        sheet.data.allItems = '';
+        for(var el in content){
+          console.log(el);
+          sheet.data.allItems += el.charAt(0).toUpperCase() + el.slice(1) +':\n'+ content[el] +'\n\n\n';
+        }
+
+        jQ('#allitems').val(sheet.data.allItems);
+      },
+      skillUpdater: function(){
+        jQ('#skillsContainer').on('change', '.skilColum_1 select', function(){
+          var $this = jQ(this),
+              thisId = $this.attr('id'),
+              activeValue = $this.val(),
+              options = {};
+          activeValue = activeValue.replace(/[ ]/gi, '_');
+          activeValue = activeValue.replace(/[\.*]/gi, '');
+
+//          get new options
+          for(skills in sheet.data.allskills){
+            if(activeValue === skills){
+              for(var i=0; i<(sheet.data.allskills[skills]).length; i+=1){
+                var list = sheet.data.allskills[skills];
+
+                for(var a=0; a<list.length; a+=1){
+                  options[list[a].toLowerCase()] = list[a];
+                }
+              }
+            }
+          }
+
+//          remove old options
+          jQ('#'+ thisId +'_1 option:gt(0)').remove();
+          jQ('#'+ thisId +'_2 option:gt(0)').remove();
+          jQ('#'+ thisId +'_3 option:gt(0)').remove();
+
+//          set new options
+          jQ.each(options, function(key, value) {
+            jQ('#'+ thisId +'_1').append($("<option></option>").attr("value", key).text(value));
+            jQ('#'+ thisId +'_2').append($("<option></option>").attr("value", key).text(value));
+            jQ('#'+ thisId +'_3').append($("<option></option>").attr("value", key).text(value));
+          });
+
+        });
+      },
       getChanges: function() {
 //        attache the BLUR listener
         jQ(document).find('.characterInfo input[type=text]').blur(function(){
@@ -446,60 +503,6 @@ var jQ = jQuery,
               sheet.functions.save('equipment');
             }
           }
-        });
-      },
-      updateAllItemsField: function(){
-        var content = {};
-
-//        jQ('#allitems').val('');
-        jQ(document).find('.equipInput textarea').each(function(){
-          content[jQ(this).attr('id')] = jQ(this).val();
-        });
-        delete content.allitems;
-        delete content.notes;
-
-        sheet.data.allItems = '';
-        for(var el in content){
-          console.log(el);
-          sheet.data.allItems += el.charAt(0).toUpperCase() + el.slice(1) +':\n'+ content[el] +'\n\n\n';
-        }
-
-        jQ('#allitems').val(sheet.data.allItems);
-      },
-      skillUpdater: function(){
-        jQ('#skillsContainer').on('change', '.skilColum_1 select', function(){
-          var $this = jQ(this),
-              activeValue = $this.val(),
-              options = {},
-              thisId = $this.attr('id');
-          activeValue = activeValue.replace(/[ ]/gi, '_');
-          activeValue = activeValue.replace(/[\.*]/gi, '');
-
-//          get new options
-          for(skills in sheet.data.allskills){
-            if(activeValue === skills){
-              for(var i=0; i<(sheet.data.allskills[skills]).length; i+=1){
-                var list = sheet.data.allskills[skills];
-
-                for(var a=0; a<list.length; a+=1){
-                  options[list[a].toLowerCase()] = list[a];
-                }
-              }
-            }
-          }
-
-//          remove old options
-          jQ('#'+ thisId +'_1 option:gt(0)').remove();
-          jQ('#'+ thisId +'_2 option:gt(0)').remove();
-          jQ('#'+ thisId +'_3 option:gt(0)').remove();
-
-//          set new options
-          jQ.each(options, function(key, value) {
-            jQ('#'+ thisId +'_1').append($("<option></option>").attr("value", key).text(value));
-            jQ('#'+ thisId +'_2').append($("<option></option>").attr("value", key).text(value));
-            jQ('#'+ thisId +'_3').append($("<option></option>").attr("value", key).text(value));
-          });
-
         });
       },
       save: function(saveArea){

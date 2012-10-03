@@ -41,7 +41,7 @@ while ($row = mysql_fetch_assoc($result)) {
             $selected = '';
           }
       ?>
-      <option value="<?= strtolower($value) ?>"<?= $selected ?>><?= ucwords($value) ?></option>
+      <option value="<?= strtolower($value) ?>"<?= $selected ?>><?= ucwords($value); ?></option>
   <?php }
       }?>
     </select>

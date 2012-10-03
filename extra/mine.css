@@ -192,6 +192,7 @@ textarea{border:1px solid #000;resize:none; padding:5px;}
 }
 .skilColum_2 select{
   width:100%;
+  text-transform: capitalize;
 }
 /*Skills and Specialties*/
 
