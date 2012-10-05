@@ -44,14 +44,13 @@ var jQ = jQuery,
     },
     functions: {
       init: function(){
-//        todo: set up logic to NOT save after blur on derived traits
-
         sheet.functions.setObjects();
         sheet.functions.getDefalutPoints();
 
         sheet.functions.getCharacterInfo();
         sheet.functions.getAttributes();
         sheet.functions.getDerivedTraits();
+        sheet.functions.getRolledTraits();
         sheet.functions.getSkills();
         sheet.functions.getEquipment();
 
@@ -65,7 +64,6 @@ var jQ = jQuery,
         sheet.functions.checkInputs.skill();
 
         sheet.functions.setDerivedTraits();
-        sheet.functions.rolledTraits();
         sheet.functions.skillCountChanger();
         sheet.functions.skillUpdater();
         sheet.functions.subSkillUpdater();
@@ -295,23 +293,22 @@ var jQ = jQuery,
           sheet.functions.getDerivedTraits(jQ(this));
         });
       },
-      rolledTraits: function() {
-        jQ('#curntInt, #curntEndur, #curntResist').blur(function() {
+      getRolledTraits: function() {
           if(
-          sheet.data.rolledTraits.initiative !== jQ('#curntInt').val() ||
-          sheet.data.rolledTraits.endurance !== jQ('#curntEndur').val() ||
-          sheet.data.rolledTraits.resistance !== jQ('#curntResist').val()
-          ) {
+            sheet.data.rolledTraits.initiative !== jQ('#curntInt').val() ||
+            sheet.data.rolledTraits.endurance !== jQ('#curntEndur').val() ||
+            sheet.data.rolledTraits.resistance !== jQ('#curntResist').val()
+            )
+              {
               sheet.data.hasChanged = true;
           }
-
 
           sheet.data.rolledTraits.initiative = jQ('#curntInt').val();
           sheet.data.rolledTraits.endurance = jQ('#curntEndur').val();
           sheet.data.rolledTraits.resistance = jQ('#curntResist').val();
 
-          sheet.functions.save('rolledTraits');
-        });
+//monkey
+          return sheet.data.hasChanged;
       },
       getSkills: function(){
         var usedSkillCounter = 0,
@@ -547,6 +544,15 @@ var jQ = jQuery,
             sheet.data.hasChanged = false;
             sheet.functions.save('attributes');
           }
+        });
+
+        jQ('#curntInt, #curntEndur, #curntResist').blur(function() {
+          console.log(sheet.functions.getRolledTraits());
+          if(sheet.functions.getRolledTraits()){
+            sheet.data.hasChanged = false;
+            sheet.functions.save('rolledTraits');
+          }
+//          taco
         });
 
         jQ('#skillsContainer').on("blur", "input[type=text]", function(){
