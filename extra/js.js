@@ -451,35 +451,47 @@ var jQ = jQuery,
               activeValue = $this.val(),
               options = {};
           activeValue = activeValue.replace(/[ ]/gi, '_');
-          activeValue = activeValue.replace(/[\.*]/gi, '');
+          activeValue = activeValue.replace(/\.|\*/gi, '');
 
-//          get new options
-          for(skills in sheet.data.allskills){
-            if(activeValue === skills){
-              for(var i=0; i<(sheet.data.allskills[skills]).length; i+=1){
-                var list = sheet.data.allskills[skills];
+          if(sheet.functions.getSkills()) {
+//            get new options
+            for(skills in sheet.data.allskills){
+              if(activeValue === skills){
+                for(var i=0; i<(sheet.data.allskills[skills]).length; i+=1){
+                  var list = sheet.data.allskills[skills];
 
-                for(var a=0; a<list.length; a+=1){
-                  options[list[a].toLowerCase()] = list[a];
+                  for(var a=0; a<list.length; a+=1){
+                    options[list[a].toLowerCase()] = list[a];
+                  }
                 }
               }
             }
-          }
 
-//          remove old options
-          jQ('#'+ thisId +'_1 option:gt(0)').remove();
-          jQ('#'+ thisId +'_2 option:gt(0)').remove();
-          jQ('#'+ thisId +'_3 option:gt(0)').remove();
+//            remove old options
+            jQ('#'+ thisId +'_1 option:gt(0)').remove();
+            jQ('#'+ thisId +'_2 option:gt(0)').remove();
+            jQ('#'+ thisId +'_3 option:gt(0)').remove();
 
-//          set new options
-          jQ.each(options, function(key, value) {
-            jQ('#'+ thisId +'_1').append(jQ("<option></option>").attr("value", key).text(value));
-            jQ('#'+ thisId +'_2').append(jQ("<option></option>").attr("value", key).text(value));
-            jQ('#'+ thisId +'_3').append(jQ("<option></option>").attr("value", key).text(value));
-          });
+//            set new options
+            jQ.each(options, function(key, value) {
+              jQ('#'+ thisId +'_1').append(jQ("<option></option>").attr("value", key).text(value));
+              jQ('#'+ thisId +'_2').append(jQ("<option></option>").attr("value", key).text(value));
+              jQ('#'+ thisId +'_3').append(jQ("<option></option>").attr("value", key).text(value));
+            });
+            
+            jQ('#skillsContainer').find('.skilColum_1 option').each(function(){
+//              enable and disable used skills
+              jQ(this).removeAttr('disabled');
 
+              for(var used in sheet.data.usedSkills){
+                if(sheet.data.usedSkills[used] === jQ(this).val()){
+                  jQ(this).attr('disabled', 'disabled');
+                }
+              }
+            });
 
-          sheet.functions.getSkillChanges();
+            sheet.functions.getSkillChanges();
+          };
         });
       },
       subSkillUpdater: function() {
