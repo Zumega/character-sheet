@@ -546,7 +546,6 @@ var jQ = jQuery,
         });
 
         jQ('#curntInt, #curntEndur, #curntResist').blur(function() {
-          console.log(sheet.functions.getRolledTraits());
           if(sheet.functions.getRolledTraits()){
             sheet.data.hasChanged = false;
             sheet.functions.save('rolledTraits');
