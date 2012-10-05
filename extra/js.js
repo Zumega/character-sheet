@@ -60,9 +60,6 @@ var jQ = jQuery,
         sheet.functions.getChanges();
         sheet.functions.ouchCheck();
 
-        sheet.functions.checkInputs.attribute();
-        sheet.functions.checkInputs.skill();
-
         sheet.functions.setDerivedTraits();
         sheet.functions.skillCountChanger();
         sheet.functions.skillUpdater();
@@ -194,16 +191,6 @@ var jQ = jQuery,
         return sheet.data.hasChanged;
       },
       checkInputs: {
-        attribute: function(){
-          jQ(document).find(".attributes input[type!=hidden]").blur(function(){
-            sheet.functions.checkInputs.generic(jQuery(this), jQ(document).find(".attributes input"), 'Attr');
-          });
-        },
-        skill: function(){
-          jQ('#skillsContainer').on('blur', 'input',  function(){
-            sheet.functions.checkInputs.generic(jQuery(this), jQ('#skillsContainer').find('input'), 'Skill');
-          });
-        },
         generic: function($this, $inputs, type){
           var sum = 0;
 
@@ -378,6 +365,10 @@ var jQ = jQuery,
                 delete sheet.data.skills['Field_'+ skillCount +'_5'];
                 delete sheet.data.skills['Field_'+ skillCount +'_6'];
 
+                if(skillCount > 0){
+                  jQ('#skillsContainer').find('input:first-child').trigger('blur');
+                }
+
                 sheet.functions.getSkills()
                 sheet.functions.save('skills');
                 $countField.text(skillCount);
@@ -523,6 +514,7 @@ var jQ = jQuery,
         });
       },
       getSkillChanges: function(){
+//        not part of getCanges() do to calculations that need to be done before save
         if(sheet.functions.getSkills()){
           sheet.data.hasChanged = false;
           sheet.functions.save('skills');
@@ -543,6 +535,14 @@ var jQ = jQuery,
             sheet.data.hasChanged = false;
             sheet.functions.save('attributes');
           }
+        });
+
+        jQ(document).find(".attributes input[type!=hidden]").blur(function(){
+          sheet.functions.checkInputs.generic(jQ(this), jQ(document).find(".attributes input"), 'Attr');
+        });
+
+        jQ('#skillsContainer').on('blur', 'input',  function(){
+          sheet.functions.checkInputs.generic(jQ(this), jQ('#skillsContainer').find('input'), 'Skill');
         });
 
         jQ('#curntInt, #curntEndur, #curntResist').blur(function() {
