@@ -307,7 +307,6 @@ var jQ = jQuery,
           sheet.data.rolledTraits.endurance = jQ('#curntEndur').val();
           sheet.data.rolledTraits.resistance = jQ('#curntResist').val();
 
-//monkey
           return sheet.data.hasChanged;
       },
       getSkills: function(){
@@ -552,7 +551,6 @@ var jQ = jQuery,
             sheet.data.hasChanged = false;
             sheet.functions.save('rolledTraits');
           }
-//          taco
         });
 
         jQ('#skillsContainer').on("blur", "input[type=text]", function(){
