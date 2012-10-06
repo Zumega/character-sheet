@@ -2,7 +2,8 @@ var jQ = jQuery,
   sheet = {
     settings: {
       saveUrl: './includes/save.php',
-      newSkillUrl: './includes/single_skill.php'
+      newSkillUrl: './includes/single_skill.php',
+      newCompUrl: './includes/single_comp.php'
     },
     data: {
       defaultPoints: {},
@@ -40,14 +41,15 @@ var jQ = jQuery,
       usedSubSkills:  new Array(),
       equipment: {},
       allItems: '',
+      comp: {},
       hasChanged: false
     },
     functions: {
       init: function(){
-        /* ****************************************
-        *  commented out functions are to
-        *  show where they are in the document
-        **************************************** */
+/* ****************************************
+*  commented out functions are to
+*  show where they are in the document
+**************************************** */
         sheet.functions.setObjects();
         sheet.functions.getDefalutPoints();
 
@@ -57,6 +59,7 @@ var jQ = jQuery,
         sheet.functions.getRolledTraits();
         sheet.functions.getSkills();
         sheet.functions.getEquipment();
+        sheet.functions.getComplications();
 
         sheet.data.hasChanged = false;
 
@@ -71,6 +74,7 @@ var jQ = jQuery,
         sheet.functions.setEquipmentTabs();
 //        setEquipmentFields()
 //        updateAllItemsField()
+        sheet.functions.compCountChanger();
 //        checkInputs:
 //          generic()
 //        getSkillChanges
@@ -256,6 +260,23 @@ var jQ = jQuery,
         });
         return sheet.data.hasChanged;
       },
+      getComplications: function(){
+        jQ('#complicationsFields').find('select, input, textarea').each(function(){
+          var $this = jQ(this);
+
+          if((sheet.data.comp[$this.attr('id')] !== $this.val()) && $this.attr('type') != 'radio' ){
+            sheet.data.hasChanged = true;
+          }
+//          todo: look for radio changes
+          if($this.attr('type') === 'radio'){
+            sheet.data.comp[$this.attr('id')] = ($this.is(':checked')) ? $this.val() : '';
+          }else{
+            sheet.data.comp[$this.attr('id')] = $this.val();
+          }
+        });
+
+        return sheet.data.hasChanged;
+      },
       setStunWoundClicks: function(){
         jQ(document).find('.characterInfo .btnUpDown').click(function(){
           var $this = jQ(this);
@@ -329,7 +350,6 @@ var jQ = jQuery,
                 type: 'POST',
                 data: {'data': skillCount },
                 dataType: 'html',
-                jsonpCallback: 'newSkill_callback',
                 success: function(response){
                   jQ('#skillsContainer').append(response);
                   if(sheet.functions.getSkills()){
@@ -535,6 +555,58 @@ var jQ = jQuery,
             $this.focus();
           }
         }
+      },
+      compCountChanger: function(){
+        jQ('#complicationsUp, #complicationsDown').on('click', function(){
+          var $this = jQ(this),
+              $countField = jQ('#complicationsCnt'),
+              compCount = parseInt($countField.text());;
+
+          switch($this.attr('id')){
+            case 'complicationsUp':
+              jQ.ajax({
+                url: sheet.settings.newCompUrl,
+                type: 'POST',
+                data: {'data': compCount },
+                dataType: 'html',
+                success: function(response){
+                  jQ('#complicationsFields').append(response);
+                  if(sheet.functions.getComplications()){
+                    sheet.data.hasChanged = false;
+                    sheet.functions.save('comp');
+                  }
+                },
+                error: function(one, text, error){
+                  console.log(one);
+                  console.log(text);
+                  console.log(error);
+                }
+              });
+
+              compCount += 1;
+              $countField.text(compCount);
+              break;
+            case 'complicationsDown':
+              jQ('#complicationsFields').find('.section:last-child').fadeOut('fast', function(){
+                jQ(this).remove();
+                compCount -= 1;
+
+                delete sheet.data.comp['desc_'+ compCount +'_complications'];
+                delete sheet.data.comp['maj_'+ compCount +'_complications'];
+                delete sheet.data.comp['min_'+ compCount +'_complications'];
+                delete sheet.data.comp['typeName_'+ compCount +'_complications'];
+
+                if(compCount > 0){
+                  jQ('#complicationsFields').find('select:first-child').trigger('blur');
+                }
+
+                sheet.functions.getComplications()
+                sheet.functions.save('comp');
+                $countField.text(compCount);
+              });
+              break;
+          }
+        });
       },
       getSkillChanges: function(){
 //        not part of getCanges() do to calculations that need to be done before save

@@ -101,7 +101,22 @@ switch ($_POST['data']['saveArea']){
       );
     }
     break;
-  case '':
+  case 'comp':
+    $isMany = true;
+    $dataBaseTable = 'sheet_complications';
+    $content = array();
+    for($i=0; $i<count($json)/4; $i+=1){
+      $maj = (empty($json['maj_'. $i .'_complications'])) ? '' : $json['maj_'. $i .'_complications'] ;
+      $min = (empty($json['min_'. $i .'_complications'])) ? '' : $json['min_'. $i .'_complications'] ;
+
+      $majorMin = (empty($maj)) ? $min : $maj ;
+
+      $content[$i] = array(
+        'txtComplicaiton' => $json['typeName_'. $i .'_complications'],
+        'tnyMajorMinor' => $majorMin,
+        'blbNote' => $json['desc_'. $i .'_complications']
+      );
+    }
     break;
   case '':
     break;
@@ -116,65 +131,66 @@ switch ($_POST['data']['saveArea']){
     exit();
 }
 
+//echo count($json) ."\n";
+//print_r($json);
+//die;
+
 
 require_once 'connection_Open.php';
   if ($isMany){
-    $keys = $value = "";
-    $query = "SELECT  count(`id`) count FROM  `sheet_user_skills` WHERE  `id` = ". $_SESSION['id'];
+    $keys = $value = '';
+    $query = 'SELECT  count(`id`) count FROM '. $dataBaseTable .' WHERE  `id` = '. $_SESSION['id'];
     $result = mysql_query($query) or die('Query failed: ' . mysql_error());
     $result = mysql_fetch_array($result, MYSQL_ASSOC);
 
-    if (count($content) == $result['count']){
-      $the = ' same';
+    if(count($content) === $result['count']){
       foreach($content as $num=>$item){
-        $pairs="";
+        $pairs='';
         foreach($item as $k=>$v){
-          $pairs .= $k ." = \"". mysql_real_escape_string(htmlspecialchars($v)) ."\", ";
+          $pairs .= $k .' = \''. mysql_real_escape_string(htmlspecialchars($v)) .'\', ';
         }
         unset($query, $result);
-        $query = "UPDATE ". $dataBaseTable ." SET ". preg_replace('/, $/', "", $pairs) ." WHERE id = " . $_SESSION["id"] . " and intOrder = ". $num;
-        $result = mysql_query($query) or die($_POST['callback'] .'({"status":"'. mysql_error() .'"})');
+        $query = 'UPDATE '. $dataBaseTable .' SET '. preg_replace('/, $/', '', $pairs) .' WHERE id = ' . $_SESSION['id'] . ' and intOrder = '. $num;
+        $result = mysql_query($query) or die($_POST['callback'] .'({\'status\':\''. mysql_error() .'\'})');
         unset($pairs, $k, $v);
       }
       unset($query, $result, $num, $item);
-    }elseif($result['count'] == 0){
-      $the = ' zero';
+    }elseif($result['count'] === 0){
       foreach($content as $num=>$item){
         foreach($item as $k=>$v){
-           $keys .=  "`". $k ."`, ";
-           $value .=  "'". mysql_real_escape_string(htmlspecialchars($v)) ."', ";
+           $keys .=  '`'. $k .'`, ';
+           $value .=  '\''. mysql_real_escape_string(htmlspecialchars($v)) .'\', ';
         }
         unset($query, $result);
-        $query = "INSERT INTO  ". $dataBaseTable ." (  `id` ,  `intOrder`, ". preg_replace('/, $/', "", $keys) .") VALUES ( ". $_SESSION["id"] .", ". $num .", ". preg_replace('/, $/', "", $value) ." )";
-        $result = mysql_query($query) or die($_POST['callback'] .'({"status":"'. mysql_error() .'"})');
+        $query = 'INSERT INTO  '. $dataBaseTable .' (  `id` ,  `intOrder`, '. preg_replace('/, $/', '', $keys) .') VALUES ( '. $_SESSION['id'] .', '. $num .', '. preg_replace('/, $/', '', $value) .' )';
+        $result = mysql_query($query) or die($_POST['callback'] .'({\'status\':\''. mysql_error() .'\'})');
         unset($keys, $value, $k, $v);
       }
       unset($query, $result, $num, $item);
     }else{
-      $the = ' other';
-      $query = "DELETE FROM  ". $dataBaseTable ." WHERE id = ". $_SESSION["id"];
-      $result = mysql_query($query) or die($_POST['callback'] .'({"status":"'. mysql_error() .'"})');
+      $query = 'DELETE FROM  '. $dataBaseTable .' WHERE id = '. $_SESSION['id'];
+      $result = mysql_query($query) or die($_POST['callback'] .'({\'status\':\''. mysql_error() .'\'})');
 
       foreach($content as $num=>$item){
         foreach($item as $k=>$v){
-           $keys .=  "`". $k ."`, ";
-           $value .=  "'". mysql_real_escape_string(htmlspecialchars($v)) ."', ";
+           $keys .=  '`'. $k .'`, ';
+           $value .=  '\''. mysql_real_escape_string(htmlspecialchars($v)) .'\', ';
         }
         unset($query, $result);
-        $query = "INSERT INTO  ". $dataBaseTable ." (  `id` ,  `intOrder`, ". preg_replace('/, $/', "", $keys) .") VALUES ( ". $_SESSION["id"] .", ". $num .", ". preg_replace('/, $/', "", $value) ." )";
+        $query = 'INSERT INTO  '. $dataBaseTable .' (  `id` ,  `intOrder`, '. preg_replace('/, $/', '', $keys) .') VALUES ( '. $_SESSION['id'] .', '. $num .', '. preg_replace('/, $/', '', $value) .' )';
         $result = mysql_query($query) or die('Query failed: ' . mysql_error());
         unset($keys, $value);
       }
       unset($query, $result, $num, $item);
     }
   }else{
-    $pairs="";
+    $pairs='';
     foreach($content as $k=>$v){
-      $pairs .= $k ." = \"". mysql_real_escape_string(htmlspecialchars($v)) ."\", ";
+      $pairs .= $k .' = \''. mysql_real_escape_string(htmlspecialchars($v)) .'\', ';
     }
-    $query = "UPDATE ". $dataBaseTable ." SET ". preg_replace('/, $/', "", $pairs) ." WHERE id = " . $_SESSION["id"] . "";
-    $result = mysql_query($query) or die($_POST['callback'] .'({"status":"'. mysql_error() .'"})');
+    $query = 'UPDATE '. $dataBaseTable .' SET '. preg_replace('/, $/', '', $pairs) .' WHERE id = ' . $_SESSION['id'] . '';
+    $result = mysql_query($query) or die($_POST['callback'] .'({\'status\':\''. mysql_error() .'\'})');
   }
-  echo $_GET['callback'] .'({"status":"done"})';
+  echo $_GET['callback'] .'({\'status\':\'done\'})';
 require_once 'connection_Close.php';
 ?>
