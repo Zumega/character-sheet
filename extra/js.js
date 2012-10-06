@@ -44,6 +44,10 @@ var jQ = jQuery,
     },
     functions: {
       init: function(){
+        /* ****************************************
+        *  commented out functions are to
+        *  show where they are in the document
+        **************************************** */
         sheet.functions.setObjects();
         sheet.functions.getDefalutPoints();
 
@@ -57,14 +61,21 @@ var jQ = jQuery,
         sheet.data.hasChanged = false;
 
         sheet.functions.setStunWoundClicks();
-        sheet.functions.getChanges();
         sheet.functions.ouchCheck();
+//        deathCheck()
 
         sheet.functions.setDerivedTraits();
         sheet.functions.skillCountChanger();
         sheet.functions.skillUpdater();
         sheet.functions.subSkillUpdater();
         sheet.functions.setEquipmentTabs();
+//        setEquipmentFields()
+//        updateAllItemsField()
+//        checkInputs:
+//          generic()
+//        getSkillChanges
+        sheet.functions.getChanges();
+//        save()
 
       },
       setObjects: function(){
@@ -112,61 +123,6 @@ var jQ = jQuery,
 
         return sheet.data.hasChanged;
       },
-      setStunWoundClicks: function(){
-        jQ(document).find('.characterInfo .btnUpDown').click(function(){
-          var $this = jQ(this);
-
-          switch($this.attr('id')){
-            case 'woundPointsUp':
-              $this.siblings('input[type=text]').val(sheet.data.characterInfo.woundPoints += 1);
-              if(sheet.data.characterInfo.woundPoints > 0) {
-                $this.siblings('input[type=button]').removeClass('hide');
-              }
-              break;
-            case 'woundPointsDown':
-              $this.siblings('input[type=text]').val(sheet.data.characterInfo.woundPoints -= 1);
-              if(sheet.data.characterInfo.woundPoints === 0){
-                $this.addClass('hide');
-              }
-              break;
-            case 'stunPointsUp':
-              $this.siblings('input[type=text]').val(sheet.data.characterInfo.stunPoints += 1);
-              if(sheet.data.characterInfo.stunPoints > 0) {
-                $this.siblings('input[type=button]').removeClass('hide');
-              }
-              break;
-            case 'stunPointsDown':
-              $this.siblings('input[type=text]').val(sheet.data.characterInfo.stunPoints -= 1);
-              if(sheet.data.characterInfo.stunPoints === 0){
-                $this.addClass('hide');
-              }
-              break;
-          }
-
-          sheet.functions.save('characterInfo');
-          sheet.functions.ouchCheck();
-        });
-      },
-      ouchCheck: function(){
-        var totalPoints = sheet.data.characterInfo.woundPoints + sheet.data.characterInfo.stunPoints,
-          wounPercent = (100 / sheet.data.derivedTraits.lifePoints) * sheet.data.characterInfo.woundPoints,
-          stunPercent = (100 / sheet.data.derivedTraits.lifePoints) * sheet.data.characterInfo.stunPoints,
-          barColor = ((100 / sheet.data.derivedTraits.lifePoints) * totalPoints) / 100,
-          woundCounterBar = 100 - wounPercent,
-          stunCounterBar = 100 - stunPercent;
-
-        sheet.settings.woundBarObj.css({"width": wounPercent +'%', "background": 'rgba(255, 0, 0, '+ barColor +')'});
-        sheet.settings.stunBarObj.css({"width": stunPercent + '%', "background": 'rgba(255, 0, 255, '+ barColor +')'});
-        sheet.settings.woundCounterBarObj.css({"width": woundCounterBar +'%'});
-        sheet.settings.stunCounterBarObj.css({"width": stunCounterBar + '%'});
-
-        sheet.functions.deathCheck();
-      },
-      deathCheck: function(){
-        if(sheet.data.derivedTraits.lifePoints === (sheet.data.characterInfo.woundPoints + sheet.data.characterInfo.stunPoints)) {
-          alert('You DEAD!!');
-        }
-      },
       getAttributes: function(){
 //        check if there are any changes
         if(
@@ -189,34 +145,6 @@ var jQ = jQuery,
         sheet.data.attributes.willpower = parseInt(jQ('#willpower').val());
 
         return sheet.data.hasChanged;
-      },
-      checkInputs: {
-        generic: function($this, $inputs, type){
-          var sum = 0;
-
-          if($this.val() === ""){
-            $this.val(0);
-          }
-          if ($this.val() % 2 || isNaN($this.val())){
-            alert("The number needs to corispond to a dice number\nMeaning it needs to be even.");
-            $this.select();
-            $this.focus();
-            return;
-          }
-
-          $inputs.each(function(){
-            sum += parseInt(jQ(this).val());
-          });
-
-          sheet.data.defaultPoints['used'+ type +'Points'] = sum;
-          sheet.settings['used'+ type +'PointsObj'].val(sum);
-
-          if (sum > sheet.data.defaultPoints['max'+ type +'Points']){
-            alert('You have use to many points\nYou only have '+ sheet.data.defaultPoints['max'+ type +'Points'] +' points to use.\nAnd you have used '+ sum +' so far.');
-            $this.select();
-            $this.focus();
-          }
-        }
       },
       getDerivedTraits: function($this) {
         var init = {
@@ -275,11 +203,6 @@ var jQ = jQuery,
 
         sheet.functions.ouchCheck();
       },
-      setDerivedTraits: function() {
-        jQ("#agl, #alert, #vit, #willpower").blur(function(){
-          sheet.functions.getDerivedTraits(jQ(this));
-        });
-      },
       getRolledTraits: function() {
           if(
             sheet.data.rolledTraits.initiative !== jQ('#curntInt').val() ||
@@ -319,6 +242,79 @@ var jQ = jQuery,
         });
 
         return sheet.data.hasChanged;
+      },
+      getEquipment: function(){
+        jQ(document).find('.equipInput textarea').each(function(){
+          var $this = jQ(this);
+
+          if($this.attr('id') !== 'allitems'){
+            if(sheet.data.equipment[$this.attr('id')] !== $this.val()){
+              sheet.data.hasChanged = true;
+            }
+            sheet.data.equipment[$this.attr('id')] = $this.val();
+          }
+        });
+        return sheet.data.hasChanged;
+      },
+      setStunWoundClicks: function(){
+        jQ(document).find('.characterInfo .btnUpDown').click(function(){
+          var $this = jQ(this);
+
+          switch($this.attr('id')){
+            case 'woundPointsUp':
+              $this.siblings('input[type=text]').val(sheet.data.characterInfo.woundPoints += 1);
+              if(sheet.data.characterInfo.woundPoints > 0) {
+                $this.siblings('input[type=button]').removeClass('hide');
+              }
+              break;
+            case 'woundPointsDown':
+              $this.siblings('input[type=text]').val(sheet.data.characterInfo.woundPoints -= 1);
+              if(sheet.data.characterInfo.woundPoints === 0){
+                $this.addClass('hide');
+              }
+              break;
+            case 'stunPointsUp':
+              $this.siblings('input[type=text]').val(sheet.data.characterInfo.stunPoints += 1);
+              if(sheet.data.characterInfo.stunPoints > 0) {
+                $this.siblings('input[type=button]').removeClass('hide');
+              }
+              break;
+            case 'stunPointsDown':
+              $this.siblings('input[type=text]').val(sheet.data.characterInfo.stunPoints -= 1);
+              if(sheet.data.characterInfo.stunPoints === 0){
+                $this.addClass('hide');
+              }
+              break;
+          }
+
+          sheet.functions.save('characterInfo');
+          sheet.functions.ouchCheck();
+        });
+      },
+      ouchCheck: function(){
+        var totalPoints = sheet.data.characterInfo.woundPoints + sheet.data.characterInfo.stunPoints,
+          wounPercent = (100 / sheet.data.derivedTraits.lifePoints) * sheet.data.characterInfo.woundPoints,
+          stunPercent = (100 / sheet.data.derivedTraits.lifePoints) * sheet.data.characterInfo.stunPoints,
+          barColor = ((100 / sheet.data.derivedTraits.lifePoints) * totalPoints) / 100,
+          woundCounterBar = 100 - wounPercent,
+          stunCounterBar = 100 - stunPercent;
+
+        sheet.settings.woundBarObj.css({"width": wounPercent +'%', "background": 'rgba(255, 0, 0, '+ barColor +')'});
+        sheet.settings.stunBarObj.css({"width": stunPercent + '%', "background": 'rgba(255, 0, 255, '+ barColor +')'});
+        sheet.settings.woundCounterBarObj.css({"width": woundCounterBar +'%'});
+        sheet.settings.stunCounterBarObj.css({"width": stunCounterBar + '%'});
+
+        sheet.functions.deathCheck();
+      },
+      deathCheck: function(){
+        if(sheet.data.derivedTraits.lifePoints === (sheet.data.characterInfo.woundPoints + sheet.data.characterInfo.stunPoints)) {
+          alert('You DEAD!!');
+        }
+      },
+      setDerivedTraits: function() {
+        jQ("#agl, #alert, #vit, #willpower").blur(function(){
+          sheet.functions.getDerivedTraits(jQ(this));
+        });
       },
       skillCountChanger: function() {
         jQ(document).find('.skillsSpecialties .btnUpDown').click(function(){
@@ -383,18 +379,86 @@ var jQ = jQuery,
           }
         });
       },
-      getEquipment: function(){
-        jQ(document).find('.equipInput textarea').each(function(){
-          var $this = jQ(this);
+      skillUpdater: function(){
+        jQ('#skillsContainer').on('change', '.skilColum_1 select', function(){
+          var $this = jQ(this),
+              thisId = $this.attr('id'),
+              activeValue = $this.val(),
+              options = {};
+          activeValue = activeValue.replace(/[ ]/gi, '_');
+          activeValue = activeValue.replace(/\.|\*/gi, '');
 
-          if($this.attr('id') !== 'allitems'){
-            if(sheet.data.equipment[$this.attr('id')] !== $this.val()){
-              sheet.data.hasChanged = true;
+          if(sheet.functions.getSkills()) {
+//            get new options
+            for(skills in sheet.data.allskills){
+              if(activeValue === skills){
+                for(var i=0; i<(sheet.data.allskills[skills]).length; i+=1){
+                  var list = sheet.data.allskills[skills];
+
+                  for(var a=0; a<list.length; a+=1){
+                    options[list[a].toLowerCase()] = list[a];
+                  }
+                }
+              }
             }
-            sheet.data.equipment[$this.attr('id')] = $this.val();
-          }
+
+//            remove old options
+            jQ('#'+ thisId +'_1 option:gt(0)').remove();
+            jQ('#'+ thisId +'_2 option:gt(0)').remove();
+            jQ('#'+ thisId +'_3 option:gt(0)').remove();
+
+//            set new options
+            jQ.each(options, function(key, value) {
+              jQ('#'+ thisId +'_1').append(jQ("<option></option>").attr("value", key).text(value));
+              jQ('#'+ thisId +'_2').append(jQ("<option></option>").attr("value", key).text(value));
+              jQ('#'+ thisId +'_3').append(jQ("<option></option>").attr("value", key).text(value));
+            });
+
+            jQ('#skillsContainer').find('.skilColum_1 option').each(function(){
+//              enable and disable used skills
+              jQ(this).removeAttr('disabled');
+
+              for(var used in sheet.data.usedSkills){
+                if(sheet.data.usedSkills[used] === jQ(this).val()){
+                  jQ(this).attr('disabled', 'disabled');
+                }
+              }
+            });
+
+            sheet.functions.getSkillChanges();
+          };
         });
-        return sheet.data.hasChanged;
+      },
+      subSkillUpdater: function() {
+        jQ('#skillsContainer').on('change', '.skilColum_2 select', function(){
+          var $this = jQ(this),
+              $options = jQ('#skillsContainer .skilColum_2 option'),
+              usedSubSkillCounter = 0;
+
+//          reset used subkills
+          sheet.data.usedSubSkills = [];
+          jQ('#skillsContainer').find('.skilColum_2 select').each(function(){
+            var $el = jQ(this);
+            if($el.attr('name').indexOf('F') === 0 && isNaN($el.val())){
+              sheet.data.usedSubSkills[usedSubSkillCounter] = $el.val();
+              usedSubSkillCounter += 1;
+            }
+          });
+
+//          enable and disable used subskills
+          $options.each(function(){
+            jQ(this).removeAttr('disabled');
+          });
+          $options.each(function(){
+            for(var used in sheet.data.usedSubSkills){
+              if(sheet.data.usedSubSkills[used] === jQ(this).val()){
+                jQ(this).attr('disabled', 'disabled');
+              }
+            }
+          });
+
+          sheet.functions.getSkillChanges();
+        });
       },
       setEquipmentTabs: function(){
         jQ(document).find('.equipTab').click(function(){
@@ -444,86 +508,33 @@ var jQ = jQuery,
 
         jQ('#allitems').val(sheet.data.allItems);
       },
-      skillUpdater: function(){
-        jQ('#skillsContainer').on('change', '.skilColum_1 select', function(){
-          var $this = jQ(this),
-              thisId = $this.attr('id'),
-              activeValue = $this.val(),
-              options = {};
-          activeValue = activeValue.replace(/[ ]/gi, '_');
-          activeValue = activeValue.replace(/\.|\*/gi, '');
+      checkInputs: {
+        generic: function($this, $inputs, type){
+          var sum = 0;
 
-          if(sheet.functions.getSkills()) {
-//            get new options
-            for(skills in sheet.data.allskills){
-              if(activeValue === skills){
-                for(var i=0; i<(sheet.data.allskills[skills]).length; i+=1){
-                  var list = sheet.data.allskills[skills];
+          if($this.val() === ""){
+            $this.val(0);
+          }
+          if ($this.val() % 2 || isNaN($this.val())){
+            alert("The number needs to corispond to a dice number\nMeaning it needs to be even.");
+            $this.select();
+            $this.focus();
+            return;
+          }
 
-                  for(var a=0; a<list.length; a+=1){
-                    options[list[a].toLowerCase()] = list[a];
-                  }
-                }
-              }
-            }
-
-//            remove old options
-            jQ('#'+ thisId +'_1 option:gt(0)').remove();
-            jQ('#'+ thisId +'_2 option:gt(0)').remove();
-            jQ('#'+ thisId +'_3 option:gt(0)').remove();
-
-//            set new options
-            jQ.each(options, function(key, value) {
-              jQ('#'+ thisId +'_1').append(jQ("<option></option>").attr("value", key).text(value));
-              jQ('#'+ thisId +'_2').append(jQ("<option></option>").attr("value", key).text(value));
-              jQ('#'+ thisId +'_3').append(jQ("<option></option>").attr("value", key).text(value));
-            });
-            
-            jQ('#skillsContainer').find('.skilColum_1 option').each(function(){
-//              enable and disable used skills
-              jQ(this).removeAttr('disabled');
-
-              for(var used in sheet.data.usedSkills){
-                if(sheet.data.usedSkills[used] === jQ(this).val()){
-                  jQ(this).attr('disabled', 'disabled');
-                }
-              }
-            });
-
-            sheet.functions.getSkillChanges();
-          };
-        });
-      },
-      subSkillUpdater: function() {
-        jQ('#skillsContainer').on('change', '.skilColum_2 select', function(){
-          var $this = jQ(this),
-              $options = jQ('#skillsContainer .skilColum_2 option'),
-              usedSubSkillCounter = 0;
-
-//          reset used subkills
-          sheet.data.usedSubSkills = [];
-          jQ('#skillsContainer').find('.skilColum_2 select').each(function(){
-            var $el = jQ(this);
-            if($el.attr('name').indexOf('F') === 0 && isNaN($el.val())){
-              sheet.data.usedSubSkills[usedSubSkillCounter] = $el.val();
-              usedSubSkillCounter += 1;
-            }
+          $inputs.each(function(){
+            sum += parseInt(jQ(this).val());
           });
 
-//          enable and disable used subskills
-          $options.each(function(){
-            jQ(this).removeAttr('disabled');
-          });
-          $options.each(function(){
-            for(var used in sheet.data.usedSubSkills){
-              if(sheet.data.usedSubSkills[used] === jQ(this).val()){
-                jQ(this).attr('disabled', 'disabled');
-              }
-            }
-          });
+          sheet.data.defaultPoints['used'+ type +'Points'] = sum;
+          sheet.settings['used'+ type +'PointsObj'].val(sum);
 
-          sheet.functions.getSkillChanges();
-        });
+          if (sum > sheet.data.defaultPoints['max'+ type +'Points']){
+            alert('You have use to many points\nYou only have '+ sheet.data.defaultPoints['max'+ type +'Points'] +' points to use.\nAnd you have used '+ sum +' so far.');
+            $this.select();
+            $this.focus();
+          }
+        }
       },
       getSkillChanges: function(){
 //        not part of getCanges() do to calculations that need to be done before save
