@@ -118,7 +118,22 @@ switch ($_POST['data']['saveArea']){
       );
     }
     break;
-  case '':
+  case 'asset':
+    $isMany = true;
+    $dataBaseTable = 'sheet_assets';
+    $content = array();
+    for($i=0; $i<count($json)/4; $i+=1){
+      $maj = (empty($json['maj_'. $i .'_assets'])) ? '' : $json['maj_'. $i .'_assets'] ;
+      $min = (empty($json['min_'. $i .'_assets'])) ? '' : $json['min_'. $i .'_assets'] ;
+
+      $majorMin = (empty($maj)) ? $min : $maj ;
+
+      $content[$i] = array(
+        'txtAssets' => $json['typeName_'. $i .'_assets'],
+        'tnyMajorMinor' => $majorMin,
+        'blbNote' => $json['desc_'. $i .'_assets']
+      );
+    }
     break;
   case '':
     break;

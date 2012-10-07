@@ -3,7 +3,7 @@ var jQ = jQuery,
     settings: {
       saveUrl: './includes/save.php',
       newSkillUrl: './includes/single_skill.php',
-      newCompUrl: './includes/single_comp.php'
+      newCompAssetUrl: './includes/single_comp_asset.php'
     },
     data: {
       defaultPoints: {},
@@ -42,6 +42,7 @@ var jQ = jQuery,
       equipment: {},
       allItems: '',
       comp: {},
+      asset: {},
       hasChanged: false
     },
     functions: {
@@ -60,6 +61,7 @@ var jQ = jQuery,
         sheet.functions.getSkills();
         sheet.functions.getEquipment();
         sheet.functions.getComplications();
+        sheet.functions.getAssets();
 
         sheet.data.hasChanged = false;
 
@@ -76,6 +78,8 @@ var jQ = jQuery,
 //        updateAllItemsField()
         sheet.functions.compCountChanger();
         sheet.functions.compUpdater();
+        sheet.functions.assetCountChanger();
+        sheet.functions.assetUpdater();
 //        checkInputs:
 //          generic()
         sheet.functions.getChanges();
@@ -276,6 +280,23 @@ var jQ = jQuery,
             sheet.data.comp[$this.attr('id')] = ($this.is(':checked')) ? $this.val() : '';
           }else{
             sheet.data.comp[$this.attr('id')] = $this.val();
+          }
+        });
+
+        return sheet.data.hasChanged;
+      },
+      getAssets: function(){
+        jQ('#assetsFields').find('select, input, textarea').each(function(){
+          var $this = jQ(this);
+
+          if((sheet.data.asset[$this.attr('id')] !== $this.val())){
+            sheet.data.hasChanged = true;
+          }
+
+          if($this.attr('type') === 'radio'){
+            sheet.data.asset[$this.attr('id')] = ($this.is(':checked')) ? $this.val() : '';
+          }else{
+            sheet.data.asset[$this.attr('id')] = $this.val();
           }
         });
 
@@ -533,54 +554,6 @@ var jQ = jQuery,
 
         jQ('#allitems').val(sheet.data.allItems);
       },
-      compUpdater: function() {
-        jQ('#complicationsFields').on("change", "select, input", function(){
-          sheet.functions.getSpecialChanges.comp();
-        });
-        jQ('#complicationsFields').on("focus", "textarea", function(){
-          var $this = jQ(this);
-
-          if($this.val() === '(NOTES)'){
-            $this.removeClass('new').val('');
-          }
-        });
-        jQ('#complicationsFields').on("blur", "textarea", function(){
-          var $this = jQ(this);
-
-          if($this.val() === ''){
-            $this.addClass('new').val('(NOTES)');
-          }
-          sheet.functions.getSpecialChanges.comp();
-        });
-      },
-      checkInputs: {
-        generic: function($this, $inputs, type){
-          var sum = 0;
-
-          if($this.val() === ""){
-            $this.val(0);
-          }
-          if ($this.val() % 2 || isNaN($this.val())){
-            alert("The number needs to corispond to a dice number\nMeaning it needs to be even.");
-            $this.select();
-            $this.focus();
-            return;
-          }
-
-          $inputs.each(function(){
-            sum += parseInt(jQ(this).val());
-          });
-
-          sheet.data.defaultPoints['used'+ type +'Points'] = sum;
-          sheet.settings['used'+ type +'PointsObj'].val(sum);
-
-          if (sum > sheet.data.defaultPoints['max'+ type +'Points']){
-            alert('You have use to many points\nYou only have '+ sheet.data.defaultPoints['max'+ type +'Points'] +' points to use.\nAnd you have used '+ sum +' so far.');
-            $this.select();
-            $this.focus();
-          }
-        }
-      },
       compCountChanger: function(){
         jQ('#complicationsUp, #complicationsDown').on('click', function(){
           var $this = jQ(this),
@@ -590,9 +563,9 @@ var jQ = jQuery,
           switch($this.attr('id')){
             case 'complicationsUp':
               jQ.ajax({
-                url: sheet.settings.newCompUrl,
+                url: sheet.settings.newCompAssetUrl,
                 type: 'POST',
-                data: {'data': compCount },
+                data: {'count': compCount, 'type': 'complications'},
                 dataType: 'html',
                 success: function(response){
                   jQ('#complicationsFields').append(response);
@@ -625,10 +598,6 @@ var jQ = jQuery,
                 delete sheet.data.comp['min_'+ compCount +'_complications'];
                 delete sheet.data.comp['typeName_'+ compCount +'_complications'];
 
-                if(compCount > 0){
-                  jQ('#complicationsFields').find('select:first-child').trigger('blur');
-                }
-
                 sheet.functions.getComplications()
                 sheet.functions.save('comp');
                 $countField.text(compCount);
@@ -640,6 +609,130 @@ var jQ = jQuery,
               break;
           }
         });
+      },
+      compUpdater: function() {
+        jQ('#complicationsFields').on("change", "select, input", function(){
+          sheet.functions.getSpecialChanges.comp();
+        });
+        jQ('#complicationsFields').on("focus", "textarea", function(){
+          var $this = jQ(this);
+
+          if($this.val() === '(NOTES)'){
+            $this.removeClass('new').val('');
+          }
+        });
+        jQ('#complicationsFields').on("blur", "textarea", function(){
+          var $this = jQ(this);
+
+          if($this.val() === ''){
+            $this.addClass('new').val('(NOTES)');
+          }
+          sheet.functions.getSpecialChanges.comp();
+        });
+      },
+      assetCountChanger: function(){
+        jQ('#assetsUp, #assetsDown').on('click', function(){
+          var $this = jQ(this),
+              $countField = jQ('#assetsCnt'),
+              assetCount = parseInt($countField.text());
+
+          switch($this.attr('id')){
+            case 'assetsUp':
+              jQ.ajax({
+                url: sheet.settings.newCompAssetUrl,
+                type: 'POST',
+                data: {'count': assetCount, 'type': 'assets'},
+                dataType: 'html',
+                success: function(response){
+                  jQ('#assetsFields').append(response);
+                  if(sheet.functions.getAssets()){
+                    sheet.data.hasChanged = false;
+                    sheet.functions.save('asset');
+                  }
+                },
+                error: function(one, text, error){
+                  console.log(one);
+                  console.log(text);
+                  console.log(error);
+                }
+              });
+
+              assetCount += 1;
+              $countField.text(assetCount);
+
+              if(assetCount > 0 ){
+                jQ('#assetDown').removeClass('hide');
+              }
+              break;
+            case 'assetsDown':
+              jQ('#assetsFields').find('.section:last-child').fadeOut('fast', function(){
+                jQ(this).remove();
+                assetCount -= 1;
+
+                delete sheet.data.comp['desc_'+ assetCount +'_asset'];
+                delete sheet.data.comp['maj_'+ assetCount +'_asset'];
+                delete sheet.data.comp['min_'+ assetCount +'_asset'];
+                delete sheet.data.comp['typeName_'+ assetCount +'_asset'];
+
+                sheet.functions.getAssets()
+                sheet.functions.save('asset');
+                $countField.text(assetCount);
+
+                if(assetCount === 0 ){
+                  $this.addClass('hide');
+                }
+              });
+              break;
+          }
+        });
+      },
+      assetUpdater: function() {
+        jQ('#assetsFields').on("change", "select, input", function(){
+          sheet.functions.getSpecialChanges.asset();
+        });
+        jQ('#assetsFields').on("focus", "textarea", function(){
+          var $this = jQ(this);
+
+          if($this.val() === '(NOTES)'){
+            $this.removeClass('new').val('');
+          }
+        });
+        jQ('#assetsFields').on("blur", "textarea", function(){
+          var $this = jQ(this);
+
+          if($this.val() === ''){
+            $this.addClass('new').val('(NOTES)');
+          }
+          sheet.functions.getSpecialChanges.asset();
+        });
+      },
+      checkInputs: {
+        generic: function($this, $inputs, type){
+          var sum = 0;
+
+          if($this.val() === ""){
+            $this.val(0);
+          }
+          if ($this.val() % 2 || isNaN($this.val())){
+            alert("The number needs to corispond to a dice number\nMeaning it needs to be even.");
+            $this.select();
+            $this.focus();
+            return;
+          }
+
+          $inputs.each(function(){
+            sum += parseInt(jQ(this).val());
+          });
+
+          sheet.data.defaultPoints['used'+ type +'Points'] = sum;
+          sheet.settings['used'+ type +'PointsObj'].val(sum);
+
+          if (sum > sheet.data.defaultPoints['max'+ type +'Points']){
+            alert('You have use to many points\nYou only have '+ sheet.data.defaultPoints['max'+ type +'Points'] +' points to use.\nAnd you have used '+ sum +' so far.');
+            $this.select();
+            $this.focus();
+          }
+        }
       },
       getChanges: function() {
 //        attache the BLUR listener
@@ -693,20 +786,26 @@ var jQ = jQuery,
       },
       getSpecialChanges: {
         skill: function(){
-//        not part of getCanges() do to calculations that need to be done before save
+//          not part of getCanges() do to calculations that need to be done before save
           if(sheet.functions.getSkills()){
             sheet.data.hasChanged = false;
             sheet.functions.save('skills');
           }
         },
         comp: function(){
-//        not part of getCanges() do to calculations that need to be done before save
+//          not part of getCanges() do to calculations that need to be done before save
           if(sheet.functions.getComplications()){
             sheet.data.hasChanged = false;
             sheet.functions.save('comp');
           }
         },
-        asset: ''
+        asset: function(){
+//          not part of getCanges() do to calculations that need to be done before save
+          if(sheet.functions.getAssets()){
+            sheet.data.hasChanged = false;
+            sheet.functions.save('asset');
+          }
+        }
       },
       save: function(saveArea){
         var values = sheet.data[saveArea];
