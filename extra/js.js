@@ -75,10 +75,14 @@ var jQ = jQuery,
 //        setEquipmentFields()
 //        updateAllItemsField()
         sheet.functions.compCountChanger();
+        sheet.functions.compUpdater();
 //        checkInputs:
 //          generic()
-//        getSkillChanges
         sheet.functions.getChanges();
+//        getSpecialChanges:
+//          skill()
+//          comp()
+//          asset()
 //        save()
 
       },
@@ -264,10 +268,10 @@ var jQ = jQuery,
         jQ('#complicationsFields').find('select, input, textarea').each(function(){
           var $this = jQ(this);
 
-          if((sheet.data.comp[$this.attr('id')] !== $this.val()) && $this.attr('type') != 'radio' ){
+          if((sheet.data.comp[$this.attr('id')] !== $this.val())){
             sheet.data.hasChanged = true;
           }
-//          todo: look for radio changes
+
           if($this.attr('type') === 'radio'){
             sheet.data.comp[$this.attr('id')] = ($this.is(':checked')) ? $this.val() : '';
           }else{
@@ -445,7 +449,7 @@ var jQ = jQuery,
               }
             });
 
-            sheet.functions.getSkillChanges();
+            sheet.functions.getSpecialChanges.skill();
           };
         });
       },
@@ -477,7 +481,7 @@ var jQ = jQuery,
             }
           });
 
-          sheet.functions.getSkillChanges();
+          sheet.functions.getSpecialChanges.skill();
         });
       },
       setEquipmentTabs: function(){
@@ -527,6 +531,26 @@ var jQ = jQuery,
         }
 
         jQ('#allitems').val(sheet.data.allItems);
+      },
+      compUpdater: function() {
+        jQ('#complicationsFields').on("change", "select, input", function(){
+          sheet.functions.getSpecialChanges.comp();
+        });
+        jQ('#complicationsFields').on("focus", "textarea", function(){
+          var $this = jQ(this);
+
+          if($this.val() === '(NOTES)'){
+            $this.removeClass('new').val('');
+          }
+        });
+        jQ('#complicationsFields').on("blur", "textarea", function(){
+          var $this = jQ(this);
+
+          if($this.val() === ''){
+            $this.addClass('new').val('(NOTES)');
+          }
+          sheet.functions.getSpecialChanges.comp();
+        });
       },
       checkInputs: {
         generic: function($this, $inputs, type){
@@ -585,6 +609,10 @@ var jQ = jQuery,
 
               compCount += 1;
               $countField.text(compCount);
+
+              if(compCount > 0 ){
+                jQ('#complicationsDown').removeClass('hide');
+              }
               break;
             case 'complicationsDown':
               jQ('#complicationsFields').find('.section:last-child').fadeOut('fast', function(){
@@ -603,17 +631,14 @@ var jQ = jQuery,
                 sheet.functions.getComplications()
                 sheet.functions.save('comp');
                 $countField.text(compCount);
+
+                if(compCount === 0 ){
+                  $this.addClass('hide');
+                }
               });
               break;
           }
         });
-      },
-      getSkillChanges: function(){
-//        not part of getCanges() do to calculations that need to be done before save
-        if(sheet.functions.getSkills()){
-          sheet.data.hasChanged = false;
-          sheet.functions.save('skills');
-        }
       },
       getChanges: function() {
 //        attache the BLUR listener
@@ -664,6 +689,23 @@ var jQ = jQuery,
             }
           }
         });
+      },
+      getSpecialChanges: {
+        skill: function(){
+//        not part of getCanges() do to calculations that need to be done before save
+          if(sheet.functions.getSkills()){
+            sheet.data.hasChanged = false;
+            sheet.functions.save('skills');
+          }
+        },
+        comp: function(){
+//        not part of getCanges() do to calculations that need to be done before save
+          if(sheet.functions.getComplications()){
+            sheet.data.hasChanged = false;
+            sheet.functions.save('comp');
+          }
+        },
+        asset: ''
       },
       save: function(saveArea){
         var values = sheet.data[saveArea];

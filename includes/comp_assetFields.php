@@ -44,16 +44,10 @@
         <label for="min_<?= $counter .'_'. $comp_asset; ?>">:Minor</label>
       </div>
       <?php
-        if(empty($row['blbNote'])) {
-          $text = '(NOTES)';
-          $css = ' new';
-        }else{
-          $text = $row['blbNote'];
-          $css = '';
-        }
+        $css = ($row['blbNote'] === '(NOTES)') ? ' new' : '' ;
       ?>
 
-      <textarea id="desc_<?= $counter .'_'. $comp_asset; ?>" name="desc_<?= $counter .'_'. $comp_asset; ?>" class="smallTextArea<?= $css;?>"><?= $text;?></textarea>
+      <textarea id="desc_<?= $counter .'_'. $comp_asset; ?>" name="desc_<?= $counter .'_'. $comp_asset; ?>" class="smallTextArea<?= $css;?>"><?= $row['blbNote']; ?></textarea>
     </div>
     <?php
     $counter += 1;
