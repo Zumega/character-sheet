@@ -12,7 +12,7 @@ $skillCount = $amount = mysql_num_rows($result);
   <div>
     You have <span id="SkillsCnt"><?= $skillCount; ?></span> skill(s)
     <input type="button" id="skillUp" class="btnUpDown btnUp" tabindex="-1" />
-    <input type="button" id="skillDown" class="btnUpDown btnDown <?= ($skillsFieldCnt === 0)? 'hide' : '' ; ?>" tabindex="-1" />
+    <input type="button" id="skillDown" class="btnUpDown btnDown <?= ($skillCount === 0)? 'hide' : '' ; ?>" tabindex="-1" />
   </div>
 
   <div id="skillsContainer" class="clear">

@@ -370,6 +370,9 @@ var jQ = jQuery,
 
               skillCount += 1;
               $countField.text(skillCount);
+              if(skillCount > 0){
+                jQ('#skillDown').removeClass('hide');
+              }
               break;
             case 'skillDown':
               jQ('#skillsContainer').find('.column:last-child').fadeOut('fast',function(){
@@ -392,14 +395,12 @@ var jQ = jQuery,
                 sheet.functions.getSkills()
                 sheet.functions.save('skills');
                 $countField.text(skillCount);
+
+                if(skillCount === 0){
+                  jQ('#skillDown').addClass('hide');
+                }
               });
               break;
-          }
-
-          if(skillCount === 0){
-            jQ('#skillDown').addClass('hide');
-          }else{
-            jQ('#skillDown').removeClass('hide');
           }
         });
       },
