@@ -9,7 +9,7 @@
     <div>
       <select id="typeName_<?= $number; ?>_<?= $type; ?>" name="field_<?= $number; ?>_<?= $type; ?>" tabindex="-1">
       <?php
-      foreach ($aryComp as $text){
+      foreach ($dataArray as $text){
         $value = str_replace('\'', '', str_replace(' ', '_', strtolower($text)));
         $selected = ($value === $row['txtComplicaiton']) ? ' selected="selected"' : '' ;
         ?>

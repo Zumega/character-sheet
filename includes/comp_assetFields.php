@@ -2,8 +2,16 @@
   require_once './includes/comps_assets.php';
   $arrayToUse = ($comp_asset === 'complications') ? $aryComp : $aryAsset ;
   $counter = 0;
+  $usedCompAsset = array();
+  $cellTitle = 'txt'. ucfirst(substr($comp_asset, 0, (strlen($comp_asset) - 1)));
 
   while ($row = mysql_fetch_assoc($result)) {
+    $compAssets[] = $row;
+    $usedCompAsset[] = $row[$cellTitle];
+  }
+
+  if(!empty($compAssets)){
+    foreach ($compAssets as $row) {
     ?>
     <div class="section">
       <div>
@@ -11,9 +19,10 @@
         <?php
         foreach ($arrayToUse as $text){
           $value = str_replace('\'', '', str_replace(' ', '_', strtolower($text)));
-          $selected = ($value === $row['txtComplicaiton']) ? ' selected="selected"' : '' ;
+          $selected = ($value === $row[$cellTitle]) ? ' selected="selected"' : 'dd' ;
+          $disabled = (in_array(strtolower($value), $usedCompAsset)) ? ' disabled="disabled"' : '' ;
           ?>
-          <option value="<?= $value ?>"<?= $selected; ?>><?= $text; ?></option>
+          <option value="<?= $value; ?>"<?= $disabled; ?><?= $selected; ?>><?= $text; ?></option>
           <?php
         }?>
         </select>
@@ -52,4 +61,6 @@
     <?php
     $counter += 1;
   }
+}
+unset($compAssets, $usedCompAsset, $cellTitle, $value);
 ?>

@@ -112,7 +112,7 @@ switch ($_POST['data']['saveArea']){
       $majorMin = (empty($maj)) ? $min : $maj ;
 
       $content[$i] = array(
-        'txtComplicaiton' => $json['typeName_'. $i .'_complications'],
+        'txtComplication' => $json['typeName_'. $i .'_complications'],
         'tnyMajorMinor' => $majorMin,
         'blbNote' => $json['desc_'. $i .'_complications']
       );
@@ -129,7 +129,7 @@ switch ($_POST['data']['saveArea']){
       $majorMin = (empty($maj)) ? $min : $maj ;
 
       $content[$i] = array(
-        'txtAssets' => $json['typeName_'. $i .'_assets'],
+        'txtAsset' => $json['typeName_'. $i .'_assets'],
         'tnyMajorMinor' => $majorMin,
         'blbNote' => $json['desc_'. $i .'_assets']
       );
