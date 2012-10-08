@@ -249,11 +249,11 @@ var jQ = jQuery,
           }
           sheet.data.skills[$this.attr('name')] = $this.val();
 
-          if($this.attr('name').indexOf('S') === 0){
+          if($this.attr('name').indexOf('s') === 0 && $this.val() !== '================='){
             sheet.data.usedSkills[usedSkillCounter] = $this.val();
             usedSkillCounter += 1;
           }
-          if($this.attr('name').indexOf('F') === 0 && isNaN($this.val())){
+          if($this.attr('name').indexOf('f') === 0 && isNaN($this.val())){
             sheet.data.usedSubSkills[usedSubSkillCounter] = $this.val();
             usedSubSkillCounter += 1;
           }
@@ -391,7 +391,7 @@ var jQ = jQuery,
               jQ.ajax({
                 url: sheet.settings.newSkillUrl,
                 type: 'POST',
-                data: {'data': skillCount },
+                data: {'data': skillCount, 'used': sheet.data.usedSkills },
                 dataType: 'html',
                 success: function(response){
                   jQ('#skillsContainer').append(response);
@@ -418,14 +418,15 @@ var jQ = jQuery,
                 jQ(this).remove();
                 skillCount -= 1;
 
-                delete sheet.data.skills['Skill_'+ skillCount];
-                delete sheet.data.skills['Field_'+ skillCount +'_0'];
-                delete sheet.data.skills['Field_'+ skillCount +'_1'];
-                delete sheet.data.skills['Field_'+ skillCount +'_2'];
-                delete sheet.data.skills['Field_'+ skillCount +'_3'];
-                delete sheet.data.skills['Field_'+ skillCount +'_4'];
-                delete sheet.data.skills['Field_'+ skillCount +'_5'];
-                delete sheet.data.skills['Field_'+ skillCount +'_6'];
+                sheet.data.usedSkills.pop();
+                delete sheet.data.skills['skill_'+ skillCount];
+                delete sheet.data.skills['field_'+ skillCount +'_0'];
+                delete sheet.data.skills['field_'+ skillCount +'_1'];
+                delete sheet.data.skills['field_'+ skillCount +'_2'];
+                delete sheet.data.skills['field_'+ skillCount +'_3'];
+                delete sheet.data.skills['field_'+ skillCount +'_4'];
+                delete sheet.data.skills['field_'+ skillCount +'_5'];
+                delete sheet.data.skills['field_'+ skillCount +'_6'];
 
                 if(skillCount > 0){
                   jQ('#skillsContainer').find('input:first-child').trigger('blur');
@@ -503,7 +504,7 @@ var jQ = jQuery,
           sheet.data.usedSubSkills = [];
           jQ('#skillsContainer').find('.skilColum_2 select').each(function(){
             var $el = jQ(this);
-            if($el.attr('name').indexOf('F') === 0 && isNaN($el.val())){
+            if($el.attr('name').indexOf('f') === 0 && isNaN($el.val())){
               sheet.data.usedSubSkills[usedSubSkillCounter] = $el.val();
               usedSubSkillCounter += 1;
             }

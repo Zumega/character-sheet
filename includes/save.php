@@ -90,14 +90,14 @@ switch ($_POST['data']['saveArea']){
     $content = array();
     for($i=0; $i<count($json)/8; $i+=1){
       $content[$i] = array(
-        'varSkill' => $json['Skill_'.$i],
-        'intSkillDice' => $json['Field_'.$i.'_0'],
-        'varSubSkill_0' => $json['Field_'.$i.'_1'],
-        'varSubSkill_1' => $json['Field_'.$i.'_2'],
-        'varSubSkill_2' => $json['Field_'.$i.'_3'],
-        'intSubSkillDice_0' => $json['Field_'.$i.'_4'],
-        'intSubSkillDice_1' => $json['Field_'.$i.'_5'],
-        'intSubSkillDice_2' => $json['Field_'.$i.'_6']
+        'varSkill' => $json['skill_'.$i],
+        'intSkillDice' => $json['field_'.$i.'_0'],
+        'varSubSkill_0' => $json['field_'.$i.'_1'],
+        'varSubSkill_1' => $json['field_'.$i.'_2'],
+        'varSubSkill_2' => $json['field_'.$i.'_3'],
+        'intSubSkillDice_0' => $json['field_'.$i.'_4'],
+        'intSubSkillDice_1' => $json['field_'.$i.'_5'],
+        'intSubSkillDice_2' => $json['field_'.$i.'_6']
       );
     }
     break;
