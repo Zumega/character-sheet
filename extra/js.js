@@ -583,7 +583,7 @@ var jQ = jQuery,
               jQ.ajax({
                 url: sheet.settings.newCompAssetUrl,
                 type: 'POST',
-                data: {'count': compCount, 'type': 'complications'},
+                data: {'count': compCount, 'type': 'complications', 'used': sheet.data.usedComp},
                 dataType: 'html',
                 success: function(response){
                   jQ('#complicationsFields').append(response);
@@ -672,7 +672,7 @@ var jQ = jQuery,
               jQ.ajax({
                 url: sheet.settings.newCompAssetUrl,
                 type: 'POST',
-                data: {'count': assetCount, 'type': 'assets'},
+                data: {'count': assetCount, 'type': 'assets', 'used': sheet.data.usedAsset},
                 dataType: 'html',
                 success: function(response){
                   jQ('#assetsFields').append(response);
@@ -700,12 +700,12 @@ var jQ = jQuery,
                 jQ(this).remove();
                 assetCount -= 1;
 
-                delete sheet.data.comp['desc_'+ assetCount +'_asset'];
-                delete sheet.data.comp['maj_'+ assetCount +'_asset'];
-                delete sheet.data.comp['min_'+ assetCount +'_asset'];
-                delete sheet.data.comp['typeName_'+ assetCount +'_asset'];
+                delete sheet.data.asset['desc_'+ assetCount +'_assets'];
+                delete sheet.data.asset['maj_'+ assetCount +'_assets'];
+                delete sheet.data.asset['min_'+ assetCount +'_assets'];
+                delete sheet.data.asset['typeName_'+ assetCount +'_assets'];
 
-                sheet.functions.getAssets()
+                sheet.functions.getAssets();
                 sheet.functions.save('asset');
                 $countField.text(assetCount);
 
