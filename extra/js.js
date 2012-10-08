@@ -276,7 +276,7 @@ var jQ = jQuery,
       },
       getComplications: function(){
         var usedCompCounter = 0;
-        
+
         jQ('#complicationsFields').find('select, input, textarea').each(function(){
           var $this = jQ(this);
 
@@ -298,6 +298,8 @@ var jQ = jQuery,
         return sheet.data.hasChanged;
       },
       getAssets: function(){
+        var usedAssetCounter = 0;
+
         jQ('#assetsFields').find('select, input, textarea').each(function(){
           var $this = jQ(this);
 
@@ -308,6 +310,10 @@ var jQ = jQuery,
           if($this.attr('type') === 'radio'){
             sheet.data.asset[$this.attr('id')] = ($this.is(':checked')) ? $this.val() : '';
           }else{
+            if($this.is('select')){
+              sheet.data.usedAsset[usedAssetCounter] = $this.val();
+              usedAssetCounter += 1;
+            }
             sheet.data.asset[$this.attr('id')] = $this.val();
           }
         });
@@ -729,6 +735,19 @@ var jQ = jQuery,
             $this.addClass('new').val('(NOTES)');
           }
           sheet.functions.getSpecialChanges.asset();
+        });
+
+        jQ('#assetsFields').on("change", "select", function(){
+          jQ('#assetsFields').find('option').each(function(){
+//            enable and disable used skills
+            jQ(this).removeAttr('disabled');
+
+            for(var used in sheet.data.usedAsset){
+              if(sheet.data.usedAsset[used] === jQ(this).val()){
+                jQ(this).attr('disabled', 'disabled');
+              }
+            }
+          });
         });
       },
       checkInputs: {
