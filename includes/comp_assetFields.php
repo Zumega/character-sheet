@@ -19,7 +19,7 @@
         <?php
         foreach ($arrayToUse as $text){
           $value = str_replace('\'', '', str_replace(' ', '_', strtolower($text)));
-          $selected = ($value === $row[$cellTitle]) ? ' selected="selected"' : 'dd' ;
+          $selected = ($value === $row[$cellTitle]) ? ' selected="selected"' : '' ;
           $disabled = (in_array(strtolower($value), $usedCompAsset)) ? ' disabled="disabled"' : '' ;
           ?>
           <option value="<?= $value; ?>"<?= $disabled; ?><?= $selected; ?>><?= $text; ?></option>

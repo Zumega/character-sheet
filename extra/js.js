@@ -41,12 +41,14 @@ var jQ = jQuery,
       usedSubSkills:  new Array(),
       equipment: {},
       allItems: '',
+      comp: {},
+      asset: {},
       allCompAsset: {
         comp: Array('========', 'Allergy', 'Amorous', 'Amputee', 'Bleeder', 'Blind', 'Branded', 'Chip on the Shoulder', 'Credo', 'Combat Paralysis', 'Coward', 'Crude', 'Dead Broke', 'Deadly Enemy', 'Deaf', 'Dull Sense', 'Easy mark', 'Ego Signature', 'Filcher', 'Forked Tongue', 'Greedy', 'Hero Worship', 'Hooked', 'Leaky Brainpan', 'Lightweight', 'Little Person', 'Loyal', 'Memorable', 'Mute', 'Non-Fightin\' Type', 'Overconfident', 'Paralyzed', 'Phobia', 'Portly', 'Prejudice', 'Sadistic', 'Scrawny', 'Slow Learner', 'Soft', 'Stingy', 'Straight Shooter', 'Superstitious', 'Things Don\'t Go Smooth', 'Traumatic Flashes', 'Twitchy', 'Ugly as Sin', 'Weak Stomach'),
         asset: Array('========', 'Allure', 'Athlete', 'Born Behind the Wheel', 'Cortex Specter', 'Fightin\' Type', 'Friends in High Places', 'Friends in low Places', 'Good Name', 'Healthy as a Horse', 'Heavy Tolerance', 'Highly Educated', 'Intimidatin\' Manner', 'Leadership', 'Lightnin\' Reflexes', 'Math Whiz', 'Mean Left Hook', 'Mechanical Empathy', 'Military Rank', 'Moneyed Individual', 'Natural Linguist', 'Nature Lover', 'Nose for Trouble', 'Reader', 'Registered Companion', 'Religiosity', 'Sharp Sense', 'Steady Calm', 'Sweet and Cheerful', 'Talented', 'Things Go Smooth', 'Total Recall', 'Tough as Nails', 'Trustworthy Gut', 'Two-Fisted', 'Walking Timepiece', 'Wears a Badge')
       },
-      comp: {},
-      asset: {},
+      usedComp: new Array(),
+      usedAsset: new Array(),
       hasChanged: false
     },
     functions: {
@@ -273,6 +275,8 @@ var jQ = jQuery,
         return sheet.data.hasChanged;
       },
       getComplications: function(){
+        var usedCompCounter = 0;
+        
         jQ('#complicationsFields').find('select, input, textarea').each(function(){
           var $this = jQ(this);
 
@@ -283,6 +287,10 @@ var jQ = jQuery,
           if($this.attr('type') === 'radio'){
             sheet.data.comp[$this.attr('id')] = ($this.is(':checked')) ? $this.val() : '';
           }else{
+            if($this.is('select')){
+              sheet.data.usedComp[usedCompCounter] = $this.val();
+              usedCompCounter += 1;
+            }
             sheet.data.comp[$this.attr('id')] = $this.val();
           }
         });
@@ -633,13 +641,18 @@ var jQ = jQuery,
           }
           sheet.functions.getSpecialChanges.comp();
         });
+
         jQ('#complicationsFields').on("change", "select", function(){
-          var $this = jQ(this);
-          for(var id in sheet.data.allCompAsset.comp){
-            if(sheet.data.allCompAsset.comp[id] === $this.val()){
-              $this.attr('disabled', 'disabled');
+          jQ('#complicationsFields').find('option').each(function(){
+//            enable and disable used skills
+            jQ(this).removeAttr('disabled');
+
+            for(var used in sheet.data.usedComp){
+              if(sheet.data.usedComp[used] === jQ(this).val()){
+                jQ(this).attr('disabled', 'disabled');
+              }
             }
-          };
+          });
         });
       },
       assetCountChanger: function(){
