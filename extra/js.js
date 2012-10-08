@@ -611,6 +611,7 @@ var jQ = jQuery,
                 jQ(this).remove();
                 compCount -= 1;
 
+                sheet.data.usedComp.pop();
                 delete sheet.data.comp['desc_'+ compCount +'_complications'];
                 delete sheet.data.comp['maj_'+ compCount +'_complications'];
                 delete sheet.data.comp['min_'+ compCount +'_complications'];
@@ -700,6 +701,7 @@ var jQ = jQuery,
                 jQ(this).remove();
                 assetCount -= 1;
 
+                sheet.data.usedAsset.pop();
                 delete sheet.data.asset['desc_'+ assetCount +'_assets'];
                 delete sheet.data.asset['maj_'+ assetCount +'_assets'];
                 delete sheet.data.asset['min_'+ assetCount +'_assets'];
