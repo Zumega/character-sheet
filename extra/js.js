@@ -49,7 +49,8 @@ var jQ = jQuery,
       },
       usedComp: new Array(),
       usedAsset: new Array(),
-      dice: new Array(),
+      dice: {},
+      displayDice: new Array(),
       usedDice: new Array(),
       hasChanged: false
     },
@@ -331,7 +332,7 @@ var jQ = jQuery,
         jQ('#diceDisplay').find('input').each(function() {
           var $this = jQ(this);
 
-          sheet.data.dice[sheet.data.dice.length] = $this.val();
+          sheet.data.displayDice[sheet.data.displayDice.length] = $this.val();
           sheet.data.usedDice[sheet.data.usedDice.length] = $this.data('roll');
         });
       },
@@ -829,15 +830,18 @@ var jQ = jQuery,
               rolled = 0;
 
           rolled = sheet.functions.getDiceRoll($this.data('dice'));
+          sheet.data.displayDice.unshift('D'+ $this.data('dice') +' = '+ rolled);
 
-          sheet.data.dice.unshift('D'+ $this.data('dice') +' = '+ rolled);
-
-          while(sheet.data.dice.length > 14){
-            sheet.data.dice.pop();
+          while(sheet.data.displayDice.length > 14) {
+            sheet.data.displayDice.pop();
           }
 
-          for(var key in sheet.data.dice) {
-            jQ('#dice_'+ key).val(sheet.data.dice[key]);
+          for(var id in sheet.data.displayDice) {
+            sheet.data.dice['dice_'+ id] = sheet.data.displayDice[id];
+            jQ('#dice_'+ id).val(sheet.data.displayDice[id]);
+            if(sheet.data.displayDice[id].length > 0){
+              jQ('#dice_'+ id).removeClass('hide');
+            }
           }
 
           sheet.functions.getLastRolls();

@@ -141,12 +141,12 @@ switch ($_POST['data']['saveArea']){
 }
 
 //echo count($json) ."\n";
-//print_r($json);
+//print_r($content);
 //die;
 
 
 require_once 'connection_Open.php';
-  if ($isMany){
+  if ($isMany) {
     $keys = $value = '';
     $query = 'SELECT  count(`id`) count FROM '. $dataBaseTable .' WHERE  `id` = '. $_SESSION['id'];
     $result = mysql_query($query) or die('Query failed: ' . mysql_error());
@@ -192,7 +192,7 @@ require_once 'connection_Open.php';
       }
       unset($query, $result, $num, $item);
     }
-  }else{
+  } else {
     $pairs='';
     foreach($content as $k=>$v){
       $pairs .= $k .' = \''. mysql_real_escape_string(htmlspecialchars($v)) .'\', ';

@@ -7,13 +7,18 @@ require 'includes/connection_Close.php';
 
 $diceDisplay = "";
 $aryMath = array();
-if ($line['intDice_0'] != ""){
-  foreach($line as $k=>$roll){
-    if ($k!="id" && $roll!=""){
+$inputCount = 0;
+
+if(!empty($line['intDice_0'])) {
+  foreach($line as $k=>$roll) {
+    if ($k!="id" && $roll!="") {
       $aryMath[] = preg_replace('/(D[0-9]{1,2} = )/', "", $roll);
       $diceDisplay .= '<input data-roll="'. $aryMath[count($aryMath)-1] .'" readonly="readonly" type="text" id="'. str_replace("intD", "d", $k) .'" name="'. str_replace("intD", "d", $k) .'" value="'. $roll .'" tabindex="-1" />'."\n";
     }
   }
+}
+for($i=$inputCount; $i<14; $i+=1){
+  $diceDisplay .= '<input data-roll="" readonly="readonly" type="text" id="dice_'. $i .'" name="dice_'. $i .'" value="" class="hide" tabindex="-1" />'."\n";
 }
 ?>
 <div class="module dice clear">

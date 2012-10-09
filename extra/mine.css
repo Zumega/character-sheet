@@ -336,6 +336,9 @@ ul.diceSum {
   float: none;
   width: 100px;
 }
+#diceDisplay input.hide{
+  display: none;
+}
 .diceSumArea{
   width: 20px;
   display: inline-block;
