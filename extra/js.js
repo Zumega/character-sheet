@@ -333,7 +333,9 @@ var jQ = jQuery,
           var $this = jQ(this);
 
           sheet.data.displayDice[sheet.data.displayDice.length] = $this.val();
-          sheet.data.usedDice[sheet.data.usedDice.length] = $this.data('roll');
+          if($this.data('roll').length > 0) {
+            sheet.data.usedDice[sheet.data.usedDice.length] = $this.data('roll');
+          }
         });
       },
       getDiceRoll: function(dice) {
@@ -826,23 +828,37 @@ var jQ = jQuery,
       },
       setDiceClicks: function() {
         jQ(document).find('.diceUI li span').click(function() {
-          var $this = jQ(this),
-              rolled = 0;
+          var $this = jQ(this);
 
-          rolled = sheet.functions.getDiceRoll($this.data('dice'));
-          sheet.data.displayDice.unshift('D'+ $this.data('dice') +' = '+ rolled);
+          if($this.data('dice') === 0) {
+            sheet.data.usedDice = [];
+            sheet.data.dice = {};
 
-          while(sheet.data.displayDice.length > 14) {
-            sheet.data.displayDice.pop();
-          }
+            for(var id in sheet.data.displayDice) {
+              jQ('#dice_'+ id).addClass('hide').val('').data('roll', '');
+            }
 
-          for(var id in sheet.data.displayDice) {
-            sheet.data.dice['dice_'+ id] = sheet.data.displayDice[id];
-            jQ('#dice_'+ id).val(sheet.data.displayDice[id]);
-            if(sheet.data.displayDice[id].length > 0){
-              jQ('#dice_'+ id).removeClass('hide');
+            sheet.data.displayDice = [];
+          } else {
+            var rolled = sheet.functions.getDiceRoll($this.data('dice'));
+            sheet.data.displayDice.unshift('D'+ $this.data('dice') +' = '+ rolled);
+
+            while(sheet.data.displayDice.length > 14) {
+              sheet.data.displayDice.pop();
+            }
+            for(var id in sheet.data.displayDice) {
+              var $diceDisplay = jQ('#dice_'+ id);
+
+              sheet.data.dice['dice_'+ id] = sheet.data.displayDice[id];
+              $diceDisplay.val(sheet.data.displayDice[id]);
+
+              if(sheet.data.displayDice[id].length > 0 && $diceDisplay.hasClass('hide')){
+                $diceDisplay.removeClass('hide');
+              }
             }
           }
+
+console.log(sheet.data.usedDice);
 
           sheet.functions.getLastRolls();
           sheet.functions.save('dice');
