@@ -63,13 +63,7 @@ switch ($_POST['data']['saveArea']){
       'intDice_10' => $json['dice_10'],
       'intDice_11' => $json['dice_11'],
       'intDice_12' => $json['dice_12'],
-      'intDice_13' => $json['dice_13'],
-      'intDice_14' => $json['dice_14'],
-      'intDice_15' => $json['dice_15'],
-      'intDice_16' => $json['dice_16'],
-      'intDice_17' => $json['dice_17'],
-      'intDice_18' => $json['dice_18'],
-      'intDice_19' => $json['dice_19']
+      'intDice_13' => $json['dice_13']
     );
     break;
   case 'equipment':

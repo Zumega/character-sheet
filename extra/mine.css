@@ -194,6 +194,9 @@ select{
 .skillsInput{
   margin-top:15px;
 }
+.skillsInput .smallInput{
+  margin-bottom: 8px;
+}
 .skilColum_2 select{
   width:100%;
   text-transform: capitalize;
@@ -307,6 +310,11 @@ select{
 .diceUI li{
   float:left;
   margin-right: 10px;
+}
+.diceUI li span{
+  cursor: pointer;
+  text-decoration: underline;
+  color: #00f;
 }
 ul.diceSum {
   float:right;

@@ -49,10 +49,12 @@ var jQ = jQuery,
       },
       usedComp: new Array(),
       usedAsset: new Array(),
+      dice: new Array(),
+      usedDice: new Array(),
       hasChanged: false
     },
     functions: {
-      init: function(){
+      init: function() {
 /* ****************************************
 *  commented out functions are to
 *  show where they are in the document
@@ -68,6 +70,9 @@ var jQ = jQuery,
         sheet.functions.getEquipment();
         sheet.functions.getComplications();
         sheet.functions.getAssets();
+        sheet.functions.getDice();
+//        getDiceRoll()
+//        getLastRolls()
 
         sheet.data.hasChanged = false;
 
@@ -88,6 +93,8 @@ var jQ = jQuery,
         sheet.functions.assetUpdater();
 //        checkInputs:
 //          generic()
+        sheet.functions.setDiceClicks();
+
         sheet.functions.getChanges();
 //        getSpecialChanges:
 //          skill()
@@ -96,7 +103,7 @@ var jQ = jQuery,
 //        save()
 
       },
-      setObjects: function(){
+      setObjects: function() {
 //        store dom in obj
         sheet.settings.saveObj = jQ('#saveMessage');
         sheet.settings.woundBarObj = jQ('#woundPointBar');
@@ -106,7 +113,7 @@ var jQ = jQuery,
         sheet.settings.usedAttrPointsObj = jQ('#usedAttrPoints');
         sheet.settings.usedSkillPointsObj = jQ('#usedSkillPoints');
       },
-      getDefalutPoints: function(){
+      getDefalutPoints: function() {
 //        store data in obj
         sheet.data.defaultPoints.maxLifePoints = parseInt(jQ('#maxLifePoints').val());
         sheet.data.defaultPoints.maxAttrPoints = parseInt(jQ('#attrPoints').val());
@@ -114,7 +121,7 @@ var jQ = jQuery,
         sheet.data.defaultPoints.maxSkillPoints = parseInt(jQ('#skillPoints').val());
         sheet.data.defaultPoints.usedSkillPoints = parseInt(jQ('#usedSkillPoints').val());
       },
-      getCharacterInfo: function(){
+      getCharacterInfo: function() {
 //        check if there are any changes
         if(
           sheet.data.characterInfo.name !== jQ('#charName').val() ||
@@ -141,7 +148,7 @@ var jQ = jQuery,
 
         return sheet.data.hasChanged;
       },
-      getAttributes: function(){
+      getAttributes: function() {
 //        check if there are any changes
         if(
           sheet.data.attributes.strength !== parseInt(jQ('#str').val()) ||
@@ -180,12 +187,12 @@ var jQ = jQuery,
           lifePoints: 0,
           endurance: 0
         },
-        rollBreakdown = function(data){
-          if(data.d1 > 12){
+        rollBreakdown = function(data) {
+          if(data.d1 > 12) {
             data.d3 = data.d1 % 12;
             data.d1 = 12;
           }
-          if(data.d2 > 12){
+          if(data.d2 > 12) {
             data.d4 = data.d2 % 12;
             data.d2 = 12;
           }
@@ -213,7 +220,7 @@ var jQ = jQuery,
         sheet.data.derivedTraits.endurance = life.endurance;
 
 
-        if(life.lifePoints > sheet.data.defaultPoints.maxLifePoints){
+        if(life.lifePoints > sheet.data.defaultPoints.maxLifePoints) {
           alert('You have to many life points.\nYou have '+ life.lifePoints +'\nYou can only have '+ sheet.data.defaultPoints.maxLifePoints);
           $this.select();
           $this.focus();
@@ -237,11 +244,11 @@ var jQ = jQuery,
 
           return sheet.data.hasChanged;
       },
-      getSkills: function(){
+      getSkills: function() {
         var usedSkillCounter = 0,
             usedSubSkillCounter = 0;
 
-        jQ('#skillsContainer').find('select, input').each(function(){
+        jQ('#skillsContainer').find('select, input').each(function() {
           var $this = jQ(this);
 
           if(sheet.data.skills[$this.attr('name')] !== $this.val()) {
@@ -249,11 +256,11 @@ var jQ = jQuery,
           }
           sheet.data.skills[$this.attr('name')] = $this.val();
 
-          if($this.attr('name').indexOf('s') === 0 && $this.val() !== '================='){
+          if($this.attr('name').indexOf('s') === 0 && $this.val() !== '=================') {
             sheet.data.usedSkills[usedSkillCounter] = $this.val();
             usedSkillCounter += 1;
           }
-          if($this.attr('name').indexOf('f') === 0 && isNaN($this.val())){
+          if($this.attr('name').indexOf('f') === 0 && isNaN($this.val())) {
             sheet.data.usedSubSkills[usedSubSkillCounter] = $this.val();
             usedSubSkillCounter += 1;
           }
@@ -261,12 +268,12 @@ var jQ = jQuery,
 
         return sheet.data.hasChanged;
       },
-      getEquipment: function(){
-        jQ(document).find('.equipInput textarea').each(function(){
+      getEquipment: function() {
+        jQ(document).find('.equipInput textarea').each(function() {
           var $this = jQ(this);
 
-          if($this.attr('id') !== 'allitems'){
-            if(sheet.data.equipment[$this.attr('id')] !== $this.val()){
+          if($this.attr('id') !== 'allitems') {
+            if(sheet.data.equipment[$this.attr('id')] !== $this.val()) {
               sheet.data.hasChanged = true;
             }
             sheet.data.equipment[$this.attr('id')] = $this.val();
@@ -274,20 +281,20 @@ var jQ = jQuery,
         });
         return sheet.data.hasChanged;
       },
-      getComplications: function(){
+      getComplications: function() {
         var usedCompCounter = 0;
 
-        jQ('#complicationsFields').find('select, input, textarea').each(function(){
+        jQ('#complicationsFields').find('select, input, textarea').each(function() {
           var $this = jQ(this);
 
-          if((sheet.data.comp[$this.attr('id')] !== $this.val())){
+          if((sheet.data.comp[$this.attr('id')] !== $this.val())) {
             sheet.data.hasChanged = true;
           }
 
-          if($this.attr('type') === 'radio'){
+          if($this.attr('type') === 'radio') {
             sheet.data.comp[$this.attr('id')] = ($this.is(':checked')) ? $this.val() : '';
           }else{
-            if($this.is('select')){
+            if($this.is('select')) {
               sheet.data.usedComp[usedCompCounter] = $this.val();
               usedCompCounter += 1;
             }
@@ -297,20 +304,20 @@ var jQ = jQuery,
 
         return sheet.data.hasChanged;
       },
-      getAssets: function(){
+      getAssets: function() {
         var usedAssetCounter = 0;
 
-        jQ('#assetsFields').find('select, input, textarea').each(function(){
+        jQ('#assetsFields').find('select, input, textarea').each(function() {
           var $this = jQ(this);
 
-          if((sheet.data.asset[$this.attr('id')] !== $this.val())){
+          if((sheet.data.asset[$this.attr('id')] !== $this.val())) {
             sheet.data.hasChanged = true;
           }
 
-          if($this.attr('type') === 'radio'){
+          if($this.attr('type') === 'radio') {
             sheet.data.asset[$this.attr('id')] = ($this.is(':checked')) ? $this.val() : '';
           }else{
-            if($this.is('select')){
+            if($this.is('select')) {
               sheet.data.usedAsset[usedAssetCounter] = $this.val();
               usedAssetCounter += 1;
             }
@@ -320,11 +327,46 @@ var jQ = jQuery,
 
         return sheet.data.hasChanged;
       },
-      setStunWoundClicks: function(){
-        jQ(document).find('.characterInfo .btnUpDown').click(function(){
+      getDice: function() {
+        jQ('#diceDisplay').find('input').each(function() {
           var $this = jQ(this);
 
-          switch($this.attr('id')){
+          sheet.data.dice[sheet.data.dice.length] = $this.val();
+          sheet.data.usedDice[sheet.data.usedDice.length] = $this.data('roll');
+        });
+      },
+      getDiceRoll: function(dice) {
+        var roll = 0;
+
+        while (roll > dice || roll <= 0) {
+          roll = Math.round(Math.random() * dice);
+        }
+
+        sheet.data.usedDice.unshift(parseInt(roll));
+        while(sheet.data.usedDice.length > 5){
+          sheet.data.usedDice.pop();
+        }
+
+        return roll;
+      },
+      getLastRolls: function() {
+        var diceMath = {
+                twoDice: (sheet.data.usedDice.length >= 2) ? sheet.data.usedDice[0] + sheet.data.usedDice[1] : 0,
+                threeDice: (sheet.data.usedDice.length >= 3) ? sheet.data.usedDice[0] + sheet.data.usedDice[1] + sheet.data.usedDice[2] : 0,
+                fourDice: (sheet.data.usedDice.length >= 4) ? sheet.data.usedDice[0] + sheet.data.usedDice[1] + sheet.data.usedDice[2] + sheet.data.usedDice[3] : 0,
+                fiveDice: (sheet.data.usedDice.length >= 5) ? sheet.data.usedDice[0] + sheet.data.usedDice[1] + sheet.data.usedDice[2] + sheet.data.usedDice[3] + sheet.data.usedDice[4] : 0
+              }
+
+        jQ('#diceNum_2').text(diceMath.twoDice);
+        jQ('#diceNum_3').text(diceMath.threeDice);
+        jQ('#diceNum_4').text(diceMath.fourDice);
+        jQ('#diceNum_5').text(diceMath.fiveDice);
+      },
+      setStunWoundClicks: function() {
+        jQ(document).find('.characterInfo .btnUpDown').click(function() {
+          var $this = jQ(this);
+
+          switch($this.attr('id')) {
             case 'woundPointsUp':
               $this.siblings('input[type=text]').val(sheet.data.characterInfo.woundPoints += 1);
               if(sheet.data.characterInfo.woundPoints > 0) {
@@ -333,7 +375,7 @@ var jQ = jQuery,
               break;
             case 'woundPointsDown':
               $this.siblings('input[type=text]').val(sheet.data.characterInfo.woundPoints -= 1);
-              if(sheet.data.characterInfo.woundPoints === 0){
+              if(sheet.data.characterInfo.woundPoints === 0) {
                 $this.addClass('hide');
               }
               break;
@@ -345,7 +387,7 @@ var jQ = jQuery,
               break;
             case 'stunPointsDown':
               $this.siblings('input[type=text]').val(sheet.data.characterInfo.stunPoints -= 1);
-              if(sheet.data.characterInfo.stunPoints === 0){
+              if(sheet.data.characterInfo.stunPoints === 0) {
                 $this.addClass('hide');
               }
               break;
@@ -355,7 +397,7 @@ var jQ = jQuery,
           sheet.functions.ouchCheck();
         });
       },
-      ouchCheck: function(){
+      ouchCheck: function() {
         var totalPoints = sheet.data.characterInfo.woundPoints + sheet.data.characterInfo.stunPoints,
           wounPercent = (100 / sheet.data.derivedTraits.lifePoints) * sheet.data.characterInfo.woundPoints,
           stunPercent = (100 / sheet.data.derivedTraits.lifePoints) * sheet.data.characterInfo.stunPoints,
@@ -370,37 +412,37 @@ var jQ = jQuery,
 
         sheet.functions.deathCheck();
       },
-      deathCheck: function(){
+      deathCheck: function() {
         if(sheet.data.derivedTraits.lifePoints === (sheet.data.characterInfo.woundPoints + sheet.data.characterInfo.stunPoints)) {
           alert('You DEAD!!');
         }
       },
       setDerivedTraits: function() {
-        jQ("#agl, #alert, #vit, #willpower").blur(function(){
+        jQ("#agl, #alert, #vit, #willpower").blur(function() {
           sheet.functions.getDerivedTraits(jQ(this));
         });
       },
       skillCountChanger: function() {
-        jQ(document).find('.skillsSpecialties .btnUpDown').click(function(){
+        jQ(document).find('.skillsSpecialties .btnUpDown').click(function() {
           var $this = jQ(this),
               $countField = jQ('#SkillsCnt'),
               skillCount = parseInt($countField.text());
 
-          switch($this.attr('id')){
+          switch($this.attr('id')) {
             case 'skillUp':
               jQ.ajax({
                 url: sheet.settings.newSkillUrl,
                 type: 'POST',
                 data: {'data': skillCount, 'used': sheet.data.usedSkills },
                 dataType: 'html',
-                success: function(response){
+                success: function(response) {
                   jQ('#skillsContainer').append(response);
-                  if(sheet.functions.getSkills()){
+                  if(sheet.functions.getSkills()) {
                     sheet.data.hasChanged = false;
                     sheet.functions.save('skills');
                   }
                 },
-                error: function(one, text, error){
+                error: function(one, text, error) {
                   console.log(one);
                   console.log(text);
                   console.log(error);
@@ -409,12 +451,12 @@ var jQ = jQuery,
 
               skillCount += 1;
               $countField.text(skillCount);
-              if(skillCount > 0){
+              if(skillCount > 0) {
                 jQ('#skillDown').removeClass('hide');
               }
               break;
             case 'skillDown':
-              jQ('#skillsContainer').find('.column:last-child').fadeOut('fast',function(){
+              jQ('#skillsContainer').find('.column:last-child').fadeOut('fast',function() {
                 jQ(this).remove();
                 skillCount -= 1;
 
@@ -428,7 +470,7 @@ var jQ = jQuery,
                 delete sheet.data.skills['field_'+ skillCount +'_5'];
                 delete sheet.data.skills['field_'+ skillCount +'_6'];
 
-                if(skillCount > 0){
+                if(skillCount > 0) {
                   jQ('#skillsContainer').find('input:first-child').trigger('blur');
                 }
 
@@ -436,7 +478,7 @@ var jQ = jQuery,
                 sheet.functions.save('skills');
                 $countField.text(skillCount);
 
-                if(skillCount === 0){
+                if(skillCount === 0) {
                   jQ('#skillDown').addClass('hide');
                 }
               });
@@ -444,8 +486,8 @@ var jQ = jQuery,
           }
         });
       },
-      skillUpdater: function(){
-        jQ('#skillsContainer').on('change', '.skilColum_1 select', function(){
+      skillUpdater: function() {
+        jQ('#skillsContainer').on('change', '.skilColum_1 select', function() {
           var $this = jQ(this),
               thisId = $this.attr('id'),
               activeValue = $this.val(),
@@ -455,12 +497,12 @@ var jQ = jQuery,
 
           if(sheet.functions.getSkills()) {
 //            get new options
-            for(skills in sheet.data.allskills){
-              if(activeValue === skills){
-                for(var i=0; i<(sheet.data.allskills[skills]).length; i+=1){
+            for(skills in sheet.data.allskills) {
+              if(activeValue === skills) {
+                for(var i=0; i<(sheet.data.allskills[skills]).length; i+=1) {
                   var list = sheet.data.allskills[skills];
 
-                  for(var a=0; a<list.length; a+=1){
+                  for(var a=0; a<list.length; a+=1) {
                     options[list[a].toLowerCase()] = list[a];
                   }
                 }
@@ -479,12 +521,12 @@ var jQ = jQuery,
               jQ('#'+ thisId +'_3').append(jQ("<option></option>").attr("value", key).text(value));
             });
 
-            jQ('#skillsContainer').find('.skilColum_1 option').each(function(){
+            jQ('#skillsContainer').find('.skilColum_1 option').each(function() {
 //              enable and disable used skills
               jQ(this).removeAttr('disabled');
 
-              for(var used in sheet.data.usedSkills){
-                if(sheet.data.usedSkills[used] === jQ(this).val()){
+              for(var used in sheet.data.usedSkills) {
+                if(sheet.data.usedSkills[used] === jQ(this).val()) {
                   jQ(this).attr('disabled', 'disabled');
                 }
               }
@@ -495,28 +537,28 @@ var jQ = jQuery,
         });
       },
       subSkillUpdater: function() {
-        jQ('#skillsContainer').on('change', '.skilColum_2 select', function(){
+        jQ('#skillsContainer').on('change', '.skilColum_2 select', function() {
           var $this = jQ(this),
               $options = jQ('#skillsContainer .skilColum_2 option'),
               usedSubSkillCounter = 0;
 
 //          reset used subkills
           sheet.data.usedSubSkills = [];
-          jQ('#skillsContainer').find('.skilColum_2 select').each(function(){
+          jQ('#skillsContainer').find('.skilColum_2 select').each(function() {
             var $el = jQ(this);
-            if($el.attr('name').indexOf('f') === 0 && isNaN($el.val())){
+            if($el.attr('name').indexOf('f') === 0 && isNaN($el.val())) {
               sheet.data.usedSubSkills[usedSubSkillCounter] = $el.val();
               usedSubSkillCounter += 1;
             }
           });
 
 //          enable and disable used subskills
-          $options.each(function(){
+          $options.each(function() {
             jQ(this).removeAttr('disabled');
           });
-          $options.each(function(){
-            for(var used in sheet.data.usedSubSkills){
-              if(sheet.data.usedSubSkills[used] === jQ(this).val()){
+          $options.each(function() {
+            for(var used in sheet.data.usedSubSkills) {
+              if(sheet.data.usedSubSkills[used] === jQ(this).val()) {
                 jQ(this).attr('disabled', 'disabled');
               }
             }
@@ -525,13 +567,13 @@ var jQ = jQuery,
           sheet.functions.getSpecialChanges.skill();
         });
       },
-      setEquipmentTabs: function(){
-        jQ(document).find('.equipTab').click(function(){
+      setEquipmentTabs: function() {
+        jQ(document).find('.equipTab').click(function() {
           var $this = jQ(this),
               tabid = $this.children('label').attr('for');
 
-          jQ(document).find('.equipTab').each(function(){
-            if(jQ(this).hasClass('active')){
+          jQ(document).find('.equipTab').each(function() {
+            if(jQ(this).hasClass('active')) {
               jQ(this).removeClass('active');
             }
           });
@@ -543,22 +585,22 @@ var jQ = jQuery,
           sheet.functions.save('equipment');
         });
       },
-      setEquipmentFields: function(id){
-        jQ(document).find('.equipInput textarea').each(function(){
+      setEquipmentFields: function(id) {
+        jQ(document).find('.equipInput textarea').each(function() {
           var $this = jQ(this);
-          if($this.hasClass('active')){
+          if($this.hasClass('active')) {
             $this.removeClass('active')
           }
-          if($this.attr('id') === id){
+          if($this.attr('id') === id) {
             $this.addClass('active');
           }
         });
       },
-      updateAllItemsField: function(){
+      updateAllItemsField: function() {
         var content = {};
 
 //        jQ('#allitems').val('');
-        jQ(document).find('.equipInput textarea').each(function(){
+        jQ(document).find('.equipInput textarea').each(function() {
           content[jQ(this).attr('id')] = jQ(this).val();
         });
 
@@ -566,34 +608,34 @@ var jQ = jQuery,
         delete content.notes;
 
         sheet.data.allItems = '';
-        for(var el in content){
+        for(var el in content) {
           console.log(el);
           sheet.data.allItems += el.charAt(0).toUpperCase() + el.slice(1) +':\n'+ content[el] +'\n\n\n';
         }
 
         jQ('#allitems').val(sheet.data.allItems);
       },
-      compCountChanger: function(){
-        jQ('#complicationsUp, #complicationsDown').on('click', function(){
+      compCountChanger: function() {
+        jQ('#complicationsUp, #complicationsDown').on('click', function() {
           var $this = jQ(this),
               $countField = jQ('#complicationsCnt'),
               compCount = parseInt($countField.text());;
 
-          switch($this.attr('id')){
+          switch($this.attr('id')) {
             case 'complicationsUp':
               jQ.ajax({
                 url: sheet.settings.newCompAssetUrl,
                 type: 'POST',
                 data: {'count': compCount, 'type': 'complications', 'used': sheet.data.usedComp},
                 dataType: 'html',
-                success: function(response){
+                success: function(response) {
                   jQ('#complicationsFields').append(response);
-                  if(sheet.functions.getComplications()){
+                  if(sheet.functions.getComplications()) {
                     sheet.data.hasChanged = false;
                     sheet.functions.save('comp');
                   }
                 },
-                error: function(one, text, error){
+                error: function(one, text, error) {
                   console.log(one);
                   console.log(text);
                   console.log(error);
@@ -603,12 +645,12 @@ var jQ = jQuery,
               compCount += 1;
               $countField.text(compCount);
 
-              if(compCount > 0 ){
+              if(compCount > 0 ) {
                 jQ('#complicationsDown').removeClass('hide');
               }
               break;
             case 'complicationsDown':
-              jQ('#complicationsFields').find('.section:last-child').fadeOut('fast', function(){
+              jQ('#complicationsFields').find('.section:last-child').fadeOut('fast', function() {
                 jQ(this).remove();
                 compCount -= 1;
 
@@ -622,7 +664,7 @@ var jQ = jQuery,
                 sheet.functions.save('comp');
                 $countField.text(compCount);
 
-                if(compCount === 0 ){
+                if(compCount === 0 ) {
                   $this.addClass('hide');
                 }
               });
@@ -631,59 +673,59 @@ var jQ = jQuery,
         });
       },
       compUpdater: function() {
-        jQ('#complicationsFields').on("change", "select, input", function(){
+        jQ('#complicationsFields').on("change", "select, input", function() {
           sheet.functions.getSpecialChanges.comp();
         });
-        jQ('#complicationsFields').on("focus", "textarea", function(){
+        jQ('#complicationsFields').on("focus", "textarea", function() {
           var $this = jQ(this);
 
-          if($this.val() === '(NOTES)'){
+          if($this.val() === '(NOTES)') {
             $this.removeClass('new').val('');
           }
         });
-        jQ('#complicationsFields').on("blur", "textarea", function(){
+        jQ('#complicationsFields').on("blur", "textarea", function() {
           var $this = jQ(this);
 
-          if($this.val() === ''){
+          if($this.val() === '') {
             $this.addClass('new').val('(NOTES)');
           }
           sheet.functions.getSpecialChanges.comp();
         });
 
-        jQ('#complicationsFields').on("change", "select", function(){
-          jQ('#complicationsFields').find('option').each(function(){
+        jQ('#complicationsFields').on("change", "select", function() {
+          jQ('#complicationsFields').find('option').each(function() {
 //            enable and disable used skills
             jQ(this).removeAttr('disabled');
 
-            for(var used in sheet.data.usedComp){
-              if(sheet.data.usedComp[used] === jQ(this).val()){
+            for(var used in sheet.data.usedComp) {
+              if(sheet.data.usedComp[used] === jQ(this).val()) {
                 jQ(this).attr('disabled', 'disabled');
               }
             }
           });
         });
       },
-      assetCountChanger: function(){
-        jQ('#assetsUp, #assetsDown').on('click', function(){
+      assetCountChanger: function() {
+        jQ('#assetsUp, #assetsDown').on('click', function() {
           var $this = jQ(this),
               $countField = jQ('#assetsCnt'),
               assetCount = parseInt($countField.text());
 
-          switch($this.attr('id')){
+          switch($this.attr('id')) {
             case 'assetsUp':
               jQ.ajax({
                 url: sheet.settings.newCompAssetUrl,
                 type: 'POST',
                 data: {'count': assetCount, 'type': 'assets', 'used': sheet.data.usedAsset},
                 dataType: 'html',
-                success: function(response){
+                success: function(response) {
                   jQ('#assetsFields').append(response);
-                  if(sheet.functions.getAssets()){
+                  if(sheet.functions.getAssets()) {
                     sheet.data.hasChanged = false;
                     sheet.functions.save('asset');
                   }
                 },
-                error: function(one, text, error){
+                error: function(one, text, error) {
                   console.log(one);
                   console.log(text);
                   console.log(error);
@@ -693,12 +735,12 @@ var jQ = jQuery,
               assetCount += 1;
               $countField.text(assetCount);
 
-              if(assetCount > 0 ){
+              if(assetCount > 0 ) {
                 jQ('#assetDown').removeClass('hide');
               }
               break;
             case 'assetsDown':
-              jQ('#assetsFields').find('.section:last-child').fadeOut('fast', function(){
+              jQ('#assetsFields').find('.section:last-child').fadeOut('fast', function() {
                 jQ(this).remove();
                 assetCount -= 1;
 
@@ -712,7 +754,7 @@ var jQ = jQuery,
                 sheet.functions.save('asset');
                 $countField.text(assetCount);
 
-                if(assetCount === 0 ){
+                if(assetCount === 0 ) {
                   $this.addClass('hide');
                 }
               });
@@ -721,32 +763,32 @@ var jQ = jQuery,
         });
       },
       assetUpdater: function() {
-        jQ('#assetsFields').on("change", "select, input", function(){
+        jQ('#assetsFields').on("change", "select, input", function() {
           sheet.functions.getSpecialChanges.asset();
         });
-        jQ('#assetsFields').on("focus", "textarea", function(){
+        jQ('#assetsFields').on("focus", "textarea", function() {
           var $this = jQ(this);
 
-          if($this.val() === '(NOTES)'){
+          if($this.val() === '(NOTES)') {
             $this.removeClass('new').val('');
           }
         });
-        jQ('#assetsFields').on("blur", "textarea", function(){
+        jQ('#assetsFields').on("blur", "textarea", function() {
           var $this = jQ(this);
 
-          if($this.val() === ''){
+          if($this.val() === '') {
             $this.addClass('new').val('(NOTES)');
           }
           sheet.functions.getSpecialChanges.asset();
         });
 
-        jQ('#assetsFields').on("change", "select", function(){
-          jQ('#assetsFields').find('option').each(function(){
+        jQ('#assetsFields').on("change", "select", function() {
+          jQ('#assetsFields').find('option').each(function() {
 //            enable and disable used skills
             jQ(this).removeAttr('disabled');
 
-            for(var used in sheet.data.usedAsset){
-              if(sheet.data.usedAsset[used] === jQ(this).val()){
+            for(var used in sheet.data.usedAsset) {
+              if(sheet.data.usedAsset[used] === jQ(this).val()) {
                 jQ(this).attr('disabled', 'disabled');
               }
             }
@@ -754,107 +796,135 @@ var jQ = jQuery,
         });
       },
       checkInputs: {
-        generic: function($this, $inputs, type){
+        generic: function($this, $inputs, type) {
           var sum = 0;
 
-          if($this.val() === ""){
+          if($this.val() === "") {
             $this.val(0);
           }
-          if ($this.val() % 2 || isNaN($this.val())){
+          if ($this.val() % 2 || isNaN($this.val())) {
             alert("The number needs to corispond to a dice number\nMeaning it needs to be even.");
             $this.select();
             $this.focus();
             return;
           }
 
-          $inputs.each(function(){
+          $inputs.each(function() {
             sum += parseInt(jQ(this).val());
           });
 
           sheet.data.defaultPoints['used'+ type +'Points'] = sum;
           sheet.settings['used'+ type +'PointsObj'].val(sum);
 
-          if (sum > sheet.data.defaultPoints['max'+ type +'Points']){
+          if (sum > sheet.data.defaultPoints['max'+ type +'Points']) {
             alert('You have use to many points\nYou only have '+ sheet.data.defaultPoints['max'+ type +'Points'] +' points to use.\nAnd you have used '+ sum +' so far.');
             $this.select();
             $this.focus();
           }
         }
       },
+      setDiceClicks: function() {
+        jQ(document).find('.diceUI li span').click(function() {
+          var $this = jQ(this),
+              rolled = 0;
+
+          rolled = sheet.functions.getDiceRoll($this.data('dice'));
+
+          sheet.data.dice.unshift('D'+ $this.data('dice') +' = '+ rolled);
+
+          while(sheet.data.dice.length > 14){
+            sheet.data.dice.pop();
+          }
+
+          for(var key in sheet.data.dice) {
+            jQ('#dice_'+ key).val(sheet.data.dice[key]);
+          }
+
+          sheet.functions.getLastRolls();
+          sheet.functions.save('dice');
+        });
+      },
       getChanges: function() {
 //        attache the BLUR listener
-        jQ(document).find('.characterInfo input[type=text]').blur(function(){
-          if(sheet.functions.getCharacterInfo()){
+        jQ(document).find('.characterInfo input[type=text]').blur(function() {
+          if(sheet.functions.getCharacterInfo()) {
             sheet.data.hasChanged = false;
             sheet.functions.ouchCheck();
             sheet.functions.save('characterInfo');
           }
         });
 
-        jQ(document).find('.attributes input[type=text]').blur(function(){
-          if(sheet.functions.getAttributes()){
+        jQ(document).find('.attributes input[type=text]').blur(function() {
+          if(sheet.functions.getAttributes()) {
             sheet.data.hasChanged = false;
             sheet.functions.save('attributes');
           }
         });
 
-        jQ(document).find(".attributes input[type!=hidden]").blur(function(){
+        jQ(document).find(".attributes input[type!=hidden]").blur(function() {
           sheet.functions.checkInputs.generic(jQ(this), jQ(document).find(".attributes input"), 'Attr');
         });
 
-        jQ('#skillsContainer').on('blur', 'input',  function(){
+        jQ('#skillsContainer').on('blur', 'input',  function() {
           sheet.functions.checkInputs.generic(jQ(this), jQ('#skillsContainer').find('input'), 'Skill');
         });
 
         jQ('#curntInt, #curntEndur, #curntResist').blur(function() {
-          if(sheet.functions.getRolledTraits()){
+          if(sheet.functions.getRolledTraits()) {
             sheet.data.hasChanged = false;
             sheet.functions.save('rolledTraits');
           }
         });
 
-        jQ('#skillsContainer').on("blur", "input[type=text]", function(){
-          if(sheet.functions.getSkills()){
+        jQ('#skillsContainer').on("blur", "input[type=text]", function() {
+          if(sheet.functions.getSkills()) {
             sheet.data.hasChanged = false;
             sheet.functions.save('skills');
           }
         });
 
-        jQ(document).find('.equipInput textarea').blur(function(){
-          if(jQ(this).attr('id') !== 'allitems'){
+        jQ(document).find('.equipInput textarea').blur(function() {
+          if(jQ(this).attr('id') !== 'allitems') {
             sheet.functions.updateAllItemsField();
 
-            if(sheet.functions.getEquipment()){
+            if(sheet.functions.getEquipment()) {
               sheet.data.hasChanged = false;
               sheet.functions.save('equipment');
             }
           }
         });
+
+        jQ(document).find('.diceUI span').click(function() {
+          if(sheet.functions.getDice()) {
+            sheet.data.hasChanged = false;
+            sheet.functions.save('dice');
+          }
+        });
       },
       getSpecialChanges: {
-        skill: function(){
+        skill: function() {
 //          not part of getCanges() do to calculations that need to be done before save
-          if(sheet.functions.getSkills()){
+          if(sheet.functions.getSkills()) {
             sheet.data.hasChanged = false;
             sheet.functions.save('skills');
           }
         },
-        comp: function(){
+        comp: function() {
 //          not part of getCanges() do to calculations that need to be done before save
-          if(sheet.functions.getComplications()){
+          if(sheet.functions.getComplications()) {
             sheet.data.hasChanged = false;
             sheet.functions.save('comp');
           }
         },
-        asset: function(){
+        asset: function() {
 //          not part of getCanges() do to calculations that need to be done before save
-          if(sheet.functions.getAssets()){
+          if(sheet.functions.getAssets()) {
             sheet.data.hasChanged = false;
             sheet.functions.save('asset');
           }
         }
       },
-      save: function(saveArea){
+      save: function(saveArea) {
         var values = sheet.data[saveArea];
 
         jQ.ajax({
@@ -863,8 +933,8 @@ var jQ = jQuery,
           data: {'data': {'content': JSON.stringify(values) , 'saveArea': saveArea }},
           dataType: 'jsonp',
           jsonpCallback: saveArea +'_callback',
-          success: function(response){
-            if(response.status !== 'done'){
+          success: function(response) {
+            if(response.status !== 'done') {
               sheet.settings.saveObj.text(response.status);
             }else{
               sheet.settings.saveObj.text('Saved');
@@ -876,7 +946,7 @@ var jQ = jQuery,
               top: '-=50'
             }, 500);
           },
-          error: function(one, text, error){
+          error: function(one, text, error) {
             console.log(one);
             console.log(text);
             console.log(error);
@@ -886,6 +956,6 @@ var jQ = jQuery,
     }
   };
 
-jQ(document).ready(function(){
+jQ(document).ready(function() {
   sheet.functions.init();
 });

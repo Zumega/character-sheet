@@ -10,21 +10,19 @@ $aryMath = array();
 if ($line['intDice_0'] != ""){
   foreach($line as $k=>$roll){
     if ($k!="id" && $roll!=""){
-      $diceDisplay .= "<input readonly='readonly' type='text' id='". str_replace("intD", "d", $k) ."' name='". str_replace("intD", "d", $k) ."' value='". $roll ."' tabindex=\"-1\" />\n";
       $aryMath[] = preg_replace('/(D[0-9]{1,2} = )/', "", $roll);
+      $diceDisplay .= '<input data-roll="'. $aryMath[count($aryMath)-1] .'" readonly="readonly" type="text" id="'. str_replace("intD", "d", $k) .'" name="'. str_replace("intD", "d", $k) .'" value="'. $roll .'" tabindex="-1" />'."\n";
     }
   }
 }
-
-
 ?>
 <div class="module dice clear">
   <input type="hidden" name="area" value="dice" />
   <ul class="diceUI clear">
-    <li><a href="javascript:DICE(0);" tabindex="-1">Clear the dice</a></li>
+    <li><span data-dice="0">Clear the dice</span></li>
     <?php
-      for ($i=2; $i<=$highDice;$i=$i+2){
-        echo '<li><a href="javascript:DICE('. $i .');" tabindex="-1">D'. $i .'</a></li>';
+      for ($i=2; $i<=$highDice; $i+=2){
+        echo '<li><span data-dice="'. $i .'">D'. $i .'</span></li>';
       }
     ?>
   </ul>
