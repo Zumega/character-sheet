@@ -446,9 +446,7 @@ var jQ = jQuery,
                   }
                 },
                 error: function(one, text, error) {
-                  console.log(one);
-                  console.log(text);
-                  console.log(error);
+                  sheet.functions.ajaxError(error);
                 }
               });
 
@@ -602,7 +600,6 @@ var jQ = jQuery,
       updateAllItemsField: function() {
         var content = {};
 
-//        jQ('#allitems').val('');
         jQ(document).find('.equipInput textarea').each(function() {
           content[jQ(this).attr('id')] = jQ(this).val();
         });
@@ -612,7 +609,6 @@ var jQ = jQuery,
 
         sheet.data.allItems = '';
         for(var el in content) {
-          console.log(el);
           sheet.data.allItems += el.charAt(0).toUpperCase() + el.slice(1) +':\n'+ content[el] +'\n\n\n';
         }
 
@@ -639,9 +635,7 @@ var jQ = jQuery,
                   }
                 },
                 error: function(one, text, error) {
-                  console.log(one);
-                  console.log(text);
-                  console.log(error);
+                  sheet.functions.ajaxError(error);
                 }
               });
 
@@ -729,9 +723,7 @@ var jQ = jQuery,
                   }
                 },
                 error: function(one, text, error) {
-                  console.log(one);
-                  console.log(text);
-                  console.log(error);
+                  sheet.functions.ajaxError(error);
                 }
               });
 
@@ -858,8 +850,6 @@ var jQ = jQuery,
             }
           }
 
-console.log(sheet.data.usedDice);
-
           sheet.functions.getLastRolls();
           sheet.functions.save('dice');
         });
@@ -967,11 +957,13 @@ console.log(sheet.data.usedDice);
             }, 500);
           },
           error: function(one, text, error) {
-            console.log(one);
-            console.log(text);
-            console.log(error);
+            sheet.functions.ajaxError(error);
           }
         });
+      },
+      ajaxError: function(error) {
+        var html = "<div class='ajaxError'>"+ error +"<\/div>";
+        jQ('body').append(html);
       }
     }
   };
