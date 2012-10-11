@@ -362,3 +362,6 @@ ul.diceSum {
   font-weight: bold;
   padding: 4px;
 }
+.ajaxError{
+  display:none;
+}

@@ -52,6 +52,7 @@ var jQ = jQuery,
       dice: {},
       displayDice: new Array(),
       usedDice: new Array(),
+      saveQueue: {},
       hasChanged: false
     },
     functions: {
@@ -102,6 +103,8 @@ var jQ = jQuery,
 //          comp()
 //          asset()
 //        save()
+//        saveQueue()
+//        ajaxError()
 
       },
       setObjects: function() {
@@ -935,31 +938,33 @@ var jQ = jQuery,
         }
       },
       save: function(saveArea) {
-        var values = sheet.data[saveArea];
+        sheet.data.saveQueue[saveArea] = sheet.data[saveArea];
 
-        jQ.ajax({
-          url: sheet.settings.saveUrl,
-          type: 'POST',
-          data: {'data': {'content': JSON.stringify(values) , 'saveArea': saveArea }},
-          dataType: 'jsonp',
-          jsonpCallback: saveArea +'_callback',
-          success: function(response) {
-            if(response.status !== 'done') {
-              sheet.settings.saveObj.text(response.status);
-            }else{
-              sheet.settings.saveObj.text('Saved');
+        for(var id in sheet.data.saveQueue){
+          jQ.ajax({
+            url: sheet.settings.saveUrl,
+            type: 'POST',
+            data: {'data': {'content': JSON.stringify(sheet.data.saveQueue[id]) , 'saveArea': id }},
+            dataType: 'jsonp',
+            jsonpCallback: saveArea +'_callback',
+            success: function(response) {
+              if(response.status !== 'done') {
+                sheet.settings.saveObj.text(response.status);
+              }else{
+                sheet.settings.saveObj.text('Saved');
+              }
+
+              sheet.settings.saveObj.animate({
+                top: '+=50'
+              }, 500).delay(1000).animate({
+                top: '-=50'
+              }, 500);
+            },
+            error: function(one, text, error) {
+              sheet.functions.ajaxError(error);
             }
-
-            sheet.settings.saveObj.animate({
-              top: '+=50'
-            }, 500).delay(2000).animate({
-              top: '-=50'
-            }, 500);
-          },
-          error: function(one, text, error) {
-            sheet.functions.ajaxError(error);
-          }
-        });
+          });
+        }
       },
       ajaxError: function(error) {
         var html = "<div class='ajaxError'>"+ error +"<\/div>";
