@@ -113,13 +113,16 @@ select{
   border-right:1px solid #f00;
   border-bottom:1px solid #f00;
   border-left: none;
+  background: #f00;
   float:left;
+
 }
 .spBar{
   border-top:1px solid #f0f;
   border-right: none;
   border-bottom:1px solid #f0f;
   border-left:1px solid #f0f;
+  background: #f0f;
   float: right;
 }
 .counterBar{

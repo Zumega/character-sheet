@@ -406,16 +406,24 @@ var jQ = jQuery,
       },
       ouchCheck: function() {
         var totalPoints = sheet.data.characterInfo.woundPoints + sheet.data.characterInfo.stunPoints,
-          wounPercent = (100 / sheet.data.derivedTraits.lifePoints) * sheet.data.characterInfo.woundPoints,
+          woundPercent = (100 / sheet.data.derivedTraits.lifePoints) * sheet.data.characterInfo.woundPoints,
           stunPercent = (100 / sheet.data.derivedTraits.lifePoints) * sheet.data.characterInfo.stunPoints,
-          barColor = ((100 / sheet.data.derivedTraits.lifePoints) * totalPoints) / 100,
-          woundCounterBar = 100 - wounPercent,
+          barOpacity = ((100 / sheet.data.derivedTraits.lifePoints) * totalPoints) / 100,
+          woundCounterBar = 100 - woundPercent,
           stunCounterBar = 100 - stunPercent;
 
-        sheet.settings.woundBarObj.css({"width": wounPercent +'%', "background": 'rgba(255, 0, 0, '+ barColor +')'});
-        sheet.settings.stunBarObj.css({"width": stunPercent + '%', "background": 'rgba(255, 0, 255, '+ barColor +')'});
-        sheet.settings.woundCounterBarObj.css({"width": woundCounterBar +'%'});
-        sheet.settings.stunCounterBarObj.css({"width": stunCounterBar + '%'});
+        sheet.settings.woundBarObj.animate({
+          width: woundPercent +'%'
+        }).css('backgroundColor', 'rgba(255,0,0,'+ barOpacity +')');
+        sheet.settings.stunBarObj.animate({
+          width: stunPercent +'%'
+        }).css('backgroundColor', 'rgba(255,0,255,'+ barOpacity +')');
+        sheet.settings.woundCounterBarObj.animate({
+          width: woundCounterBar +'%'
+        });
+        sheet.settings.stunCounterBarObj.animate({
+          width: stunCounterBar +'%'
+        });
 
         sheet.functions.deathCheck();
       },
