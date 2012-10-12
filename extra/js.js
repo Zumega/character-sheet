@@ -106,7 +106,7 @@ var jQ = jQuery,
 //        saveQueue();
 //        save()
 //        ajaxError()
-
+//        unload()
       },
       setObjects: function() {
 //        store dom in obj
@@ -376,27 +376,15 @@ var jQ = jQuery,
           switch($this.attr('id')) {
             case 'woundPointsUp':
               $this.siblings('input[type=text]').val(sheet.data.characterInfo.woundPoints += 1);
-              if(sheet.data.characterInfo.woundPoints > 0) {
-                $this.siblings('input[type=button]').removeClass('hide');
-              }
               break;
             case 'woundPointsDown':
               $this.siblings('input[type=text]').val(sheet.data.characterInfo.woundPoints -= 1);
-              if(sheet.data.characterInfo.woundPoints === 0) {
-                $this.addClass('hide');
-              }
               break;
             case 'stunPointsUp':
               $this.siblings('input[type=text]').val(sheet.data.characterInfo.stunPoints += 1);
-              if(sheet.data.characterInfo.stunPoints > 0) {
-                $this.siblings('input[type=button]').removeClass('hide');
-              }
               break;
             case 'stunPointsDown':
               $this.siblings('input[type=text]').val(sheet.data.characterInfo.stunPoints -= 1);
-              if(sheet.data.characterInfo.stunPoints === 0) {
-                $this.addClass('hide');
-              }
               break;
           }
 
@@ -424,6 +412,20 @@ var jQ = jQuery,
         sheet.settings.stunCounterBarObj.animate({
           width: stunCounterBar +'%'
         });
+
+//        update button 'down' hide/show
+        if(sheet.data.characterInfo.woundPoints > 0) {
+          jQ('#woundPointsDown').removeClass('hide');
+        }
+        if(sheet.data.characterInfo.woundPoints === 0) {
+          jQ('#woundPointsDown').addClass('hide');
+        }
+        if(sheet.data.characterInfo.stunPoints > 0) {
+          jQ('#stunPointsDown').removeClass('hide');
+        }
+        if(sheet.data.characterInfo.stunPoints === 0) {
+          jQ('#stunPointsDown').addClass('hide');
+        }
 
         sheet.functions.deathCheck();
       },
@@ -982,6 +984,11 @@ var jQ = jQuery,
       ajaxError: function(error) {
         var html = "<div class='ajaxError'>"+ error +"<\/div>";
         jQ('body').append(html);
+      },
+      unload: function() {
+        window.onbeforeunload = function() {
+          document.activeElement.blur();
+        }
       }
     }
   };
