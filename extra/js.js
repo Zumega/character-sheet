@@ -3,7 +3,8 @@ var jQ = jQuery,
     settings: {
       saveUrl: './includes/save.php',
       newSkillUrl: './includes/single_skill.php',
-      newCompAssetUrl: './includes/single_comp_asset.php'
+      newCompAssetUrl: './includes/single_comp_asset.php',
+      queueTimer: null
     },
     data: {
       defaultPoints: {},
@@ -52,8 +53,8 @@ var jQ = jQuery,
       dice: {},
       displayDice: new Array(),
       usedDice: new Array(),
-      saveQueue: {},
-      hasChanged: false
+      hasChanged: false,
+      saveArea: ''
     },
     functions: {
       init: function() {
@@ -102,8 +103,8 @@ var jQ = jQuery,
 //          skill()
 //          comp()
 //          asset()
+//        saveQueue();
 //        save()
-//        saveQueue()
 //        ajaxError()
 
       },
@@ -399,7 +400,7 @@ var jQ = jQuery,
               break;
           }
 
-          sheet.functions.save('characterInfo');
+          sheet.functions.saveQueue('characterInfo');
           sheet.functions.ouchCheck();
         });
       },
@@ -445,7 +446,7 @@ var jQ = jQuery,
                   jQ('#skillsContainer').append(response);
                   if(sheet.functions.getSkills()) {
                     sheet.data.hasChanged = false;
-                    sheet.functions.save('skills');
+                    sheet.functions.saveQueue('skills');
                   }
                 },
                 error: function(one, text, error) {
@@ -479,7 +480,7 @@ var jQ = jQuery,
                 }
 
                 sheet.functions.getSkills()
-                sheet.functions.save('skills');
+                sheet.functions.saveQueue('skills');
                 $countField.text(skillCount);
 
                 if(skillCount === 0) {
@@ -586,7 +587,7 @@ var jQ = jQuery,
           sheet.data.equipment.activeTab = tabid;
           sheet.functions.setEquipmentFields(tabid);
           sheet.data.hasChanged = false;
-          sheet.functions.save('equipment');
+          sheet.functions.saveQueue('equipment');
         });
       },
       setEquipmentFields: function(id) {
@@ -634,7 +635,7 @@ var jQ = jQuery,
                   jQ('#complicationsFields').append(response);
                   if(sheet.functions.getComplications()) {
                     sheet.data.hasChanged = false;
-                    sheet.functions.save('comp');
+                    sheet.functions.saveQueue('comp');
                   }
                 },
                 error: function(one, text, error) {
@@ -661,7 +662,7 @@ var jQ = jQuery,
                 delete sheet.data.comp['typeName_'+ compCount +'_complications'];
 
                 sheet.functions.getComplications()
-                sheet.functions.save('comp');
+                sheet.functions.saveQueue('comp');
                 $countField.text(compCount);
 
                 if(compCount === 0 ) {
@@ -722,7 +723,7 @@ var jQ = jQuery,
                   jQ('#assetsFields').append(response);
                   if(sheet.functions.getAssets()) {
                     sheet.data.hasChanged = false;
-                    sheet.functions.save('asset');
+                    sheet.functions.saveQueue('asset');
                   }
                 },
                 error: function(one, text, error) {
@@ -749,7 +750,7 @@ var jQ = jQuery,
                 delete sheet.data.asset['typeName_'+ assetCount +'_assets'];
 
                 sheet.functions.getAssets();
-                sheet.functions.save('asset');
+                sheet.functions.saveQueue('asset');
                 $countField.text(assetCount);
 
                 if(assetCount === 0 ) {
@@ -854,7 +855,7 @@ var jQ = jQuery,
           }
 
           sheet.functions.getLastRolls();
-          sheet.functions.save('dice');
+          sheet.functions.saveQueue('dice');
         });
       },
       getChanges: function() {
@@ -910,7 +911,7 @@ var jQ = jQuery,
         jQ(document).find('.diceUI span').click(function() {
           if(sheet.functions.getDice()) {
             sheet.data.hasChanged = false;
-            sheet.functions.save('dice');
+//            sheet.functions.save('dice');
           }
         });
       },
@@ -937,34 +938,38 @@ var jQ = jQuery,
           }
         }
       },
-      save: function(saveArea) {
-        sheet.data.saveQueue[saveArea] = sheet.data[saveArea];
-
-        for(var id in sheet.data.saveQueue){
-          jQ.ajax({
-            url: sheet.settings.saveUrl,
-            type: 'POST',
-            data: {'data': {'content': JSON.stringify(sheet.data.saveQueue[id]) , 'saveArea': id }},
-            dataType: 'jsonp',
-            jsonpCallback: saveArea +'_callback',
-            success: function(response) {
-              if(response.status !== 'done') {
-                sheet.settings.saveObj.text(response.status);
-              }else{
-                sheet.settings.saveObj.text('Saved');
-              }
-
-              sheet.settings.saveObj.animate({
-                top: '+=50'
-              }, 500).delay(1000).animate({
-                top: '-=50'
-              }, 500);
-            },
-            error: function(one, text, error) {
-              sheet.functions.ajaxError(error);
-            }
-          });
+      saveQueue: function(saveArea){
+        if (sheet.settings.queueTimer === null) {
+          sheet.data.saveArea = saveArea;
+          sheet.settings.queueTimer = setTimeout('sheet.functions.save(); sheet.settings.queueTimer = null;', 3 * 1000);
         }
+      },
+      save: function(saveArea) {
+        saveArea = saveArea || sheet.data.saveArea;
+
+        jQ.ajax({
+          url: sheet.settings.saveUrl,
+          type: 'POST',
+          data: {'data': {'content': JSON.stringify(sheet.data[saveArea]) , 'saveArea': saveArea }},
+          dataType: 'jsonp',
+          jsonpCallback: saveArea +'_callback',
+          success: function(response) {
+            if(response.status !== 'done') {
+              sheet.settings.saveObj.text(response.status);
+            }else{
+              sheet.settings.saveObj.text('Saved');
+            }
+
+            sheet.settings.saveObj.animate({
+              top: '+=50'
+            }, 500).delay(1000).animate({
+              top: '-=50'
+            }, 500);
+          },
+          error: function(one, text, error) {
+            sheet.functions.ajaxError(error);
+          }
+        });
       },
       ajaxError: function(error) {
         var html = "<div class='ajaxError'>"+ error +"<\/div>";

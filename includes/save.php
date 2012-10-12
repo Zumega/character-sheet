@@ -129,12 +129,6 @@ switch ($_POST['data']['saveArea']){
       );
     }
     break;
-  case '':
-    break;
-  case '':
-    break;
-  case '':
-    break;
   default :
     echo'OOPS! you broke it!';
     exit();
