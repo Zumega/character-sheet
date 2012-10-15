@@ -66,6 +66,26 @@ select{
   border: 1px solid #222;
   border-radius: 4px;
 }
+.saveMessage{
+  position: fixed;
+  top: 0;
+  right: 0;
+  margin-top: -50px;
+  border-bottom: 1px solid #000;
+  border-left: 1px solid #000;
+  border-radius: 0 0 0 8px;
+  background: #fff;
+  background: -webkit-linear-gradient(top, #eee, #bbb);
+  background: -moz-linear-gradient(top, #eee, #bbb);
+  background: -ms-linear-gradient(top, #eee, #bbb);
+  background: -o-linear-gradient(top, #eee, #bbb);
+  color: #000;
+  font-weight: bold;
+  padding: 4px;
+}
+.ajaxError{
+  display:none;
+}
 /*global*/
 
 /*jump menu*/
@@ -347,24 +367,3 @@ ul.diceSum {
   display: inline-block;
 }
 /*Dice*/
-
-.saveMessage{
-  position: fixed;
-  top: 0;
-  right: 0;
-  margin-top: -50px;
-  border-bottom: 1px solid #000;
-  border-left: 1px solid #000;
-  border-radius: 0 0 0 8px;
-  background: #fff;
-  background: -webkit-linear-gradient(top, #eee, #bbb);
-  background: -moz-linear-gradient(top, #eee, #bbb);
-  background: -ms-linear-gradient(top, #eee, #bbb);
-  background: -o-linear-gradient(top, #eee, #bbb);
-  color: #000;
-  font-weight: bold;
-  padding: 4px;
-}
-.ajaxError{
-  display:none;
-}
