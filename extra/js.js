@@ -106,7 +106,8 @@ var jQ = jQuery,
 //        saveQueue();
 //        save()
 //        ajaxError()
-//        unload()
+        sheet.functions.showHideModules();
+        sheet.functions.controlsNumbers();
       },
       setObjects: function() {
 //        store dom in obj
@@ -985,10 +986,44 @@ var jQ = jQuery,
         var html = "<div class='ajaxError'>"+ error +"<\/div>";
         jQ('body').append(html);
       },
-      unload: function() {
-        window.onbeforeunload = function() {
-          document.activeElement.blur();
-        }
+      showHideModules: function() {
+        jQ(document).find('.close').on('click', function() {
+          var $element = jQ(document).find('.'+ jQ(this).parent().attr('id'));
+
+          if($element.css('display') === 'none') {
+            $element.slideDown();
+          } else {
+            $element.slideUp();
+          }
+        });
+      },
+      controlsNumbers: function() {
+        jQ('#controlsContainer').click(function() {
+          jQ(this).animate({
+            top: '-300px'
+          },
+          700,
+          function(){
+            jQ('#controlTab').animate({
+              top: '0px'
+            }, 100);
+          });
+        });
+
+        jQ('#controlTab').click(function() {
+          jQ(this).animate({
+            top: '-30px'
+          },
+          100,
+          function() {
+            jQ('#controlsContainer').animate({
+              top: '0px'
+            },
+            700);
+          });
+        });
+
+        jQ('#controlsContainer').delay(5000).trigger('click');
       }
     }
   };

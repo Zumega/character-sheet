@@ -13,7 +13,7 @@ require_once 'connection_Close.php';
 
 ?>
 
-<div class="controlsContainer">
+<div class="controlsContainer" id="controlsContainer">
   <ul>
     <li>
       <label for="attrPoints">Attribute Points:</label>
@@ -32,4 +32,7 @@ require_once 'connection_Close.php';
 <!--    <li><a href="javascript:SaveArea();">Save</a></li>
     <li><a href="<?= $siteURL ?>logout">Log out</a></li>-->
   </ul>
+</div>
+<div class="contorlTab" id="controlTab">
+  <span>numbers</span>
 </div>

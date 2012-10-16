@@ -22,6 +22,9 @@
       include "./includes/controls.php";
     ?>
     <div class="bodyContainer">
+      <div>
+        Serenity Character Sheet
+      </div>
       <a name='top'></a>
       <?php
         include $jumpMenu;
@@ -71,7 +74,7 @@
       <div class='column'>
         <div class='column'>
           <a name='complications'></a>
-          <h2 class="comp_asset" id="comp"><span class="close">X</span>Complications:</h2>
+          <h2 class="comp_asset" id="complications"><span class="close">X</span>Complications:</h2>
           <?php
             $comp_asset = 'complications';
             include "./modules/comp_asset.php";
@@ -79,7 +82,7 @@
         </div>
         <div class='column'>
           <a name='assets'></a>
-          <h2 class="comp_asset" id="asset"><span class="close">X</span>Assets:</h2>
+          <h2 class="comp_asset" id="assets"><span class="close">X</span>Assets:</h2>
           <?php
             $comp_asset = 'assets';
             include "./modules/comp_asset.php";

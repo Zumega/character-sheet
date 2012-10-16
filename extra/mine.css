@@ -69,11 +69,11 @@ select{
 .saveMessage{
   position: fixed;
   top: 0;
-  right: 0;
+  left: 0;
   margin-top: -50px;
   border-bottom: 1px solid #000;
-  border-left: 1px solid #000;
-  border-radius: 0 0 0 8px;
+  border-right: 1px solid #000;
+  border-radius: 0 0 8px 0;
   background: #fff;
   background: -webkit-linear-gradient(top, #eee, #bbb);
   background: -moz-linear-gradient(top, #eee, #bbb);
@@ -112,6 +112,7 @@ select{
   font-size: 10px;
   font-weight: bold;
   box-shadow: -2px 1px 3px black;
+  cursor: pointer;
 }
 .row{float: left;margin: 3px 0px 7px;}
 .cell{float: left;width: 280px;padding-right: 20px;}
@@ -161,16 +162,22 @@ select{
 /*Character Info*/
 
 /*base control elements*/
-.controlsContainer{
+.controlsContainer,
+.contorlTab {
   position: fixed;
-  left: 0px;
-  top:0px;
+  right: 0px;
   background: #fff;
   border: 1px solid #ccc;
+  border-radius: 0 0 0 8px;
   width: auto;
   padding: 10px;
-  display:block;
-  z-index: 100;
+  cursor: pointer;
+  display: block;
+  z-index: 1000;
+  box-shadow: 0 3px 10px #888;
+}
+.controlsContainer {
+  top: 0;
 }
 .controlsContainer li {
   margin-bottom:5px;
@@ -183,6 +190,13 @@ select{
   width: 50px;
   margin-left: 10px;
   float:none;
+}
+.contorlTab{
+  top: -30px;
+  padding: 6px;
+}
+.contorlTab span{
+  display: block;
 }
 /*base control elements*/
 
