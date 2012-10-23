@@ -16,30 +16,43 @@
 
     if($passed) {
       require '../includes/connection_Open.php';
-        $query = 'SELECT users.id, txtName, txtEmail, txtCharName '.
-  'FROM sheet_users AS users '.
-  'INNER JOIN sheet_character_info AS info ON users.id = info.id '.
-  'WHERE intDelete = 0 AND '.
-  'users.txtName = info.txtPlayerName AND '.
-  'txtEmail = "'. $email .'" AND '.
-  'txtName = "'. $name .'" AND '.
-  'txtCharName = "'. $charName .'"';
-        $result = mysql_query($query) or die('Query failed: ' . mysql_error());
-        $line = mysql_fetch_array($result, MYSQL_ASSOC);
+        $query = "SELECT txtEmail FROM `sheet_users` WHERE txtEmail='". $email ."'";
+				$result = mysql_query($query) or die('Query failed: ' . mysql_error());
+				$count = mysql_num_rows($result);
 
-        if(!empty($line)) {
-          $hash = md5($line['txtName'] . $line['txtEmail'] . $line['txtCharName'] . time());
+        if ($count === 1) {
+					$errorMssg = 'Email address already registered.';
+				}	else {
+          $query = "INSERT INTO sheet_users( `txtName`, `txtEmail` ) VALUES ('". $name ."', '". $email ."')";
+          mysql_query($query) or die('Query failed: ' . mysql_error());
+
+          $query = "SELECT id FROM `sheet_users` WHERE txtEmail='". $email ."'";
+          $result = mysql_query($query) or die('Query failed: ' . mysql_error());
+          $line = mysql_fetch_array($result, MYSQL_ASSOC);
+
+          $queryInfo = "INSERT INTO sheet_character_info (id, txtCharName) VALUES ($line[id], '". $charName ."')";
+          mysql_query($queryInfo) or die('Query failed: ' . mysql_error());
+
+          $queryAttr = "INSERT INTO sheet_attributes (id) VALUES ($line[id])";
+          mysql_query($queryAttr) or die('Query failed: ' . mysql_error());
+
+          $queryEquip = "INSERT INTO sheet_equipment (id) VALUES ($line[id])";
+          mysql_query($queryEquip) or die('Query failed: ' . mysql_error());
+
+          $queryDice = "INSERT INTO sheet_dice (id) VALUES ($line[id])";
+          mysql_query($queryDice) or die('Query failed: ' . mysql_error());
+
+          $queryTraits = "INSERT INTO sheet_roll_traits (id) VALUES ($line[id])";
+          mysql_query($queryTraits) or die('Query failed: ' . mysql_error());
 
           session_start();
           $_SESSION['id'] = $line['id'];
           $_SESSION['hash'] = $hash;
 
           echo $_GET['callback'] .'({"success":true})';
-        } else {
-          echo $_GET['callback'] .'({"success":false, "errors":"You many not have an account or you may have missed typed something."})';
+          return true;
         }
       require '../includes/connection_Close.php';
-    } else {
       echo $_GET['callback'] .'({"success":false, "errors":"'. $errorMssg .'"})';
     }
 
