@@ -11,7 +11,7 @@ var sign = {
         jQ('#signIn, #signUp').on('focus', 'input', function() {
           var $this = jQ(this),
               thisId = $this.parent().parent().parent().attr('id'),
-              thatId = $this.parent().parent().parent().siblings().attr('id');
+              thatId = $this.parent().parent().parent().siblings('.signContianer').attr('id');
 
           sign.data.activeFormId = thisId;
           sign.data.inactiveFormId = thatId;
@@ -19,6 +19,8 @@ var sign = {
           jQ('#'+ thatId).animate({
             'opacity': '.5'
           }, 500, function() {
+
+        console.log(3);
             jQ('#'+ thatId).find('.hideButton').slideUp('fast');
             jQ('#'+ thatId).find('input[type!=button]').val('');
           });

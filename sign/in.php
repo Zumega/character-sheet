@@ -52,15 +52,15 @@
     <div class="errorMssg"></div>
     <div>
       <label for="email">Email:</label>
-      <input type="text" id="inEmail" name="email" value="b@b.bb" tabindex="<?= ++$tabIndex; ?>" />
+      <input type="text" id="inEmail" name="email" value="" tabindex="<?= ++$tabIndex; ?>" />
     </div>
     <div>
       <label for="name">Your Name:</label>
-      <input type="text" id="inName" name="name" value="Ros" tabindex="<?= ++$tabIndex; ?>" />
+      <input type="text" id="inName" name="name" value="" tabindex="<?= ++$tabIndex; ?>" />
     </div>
     <div>
       <label for="charName">Characters Name:</label>
-      <input type="text" id="inCharName" name="charName" value="Gilbert" tabindex="<?= ++$tabIndex; ?>" />
+      <input type="text" id="inCharName" name="charName" value="" tabindex="<?= ++$tabIndex; ?>" />
     </div>
     <div class="hideButton">
       <input type="button" class="signButton" id="submitSignIn" name="submitSignIn" value="Sign In" tabindex="<?= ++$tabIndex; ?>" />
