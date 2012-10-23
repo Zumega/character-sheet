@@ -30,7 +30,7 @@
           $result = mysql_query($query) or die('Query failed: ' . mysql_error());
           $line = mysql_fetch_array($result, MYSQL_ASSOC);
 
-          $queryInfo = "INSERT INTO sheet_character_info (id, txtCharName) VALUES ($line[id], '". $charName ."')";
+          $queryInfo = "INSERT INTO sheet_character_info (id, txtCharName, txtPlayerName) VALUES ($line[id], '". $charName ."', '". $name ."')";
           mysql_query($queryInfo) or die('Query failed: ' . mysql_error());
 
           $queryAttr = "INSERT INTO sheet_attributes (id) VALUES ($line[id])";

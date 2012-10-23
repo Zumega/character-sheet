@@ -24,6 +24,7 @@
   'txtEmail = "'. $email .'" AND '.
   'txtName = "'. $name .'" AND '.
   'txtCharName = "'. $charName .'"';
+
         $result = mysql_query($query) or die('Query failed: ' . mysql_error());
         $line = mysql_fetch_array($result, MYSQL_ASSOC);
 
