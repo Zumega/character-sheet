@@ -29,8 +29,6 @@ require_once 'connection_Close.php';
         <li>Used: <input type="text" value="<?= $usedSkillPoints; ?>" id="usedSkillPoints" name="usedSkillPoints" readonly="readonly" class="noEdit" tabindex="-1" /></li>
       </ul>
     </li>
-<!--    <li><a href="javascript:SaveArea();">Save</a></li>
-    <li><a href="<?= $siteURL ?>logout">Log out</a></li>-->
   </ul>
 </div>
 <div class="contorlTab" id="controlTab">

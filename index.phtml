@@ -1,10 +1,6 @@
 <?php
   require_once './includes/variables.php';
   session_start();
-  if(!$_SESSION["id"]){
-    header("location:".preg_replace('/[\/]$/', '', $siteURL)."/login");
-  }
-  $_SESSION["id"] = 10;
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -16,10 +12,19 @@
     <script type="text/javascript" src="./extra/jQuery.js"></script>
     <script type="text/javascript" src="./extra/json2.js"></script>
     <script type="text/javascript" src="./extra/js.js"></script>
+<?php if(!$_SESSION["id"]) { ?>
+    <link href="./extra/sign.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="./extra/sign.js"></script>
+<?php } ?>
   </head>
   <body>
     <?php
-      include "./includes/controls.php";
+    if(!$_SESSION['id']) {
+      include_once './sign/readme.php';
+      include_once './sign/in.php';
+      include_once './sign/up.php';
+    } else {
+      include './includes/controls.php';
     ?>
     <div class="bodyContainer">
       <div>
@@ -31,44 +36,44 @@
       ?>
       <h2 id="characterInfo"><span class="close">X</span>Character Info:</h2>
       <?php
-        include "./modules/character.php";
+        include './modules/character.php';
         include $jumpMenu;
       ?>
       <a name='attributes'></a>
       <h2 id="attributes"><span class="close">X</span>Attributes:</h2>
       <?php
-        include "./modules/attributes.php";
+        include './modules/attributes.php';
         include $jumpMenu;
       ?>
       <a name='derived_Traits'></a>
       <h2 id="derivedTraits"><span class="close">X</span>Derived Traits:</h2>
       <?php
-        include "./modules/derived_traits.php";
+        include './modules/derived_traits.php';
         include $jumpMenu;
       ?>
       <a name='skills_and_specialties'></a>
       <h2 id="skillsSpecialties"><span class="close">X</span>Skills and Specialties:</h2>
       <?php
-        include "./modules/skills_specialties.php";
+        include './modules/skills_specialties.php';
         include $jumpMenu;
       ?>
       <div class='column'>
         <a name='equipment'></a>
         <h2 id="equipment"><span class="close">X</span>Equipment:</h2>
         <?php
-          include "./modules/equipment.php";
+          include './modules/equipment.php';
           include $jumpMenu;
         ?>
         <a name='info'></a>
         <h2 id="info"><span class="close">X</span>Info:</h2>
         <?php
-          include "./modules/info.php";
+          include './modules/info.php';
           include $jumpMenu;
         ?>
         <a name='dice'></a>
         <h2 id="dice"><span class="close">X</span>Dice:</h2>
         <?php
-          include "./modules/dice.php";
+          include './modules/dice.php';
         ?>
       </div>
       <div class='column'>
@@ -77,7 +82,7 @@
           <h2 class="comp_asset" id="complications"><span class="close">X</span>Complications:</h2>
           <?php
             $comp_asset = 'complications';
-            include "./modules/comp_asset.php";
+            include './modules/comp_asset.php';
           ?>
         </div>
         <div class='column'>
@@ -85,7 +90,7 @@
           <h2 class="comp_asset" id="assets"><span class="close">X</span>Assets:</h2>
           <?php
             $comp_asset = 'assets';
-            include "./modules/comp_asset.php";
+            include './modules/comp_asset.php';
           ?>
         </div>
       </div>
@@ -94,6 +99,8 @@
       ?>
       <div id='saveMessage' class='saveMessage'>Saved</div>
       <a name='bottom'></a>
+      <a class="signOut" href="<?= $siteURL ?>signout">Sign out</a>
     </div>
+    <?php } ?>
   </body>
 </html>

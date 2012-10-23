@@ -86,6 +86,11 @@ select{
 .ajaxError{
   display:none;
 }
+.signOut {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+}
 /*global*/
 
 /*jump menu*/

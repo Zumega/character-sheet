@@ -1,20 +1,20 @@
 <?php
 	session_start();
-  
+
 	if($_SESSION["id"]){
-		header("location:/new/sheet/beta/");
+		header("location:../");
 	}
 	require_once "../includes/log-sign_in.php";
   require_once '../includes/variables.php';
 ?>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE htm">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Login - Character Sheet</title>
 <script type="text/javascript" src="../extra/jQuery.js"></script>
-<script type="text/javascript" src="../extra/js.js"></script>
+<script type="text/javascript" src="../extra/login.js"></script>
 </head>
 
 <body>

@@ -1,0 +1,72 @@
+.hideButton {
+  display: none;
+  text-align: center;
+}
+.signContianer {
+  width: 340px;
+  margin: 20px auto;
+  padding: 10px;
+  background: #fff;
+  box-shadow: 0 0 10px #444;
+  border-radius: 10px;
+}
+
+.sign div {
+  line-height: 2;
+}
+.sign input {
+  width: 200px;
+}
+input.signButton {
+  width: 80%;
+  margin: 3px 0;
+  padding: 3px;
+  border: 1px solid #000;
+  border-radius: 6px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+input.signButton:hover,
+input.signButton:focus{
+  background: #444;
+}
+
+.signLoading{
+  display: none;
+  background: #000;
+  color: #fff;
+  font-weight: bold;
+  text-align: center;
+  width: 80%;
+  margin: 3px auto;
+  padding: 3px;
+  border: 1px solid #000;
+  border-radius: 6px;
+  text-transform: uppercase;
+}
+
+.errorMssg{
+  display: none;
+  text-align: center;
+  color: #f00;
+  border: 1px solid #fa0;
+  background: #ff0;
+  border-radius: 6px;
+  padding: 4px;
+  margin: 2px 0 8px 0;
+}
+
+.readMe{
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 200px;
+  background: #fff;
+  padding: 10px;
+  border-radius: 0 0 0 10px;
+}
+.readMe li {
+  list-style-type: disc;
+  margin-left: 10px;
+  margin-bottom: 10px;
+}
