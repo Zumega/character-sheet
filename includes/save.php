@@ -193,6 +193,12 @@ require_once 'connection_Open.php';
     }
     $query = 'UPDATE '. $dataBaseTable .' SET '. preg_replace('/, $/', '', $pairs) .' WHERE id = ' . $_SESSION['id'] . '';
     $result = mysql_query($query) or die($_POST['callback'] .'({\'status\':\''. mysql_error() .'\'})');
+
+    if($_POST['data']['saveArea'] === 'characterInfo') {
+      $query = 'UPDATE sheet_users SET txtName = "'. $json['playerName'] .'" '.
+               'WHERE id = ' . $_SESSION['id'] . '';
+      $result = mysql_query($query) or die($_POST['callback'] .'({\'status\':\''. mysql_error() .'\'})');
+    }
   }
   echo $_GET['callback'] .'({\'status\':\'done\'})';
 require_once 'connection_Close.php';

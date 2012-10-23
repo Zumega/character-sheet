@@ -33,10 +33,10 @@
           $queryInfo = "INSERT INTO sheet_character_info (id, txtCharName, txtPlayerName) VALUES ($line[id], '". $charName ."', '". $name ."')";
           mysql_query($queryInfo) or die('Query failed: ' . mysql_error());
 
-          $queryAttr = "INSERT INTO sheet_attributes (id) VALUES ($line[id])";
+          $queryAttr = "INSERT INTO sheet_attributes (id, intStrength, intAgility, intVitality, intAlertness, intIntelligence, intWillpower) VALUES ($line[id], 4, 4, 4, 4, 4, 4)";
           mysql_query($queryAttr) or die('Query failed: ' . mysql_error());
 
-          $queryEquip = "INSERT INTO sheet_equipment (id) VALUES ($line[id])";
+          $queryEquip = "INSERT INTO sheet_equipment (id, tnytxtActiveTab) VALUES ($line[id], 'allitems')";
           mysql_query($queryEquip) or die('Query failed: ' . mysql_error());
 
           $queryDice = "INSERT INTO sheet_dice (id) VALUES ($line[id])";
