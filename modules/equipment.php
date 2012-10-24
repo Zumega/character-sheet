@@ -8,8 +8,6 @@ require 'includes/connection_Open.php';
           ') AS "blbAllItems", '.
           '`tnytxtActiveTab`, `blbWeapons`, `blbGear`, `blbArmor`, `blbMoney`, `blbNotes`'.
           'FROM  `sheet_equipment` WHERE id='. $_SESSION['id'];
-//  echo $query;
-//  die;
 
   $result = mysql_query($query) or die('Query failed: ' . mysql_error());
   $line = mysql_fetch_array($result, MYSQL_ASSOC);
@@ -33,12 +31,6 @@ require 'includes/connection_Close.php';
     ?>
     </ul>
   </div>
-  <?php
-//  echo "<pre>";
-//  print_r($line);
-//  echo "</pre>";
-  ?>
-
   <div class="equipInput">
   <?php
     foreach($equipTabs as $value){

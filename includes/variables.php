@@ -3,7 +3,7 @@
   $jumpMenu = "./includes/jump_menu.php";
   $highDice = 12; // multipals of 2
   $maxLife = 34;
-  $attrPoints = 42; // should this me 62 like the book says?
+  $attrPoints = 42; // should this be 62 like the book says?
   $skillPoints = 20;
   $plotPoints = 4;
   $startCompAsset = 1;
