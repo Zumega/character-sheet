@@ -6,11 +6,13 @@
     $charName = $_POST['charName'];
     $passed = true;
     $errorMssg = '';
+    $whyFail = '';
 
     include_once './emailverification.php';
 
     if(!validEmail($email)) {
       $errorMssg = 'Bad email address';
+      $whyFail = 'bad email';
       $passed = false;
     };
 
@@ -37,11 +39,11 @@
 
           echo $_GET['callback'] .'({"success":true})';
         } else {
-          echo $_GET['callback'] .'({"success":false, "errors":"You many not have an account or you may have missed typed something."})';
+          echo $_GET['callback'] .'({"success":false, "why":"no record", "errors":"You many not have an account or you may have missed typed something."})';
         }
       require '../includes/connection_Close.php';
     } else {
-      echo $_GET['callback'] .'({"success":false, "errors":"'. $errorMssg .'"})';
+      echo $_GET['callback'] .'({"success":false, "why":"'. $whyFail .'", "errors":"'. $errorMssg .'"})';
     }
 
     return true;

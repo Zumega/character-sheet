@@ -20,9 +20,9 @@ var sign = {
             'opacity': '.5'
           }, 500, function() {
 
-        console.log(3);
             jQ('#'+ thatId).find('.hideButton').slideUp('fast');
             jQ('#'+ thatId).find('input[type!=button]').val('');
+            jQ('#'+ thatId).find('.errorMssg').slideUp('fast');
           });
           jQ('#'+ thisId).animate({
             'opacity': '1'
@@ -63,7 +63,6 @@ var sign = {
                 dataType: 'jsonp',
                 jsonpCallback: 'sign',
                 success: function(data) {
-                  console.log(data);
                   if(data.success){
                     window.location = './';
                   } else {
@@ -71,6 +70,10 @@ var sign = {
                     $this.find('.sign').slideDown('fast');
                     $this.find('.errorMssg').text(data.errors).show();
                     $this.find('input:first').select();
+
+                    if(data.why === 'no record') {
+                      jQ('#'+ sign.data.inactiveFormId).slideDown('fast');
+                    }
                   }
                 },
                 error: function(a, b, error) {}
