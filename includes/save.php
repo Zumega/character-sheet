@@ -2,14 +2,6 @@
 session_start();
 $json = json_decode($_POST['data']['content'], true);
 
-//print_r($json);
-//echo $_POST['callback'] .'({\'status\':\''. $json .'\'})';
-//die();
-
-//echo $_POST['data']['saveArea'];
-//exit();
-
-
 switch ($_POST['data']['saveArea']){
   case 'characterInfo':
     $isMany = false;
@@ -134,19 +126,14 @@ switch ($_POST['data']['saveArea']){
     exit();
 }
 
-//echo count($json) ."\n";
-//print_r($content);
-//die;
-
-
 require_once 'connection_Open.php';
   if ($isMany) {
     $keys = $value = '';
     $query = 'SELECT  count(`id`) count FROM '. $dataBaseTable .' WHERE  `id` = '. $_SESSION['id'];
-    $result = mysql_query($query) or die('Query failed: ' . mysql_error());
-    $result = mysql_fetch_array($result, MYSQL_ASSOC);
+    require './query_process.php';
+    $line = $result->fetch_assoc();
 
-    if(count($content) === $result['count']){
+    if(count($content) === $line['count']){
       foreach($content as $num=>$item){
         $pairs='';
         foreach($item as $k=>$v){
@@ -154,11 +141,11 @@ require_once 'connection_Open.php';
         }
         unset($query, $result);
         $query = 'UPDATE '. $dataBaseTable .' SET '. preg_replace('/, $/', '', $pairs) .' WHERE id = ' . $_SESSION['id'] . ' and intOrder = '. $num;
-        $result = mysql_query($query) or die($_POST['callback'] .'({\'status\':\''. mysql_error() .'\'})');
+        _setQuery($mysqli, $query);
         unset($pairs, $k, $v);
       }
       unset($query, $result, $num, $item);
-    }elseif($result['count'] === 0){
+    }elseif($line['count'] === 0){
       foreach($content as $num=>$item){
         foreach($item as $k=>$v){
            $keys .=  '`'. $k .'`, ';
@@ -166,40 +153,46 @@ require_once 'connection_Open.php';
         }
         unset($query, $result);
         $query = 'INSERT INTO  '. $dataBaseTable .' (  `id` ,  `intOrder`, '. preg_replace('/, $/', '', $keys) .') VALUES ( '. $_SESSION['id'] .', '. $num .', '. preg_replace('/, $/', '', $value) .' )';
-        $result = mysql_query($query) or die($_POST['callback'] .'({\'status\':\''. mysql_error() .'\'})');
+        _setQuery($mysqli, $query);
         unset($keys, $value, $k, $v);
       }
       unset($query, $result, $num, $item);
     }else{
-      $query = 'DELETE FROM  '. $dataBaseTable .' WHERE id = '. $_SESSION['id'];
-      $result = mysql_query($query) or die($_POST['callback'] .'({\'status\':\''. mysql_error() .'\'})');
+      $query = 'DELETE FROM '. $dataBaseTable .' WHERE id = '. $_SESSION['id'];
+      _setQuery($mysqli, $query);
+      unset($query, $result);
 
       foreach($content as $num=>$item){
         foreach($item as $k=>$v){
            $keys .=  '`'. $k .'`, ';
-           $value .=  '\''. mysql_real_escape_string(htmlspecialchars($v)) .'\', ';
+           $value .=  '\''. $mysqli->real_escape_string(htmlspecialchars($v)) .'\', ';
         }
-        unset($query, $result);
         $query = 'INSERT INTO  '. $dataBaseTable .' (  `id` ,  `intOrder`, '. preg_replace('/, $/', '', $keys) .') VALUES ( '. $_SESSION['id'] .', '. $num .', '. preg_replace('/, $/', '', $value) .' )';
-        $result = mysql_query($query) or die('Query failed: ' . mysql_error());
-        unset($keys, $value);
+        _setQuery($mysqli, $query);
+        unset($query, $result, $keys, $value);
       }
       unset($query, $result, $num, $item);
     }
   } else {
     $pairs='';
     foreach($content as $k=>$v){
-      $pairs .= $k .' = \''. mysql_real_escape_string(htmlspecialchars($v)) .'\', ';
+      $pairs .= $k .' = \''. $mysqli->real_escape_string(htmlspecialchars($v)) .'\', ';
     }
     $query = 'UPDATE '. $dataBaseTable .' SET '. preg_replace('/, $/', '', $pairs) .' WHERE id = ' . $_SESSION['id'] . '';
-    $result = mysql_query($query) or die($_POST['callback'] .'({\'status\':\''. mysql_error() .'\'})');
+    _setQuery($mysqli, $query);
 
     if($_POST['data']['saveArea'] === 'characterInfo') {
       $query = 'UPDATE sheet_users SET txtName = "'. $json['playerName'] .'" '.
                'WHERE id = ' . $_SESSION['id'] . '';
-      $result = mysql_query($query) or die($_POST['callback'] .'({\'status\':\''. mysql_error() .'\'})');
+      _setQuery($mysqli, $query);
     }
   }
   echo $_GET['callback'] .'({\'status\':\'done\'})';
 require_once 'connection_Close.php';
+
+function _setQuery($mysqli, $query) {
+  if (!$mysqli->query($query)) {
+    echo $_POST['callback'] .'({"\status":"'. $mysqli->errno .' :: '. $mysqli->error .'"})';
+  }
+}
 ?>

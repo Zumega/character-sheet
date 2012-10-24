@@ -27,8 +27,8 @@
   'txtName = "'. $name .'" AND '.
   'txtCharName = "'. $charName .'"';
 
-        $result = mysql_query($query) or die('Query failed: ' . mysql_error());
-        $line = mysql_fetch_array($result, MYSQL_ASSOC);
+        require '../includes/query_process.php';
+        $line = $result->fetch_assoc();
 
         if(!empty($line)) {
           $hash = md5($line['txtName'] . $line['txtEmail'] . $line['txtCharName'] . time());

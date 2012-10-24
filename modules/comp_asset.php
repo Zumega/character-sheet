@@ -1,9 +1,9 @@
 <?php
 require 'includes/connection_Open.php';
-  $query = 'SELECT * FROM sheet_'. $comp_asset .' WHERE id = '. $_SESSION['id'] .' ORDER BY intOrder';
-  $result = mysql_query($query) or die('Query failed: ' . mysql_error());
+$query = 'SELECT * FROM sheet_'. $comp_asset .' WHERE id = '. $_SESSION['id'] .' ORDER BY intOrder';
+require './includes/query_process.php';
 require 'includes/connection_Close.php';
-$amount = mysql_num_rows($result);
+$amount = $sqlInfo->num_rows();
 
 ?>
 <div class="module comp_asset <?= $comp_asset ?> clear">

@@ -1,8 +1,8 @@
 <?php
 require 'includes/connection_Open.php';
-  $query = "SELECT * FROM  `sheet_attributes` WHERE id=". $_SESSION['id'];
-  $result = mysql_query($query) or die('Query failed: ' . mysql_error());
-  $line = mysql_fetch_array($result, MYSQL_ASSOC);
+$query = "SELECT * FROM  `sheet_attributes` WHERE id=". $_SESSION['id'];
+require './includes/query_process.php';
+$line = $result->fetch_assoc();
 require 'includes/connection_Close.php';
 
 

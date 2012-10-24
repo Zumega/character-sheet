@@ -6,7 +6,7 @@
   $skills = array();
   $usedSkills = array();
 
-while ($row = mysql_fetch_assoc($result)) {
+while ($row = $result->fetch_assoc()) {
   $skills[] = $row;
   $usedSkills[] = $row['varSkill'];
 }
@@ -15,9 +15,6 @@ if(!empty($skills)){
   foreach ($skills as $row) {
     $fieldCntr = 0;
     $rowValues = (array) $row;
-//    echo '<pre>';
-//    print_r($rowValues);
-//    echo '</pre>';
   ?>
   <div class="column skillsInput">
     <div class="skilColum_1">

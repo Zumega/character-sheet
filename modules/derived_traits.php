@@ -1,8 +1,8 @@
 <?php
 require 'includes/connection_Open.php';
 $query = "SELECT * FROM sheet_roll_traits WHERE id = ". $_SESSION['id'];
-$result = mysql_query($query) or die('Query failed: ' . mysql_error());
-$line = mysql_fetch_array($result, MYSQL_ASSOC);
+require './includes/query_process.php';
+$line = $result->fetch_assoc();
 require_once 'includes/connection_Close.php';
 
 ?>

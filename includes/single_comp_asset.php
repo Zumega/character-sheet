@@ -3,7 +3,7 @@
   $number = $_POST['count'];
   $type = $_POST['type'];
   $dataArray = ($type === 'complications') ? $aryComp : $aryAsset ;
-  $used = $_POST['used'];
+  $used = (empty($_POST['used'])) ? array() : $_POST['used'] ;
 ?>
 
   <div class="section">
@@ -12,12 +12,14 @@
       <?php
       foreach ($dataArray as $text){
         $value = str_replace('\'', '', str_replace(' ', '_', strtolower($text)));
-        $selected = ($value === $row['txtComplicaiton']) ? ' selected="selected"' : '' ;
-        $disabled = (in_array($value, $used)) ? ' disabled="disabled"' : '' ;
+        $selected = ($value === '========') ? ' selected="selected"' : '' ;
+        $disabled = ($value !== '========' && in_array($value, $used)) ? ' disabled="disabled"' : '' ;
         ?>
-        <option value="<?= $value ?>"<?= $selected; ?><?= $disabled; ?>><?= $text; ?></option>
+        <option value="<?= $value ?>"<?= $disabled; ?><?= $selected; ?>><?= $text; ?></option>
         <?php
-      }?>
+      }
+      unset($value, $selected, $disabled);
+      ?>
       </select>
     </div>
     <?php

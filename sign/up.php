@@ -17,36 +17,34 @@
     if($passed) {
       require '../includes/connection_Open.php';
         $query = "SELECT txtEmail FROM `sheet_users` WHERE txtEmail='". $email ."'";
-				$result = mysql_query($query) or die('Query failed: ' . mysql_error());
-				$count = mysql_num_rows($result);
+				require '../includes/query_process.php';
+				$count = $sqlInfo->num_rows();
 
         if ($count === 1) {
 					$errorMssg = 'Email address already registered.';
 				}	else {
           $query = "INSERT INTO sheet_users( `txtName`, `txtEmail` ) VALUES ('". $name ."', '". $email ."')";
-          mysql_query($query) or die('Query failed: ' . mysql_error());
+          if(!_setQuery($mysqli, $query)) $errorMssg = 'Something went wrong please try agian.' ;
+          $userId = $mysqli->insert_id;
 
-          $query = "SELECT id FROM `sheet_users` WHERE txtEmail='". $email ."'";
-          $result = mysql_query($query) or die('Query failed: ' . mysql_error());
-          $line = mysql_fetch_array($result, MYSQL_ASSOC);
+          $queryInfo = "INSERT INTO sheet_character_info (id, txtCharName, txtPlayerName) VALUES ($userId, '". $charName ."', '". $name ."')";
+          if(!_setQuery($mysqli, $queryInfo)) $errorMssg = 'Something went wrong please try agian.' ;
 
-          $queryInfo = "INSERT INTO sheet_character_info (id, txtCharName, txtPlayerName) VALUES ($line[id], '". $charName ."', '". $name ."')";
-          mysql_query($queryInfo) or die('Query failed: ' . mysql_error());
+          $queryAttr = "INSERT INTO sheet_attributes (id, intStrength, intAgility, intVitality, intAlertness, intIntelligence, intWillpower) VALUES ($userId, 4, 4, 4, 4, 4, 4)";
+          if(!_setQuery($mysqli, $queryAttr)) $errorMssg = 'Something went wrong please try agian.' ;
 
-          $queryAttr = "INSERT INTO sheet_attributes (id, intStrength, intAgility, intVitality, intAlertness, intIntelligence, intWillpower) VALUES ($line[id], 4, 4, 4, 4, 4, 4)";
-          mysql_query($queryAttr) or die('Query failed: ' . mysql_error());
+          $queryEquip = "INSERT INTO sheet_equipment (id, tnytxtActiveTab) VALUES ($userId, 'allitems')";
+          if(!_setQuery($mysqli, $queryEquip)) $errorMssg = 'Something went wrong please try agian.' ;
 
-          $queryEquip = "INSERT INTO sheet_equipment (id, tnytxtActiveTab) VALUES ($line[id], 'allitems')";
-          mysql_query($queryEquip) or die('Query failed: ' . mysql_error());
+          $queryDice = "INSERT INTO sheet_dice (id) VALUES ($userId)";
+          if(!_setQuery($mysqli, $queryDice)) $errorMssg = 'Something went wrong please try agian.' ;
 
-          $queryDice = "INSERT INTO sheet_dice (id) VALUES ($line[id])";
-          mysql_query($queryDice) or die('Query failed: ' . mysql_error());
-
-          $queryTraits = "INSERT INTO sheet_roll_traits (id) VALUES ($line[id])";
-          mysql_query($queryTraits) or die('Query failed: ' . mysql_error());
+          $queryTraits = "INSERT INTO sheet_roll_traits (id) VALUES ($userId)";
+          if(!_setQuery($mysqli, $queryTraits)) $errorMssg = 'Something went wrong please try agian.' ;
 
           session_start();
-          $_SESSION['id'] = $line['id'];
+          $_SESSION['id'] = $userId;
+//          todo: something with this hash
           $_SESSION['hash'] = $hash;
 
           echo $_GET['callback'] .'({"success":true})';
@@ -55,7 +53,6 @@
       require '../includes/connection_Close.php';
       echo $_GET['callback'] .'({"success":false, "errors":"'. $errorMssg .'"})';
     }
-
     return true;
   } else {
 ?>
@@ -81,4 +78,12 @@
   </div>
   <div class="signLoading">Loading</div>
 </div>
-<?php } ?>
+<?php }
+
+function _setQuery($mysqli, $query) {
+  if (!$mysqli->query($query)) {
+    return false;
+  }
+  return true;
+}
+?>

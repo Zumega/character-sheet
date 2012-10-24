@@ -794,11 +794,11 @@ var jQ = jQuery,
 
         jQ('#assetsFields').on("change", "select", function() {
           jQ('#assetsFields').find('option').each(function() {
-//            enable and disable used skills
+//            enable and disable used assets
             jQ(this).removeAttr('disabled');
 
             for(var used in sheet.data.usedAsset) {
-              if(sheet.data.usedAsset[used] === jQ(this).val()) {
+              if(sheet.data.usedAsset[used] !== '========' && sheet.data.usedAsset[used] === jQ(this).val()) {
                 jQ(this).attr('disabled', 'disabled');
               }
             }

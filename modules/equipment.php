@@ -9,8 +9,8 @@ require 'includes/connection_Open.php';
           '`tnytxtActiveTab`, `blbWeapons`, `blbGear`, `blbArmor`, `blbMoney`, `blbNotes`'.
           'FROM  `sheet_equipment` WHERE id='. $_SESSION['id'];
 
-  $result = mysql_query($query) or die('Query failed: ' . mysql_error());
-  $line = mysql_fetch_array($result, MYSQL_ASSOC);
+require './includes/query_process.php';
+$line = $result->fetch_assoc();
 require 'includes/connection_Close.php';
 ?>
 <div class="module equipment clear">

@@ -5,7 +5,7 @@
   $usedCompAsset = array();
   $cellTitle = 'txt'. ucfirst(substr($comp_asset, 0, (strlen($comp_asset) - 1)));
 
-  while ($row = mysql_fetch_assoc($result)) {
+  while ($row = $result->fetch_assoc()) {
     $compAssets[] = $row;
     $usedCompAsset[] = $row[$cellTitle];
   }
@@ -20,11 +20,13 @@
         foreach ($arrayToUse as $text){
           $value = str_replace('\'', '', str_replace(' ', '_', strtolower($text)));
           $selected = ($value === $row[$cellTitle]) ? ' selected="selected"' : '' ;
-          $disabled = (in_array(strtolower($value), $usedCompAsset)) ? ' disabled="disabled"' : '' ;
+          $disabled = ($value !== '========' && in_array(strtolower($value), $usedCompAsset)) ? ' disabled="disabled"' : '' ;
           ?>
           <option value="<?= $value; ?>"<?= $disabled; ?><?= $selected; ?>><?= $text; ?></option>
           <?php
-        }?>
+        }
+        unset($value, $selected, $disabled);
+        ?>
         </select>
       </div>
       <?php
