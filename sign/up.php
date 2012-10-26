@@ -1,6 +1,5 @@
 <?php
   if(!empty($_GET['callback'])){
-
     $email = $_POST['email'];
     $name = $_POST['name'];
     $charName = $_POST['charName'];
@@ -16,6 +15,10 @@
 
     if($passed) {
       require '../includes/connection_Open.php';
+        $email = $mysqli->real_escape_string(htmlspecialchars($email));
+        $name = $mysqli->real_escape_string(htmlspecialchars($name));
+        $charName = $mysqli->real_escape_string(htmlspecialchars($charName));
+      
         $query = "SELECT txtEmail FROM `sheet_users` WHERE txtEmail='". $email ."'";
 				require '../includes/query_process.php';
 				$count = $sqlInfo->num_rows();

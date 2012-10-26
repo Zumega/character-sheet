@@ -1,4 +1,6 @@
 <?php
+//phpinfo();
+//die;
   if(!empty($_GET['callback'])){
 
     $email = $_POST['email'];
@@ -18,6 +20,10 @@
 
     if($passed) {
       require '../includes/connection_Open.php';
+        $email = $mysqli->real_escape_string(htmlspecialchars($email));
+        $name = $mysqli->real_escape_string(htmlspecialchars($name));
+        $charName = $mysqli->real_escape_string(htmlspecialchars($charName));
+
         $query = 'SELECT users.id, txtName, txtEmail, txtCharName '.
   'FROM sheet_users AS users '.
   'INNER JOIN sheet_character_info AS info ON users.id = info.id '.

@@ -137,7 +137,7 @@ require_once 'connection_Open.php';
       foreach($content as $num=>$item){
         $pairs='';
         foreach($item as $k=>$v){
-          $pairs .= $k .' = \''. mysql_real_escape_string(htmlspecialchars($v)) .'\', ';
+          $pairs .= $k .' = \''. $mysqli->real_escape_string(htmlspecialchars($v)) .'\', ';
         }
         unset($query, $result);
         $query = 'UPDATE '. $dataBaseTable .' SET '. preg_replace('/, $/', '', $pairs) .' WHERE id = ' . $_SESSION['id'] . ' and intOrder = '. $num;
@@ -149,7 +149,7 @@ require_once 'connection_Open.php';
       foreach($content as $num=>$item){
         foreach($item as $k=>$v){
            $keys .=  '`'. $k .'`, ';
-           $value .=  '\''. mysql_real_escape_string(htmlspecialchars($v)) .'\', ';
+           $value .=  '\''. $mysqli->real_escape_string(htmlspecialchars($v)) .'\', ';
         }
         unset($query, $result);
         $query = 'INSERT INTO  '. $dataBaseTable .' (  `id` ,  `intOrder`, '. preg_replace('/, $/', '', $keys) .') VALUES ( '. $_SESSION['id'] .', '. $num .', '. preg_replace('/, $/', '', $value) .' )';
