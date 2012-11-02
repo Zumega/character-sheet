@@ -54,6 +54,7 @@ var jQ = jQuery,
       displayDice: new Array(),
       usedDice: new Array(),
       hasChanged: false,
+      lastActiveArea: null,
       saveArea: ''
     },
     functions: {
@@ -109,6 +110,7 @@ var jQ = jQuery,
         sheet.functions.showHideModules();
         sheet.functions.controlsNumbers();
 //        popup();
+//        unLoad();
       },
       setObjects: function() {
 //        store dom in obj
@@ -430,7 +432,7 @@ var jQ = jQuery,
         if(sheet.data.characterInfo.stunPoints === 0) {
           jQ('#stunPointsDown').addClass('hide');
         }
-        if((sheet.data.characterInfo.woundPoints + sheet.data.characterInfo.stunPoints) === sheet.data.derivedTraits.lifePoints) {
+        if((sheet.data.characterInfo.woundPoints + sheet.data.characterInfo.stunPoints) >= sheet.data.derivedTraits.lifePoints) {
           jQ('#woundPointsUp, #stunPointsUp').addClass('hide');
         }
         if((sheet.data.characterInfo.woundPoints + sheet.data.characterInfo.stunPoints) < sheet.data.derivedTraits.lifePoints) {
@@ -440,7 +442,7 @@ var jQ = jQuery,
         sheet.functions.deathCheck();
       },
       deathCheck: function() {
-        if(sheet.data.derivedTraits.lifePoints === (sheet.data.characterInfo.woundPoints + sheet.data.characterInfo.stunPoints)) {
+        if(sheet.data.derivedTraits.lifePoints <= (sheet.data.characterInfo.woundPoints + sheet.data.characterInfo.stunPoints)) {
           sheet.functions.popup('You DEAD!!');
         }
       },
@@ -1061,10 +1063,32 @@ var jQ = jQuery,
             jQ('#bgOverlay, #popUp').hide();
           }
         });
+      },
+      unLoad: function() {
+        sheet.functions.getCharacterInfo();
+        sheet.functions.getAttributes();
+        sheet.functions.getDerivedTraits();
+        sheet.functions.getRolledTraits();
+        sheet.functions.getSkills();
+        sheet.functions.getEquipment();
+        sheet.functions.getComplications();
+        sheet.functions.getAssets();
+        sheet.functions.getDice();
+
+        jQ.ajax({
+          url: sheet.settings.saveUrl,
+          type: 'POST',
+          data: {'data': {'content': JSON.stringify(sheet.data) , 'saveArea': 'all' }},
+          async: false
+        });
       }
     }
   };
 
 jQ(document).ready(function() {
   sheet.functions.init();
+});
+
+jQ(window).unload(function() {
+  sheet.functions.unLoad();
 });

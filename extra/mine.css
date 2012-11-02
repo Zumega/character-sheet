@@ -141,6 +141,7 @@ select{
 .barContainer{
   width:940px;
   position: relative;
+  overflow: hidden;
 }
 .wpspBars{
   width:0%;
