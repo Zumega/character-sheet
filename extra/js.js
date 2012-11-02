@@ -430,6 +430,12 @@ var jQ = jQuery,
         if(sheet.data.characterInfo.stunPoints === 0) {
           jQ('#stunPointsDown').addClass('hide');
         }
+        if((sheet.data.characterInfo.woundPoints + sheet.data.characterInfo.stunPoints) === sheet.data.derivedTraits.lifePoints) {
+          jQ('#woundPointsUp, #stunPointsUp').addClass('hide');
+        }
+        if((sheet.data.characterInfo.woundPoints + sheet.data.characterInfo.stunPoints) < sheet.data.derivedTraits.lifePoints) {
+          jQ('#woundPointsUp, #stunPointsUp').removeClass('hide');
+        }
 
         sheet.functions.deathCheck();
       },
@@ -817,8 +823,10 @@ var jQ = jQuery,
           }
           if ($this.val() % 2 || isNaN($this.val())) {
             sheet.functions.popup("The number needs to corispond to a dice number<br \/><br \/>Meaning it needs to be even.");
-            $this.select();
-            $this.focus();
+            if(typeof $this !== 'undefined') {
+              $this.select();
+              $this.focus();
+            }
             return false;
           }
 
@@ -831,8 +839,10 @@ var jQ = jQuery,
 
           if (sum > sheet.data.defaultPoints['max'+ type +'Points']) {
             sheet.functions.popup('You have use to many points<br \/><br \/>You only have '+ sheet.data.defaultPoints['max'+ type +'Points'] +' points to use.<br \/><br \/>And you have used '+ sum +' so far.');
-            $this.select();
-            $this.focus();
+            if(typeof $this !== 'undefined') {
+              $this.select();
+              $this.focus();
+            }
             return false;
           }
         }
