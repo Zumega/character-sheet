@@ -192,7 +192,7 @@ select{
   padding: 10px;
   cursor: pointer;
   display: block;
-  z-index: 1000;
+  z-index: 400;
   box-shadow: 0 3px 10px #888;
 }
 .controlsContainer {
@@ -400,3 +400,28 @@ ul.diceSum {
   display: inline-block;
 }
 /*Dice*/
+
+/*Popup*/
+.bgOverlay,
+.popUp{
+  display: none;
+  position: fixed;
+  z-index: 600;
+}
+.bgOverlay{
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: rgba(0,0,0,.75);
+}
+.popUp{
+  background: #fff;
+  border-radius: 10px;
+  border: 2px solid #f00;
+  box-shadow: 0 0 10px #f00,  0 0 30px #fff;
+  top: 0;
+  left: 50%;
+  padding: 10px;
+}
+/*Popup*/

@@ -108,6 +108,7 @@ var jQ = jQuery,
 //        ajaxError()
         sheet.functions.showHideModules();
         sheet.functions.controlsNumbers();
+//        popup();
       },
       setObjects: function() {
 //        store dom in obj
@@ -227,9 +228,11 @@ var jQ = jQuery,
 
 
         if(life.lifePoints > sheet.data.defaultPoints.maxLifePoints) {
-          alert('You have to many life points.\nYou have '+ life.lifePoints +'\nYou can only have '+ sheet.data.defaultPoints.maxLifePoints);
-          $this.select();
-          $this.focus();
+          sheet.functions.popup('You have to many life points.<br \/><br \/>You have '+ life.lifePoints +'<br \/><br \/>You can only have '+ sheet.data.defaultPoints.maxLifePoints);
+          if(typeof $this !== 'undefined') {
+            $this.select();
+            $this.focus();
+          }
         }
 
         sheet.functions.ouchCheck();
@@ -432,7 +435,7 @@ var jQ = jQuery,
       },
       deathCheck: function() {
         if(sheet.data.derivedTraits.lifePoints === (sheet.data.characterInfo.woundPoints + sheet.data.characterInfo.stunPoints)) {
-          alert('You DEAD!!');
+          sheet.functions.popup('You DEAD!!');
         }
       },
       setDerivedTraits: function() {
@@ -813,10 +816,10 @@ var jQ = jQuery,
             $this.val(0);
           }
           if ($this.val() % 2 || isNaN($this.val())) {
-            alert("The number needs to corispond to a dice number\nMeaning it needs to be even.");
+            sheet.functions.popup("The number needs to corispond to a dice number<br \/><br \/>Meaning it needs to be even.");
             $this.select();
             $this.focus();
-            return;
+            return false;
           }
 
           $inputs.each(function() {
@@ -827,9 +830,10 @@ var jQ = jQuery,
           sheet.settings['used'+ type +'PointsObj'].val(sum);
 
           if (sum > sheet.data.defaultPoints['max'+ type +'Points']) {
-            alert('You have use to many points\nYou only have '+ sheet.data.defaultPoints['max'+ type +'Points'] +' points to use.\nAnd you have used '+ sum +' so far.');
+            sheet.functions.popup('You have use to many points<br \/><br \/>You only have '+ sheet.data.defaultPoints['max'+ type +'Points'] +' points to use.<br \/><br \/>And you have used '+ sum +' so far.');
             $this.select();
             $this.focus();
+            return false;
           }
         }
       },
@@ -922,7 +926,6 @@ var jQ = jQuery,
         jQ(document).find('.diceUI span').click(function() {
           if(sheet.functions.getDice()) {
             sheet.data.hasChanged = false;
-//            sheet.functions.save('dice');
           }
         });
       },
@@ -1024,6 +1027,30 @@ var jQ = jQuery,
         });
 
         jQ('#controlsContainer').delay(5000).trigger('click');
+      },
+      popup: function(text) {
+        if(jQ('#bgOverlay').length === 0) {
+          var overlay = '<div id="bgOverlay" class="bgOverlay"><\/div>'+
+                        '<div id="popUp" class="popUp"><\/div>';
+          jQ('body').append(overlay);
+        }
+
+        jQ('#bgOverlay, #popUp').show();
+
+        jQ('#popUp').html(text).css({
+          'top': '20%',
+          'left': (jQ(window).width() / 2) - (jQ('#popUp').width() / 2) +'px'
+        });
+
+        jQ('#bgOverlay').on('click', function() {
+          jQ('#bgOverlay, #popUp').hide();
+        });
+
+        jQ(document).keyup(function(event) {
+          if(event.keyCode === 27 || event.keyCode === 13) {
+            jQ('#bgOverlay, #popUp').hide();
+          }
+        });
       }
     }
   };
