@@ -1,10 +1,10 @@
 <?php
 require 'includes/connection_Open.php';
   $query = 'SELECT '.
-          'CONCAT("Weapons:\n", `blbWeapons`, '.
-          '"\n\n\nGear:\n", `blbGear`, '.
-          '"\n\n\nArmor:\n", `blbArmor`, '.
-          '"\n\n\nMoney:\n", `blbMoney`'.
+          'CONCAT("'. str_replace(" ", "", $equipTabs[1]) .':\n", `blb'. str_replace(" ", "", $equipTabs[1]) .'`, '.
+          '"\n\n\n'. str_replace(" ", "", $equipTabs[2]) .':\n", `blb'. str_replace(" ", "", $equipTabs[2]) .'`, '.
+          '"\n\n\n'. str_replace(" ", "", $equipTabs[3]) .':\n", `blb'. str_replace(" ", "", $equipTabs[3]) .'`, '.
+          '"\n\n\n'. str_replace(" ", "", $equipTabs[4]) .':\n", `blb'. str_replace(" ", "", $equipTabs[4]) .'`'.
           ') AS "blbAllItems", '.
           '`tnytxtActiveTab`, `blbWeapons`, `blbGear`, `blbArmor`, `blbMoney`, `blbNotes`'.
           'FROM  `sheet_equipment` WHERE id='. $_SESSION['id'];

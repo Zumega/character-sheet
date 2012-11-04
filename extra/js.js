@@ -473,7 +473,7 @@ var jQ = jQuery,
                 data: {'data': skillCount, 'used': sheet.data.usedSkills },
                 dataType: 'html',
                 success: function(response) {
-                  jQ('#skillsContainer').append(response);
+                  jQ('#skillsContainer').append(response).find('.column:last-child').slideDown('fast');
                   if(sheet.functions.getSkills()) {
                     sheet.data.hasChanged = false;
                     sheet.functions.saveQueue('skills');
@@ -491,7 +491,7 @@ var jQ = jQuery,
               }
               break;
             case 'skillDown':
-              jQ('#skillsContainer').find('.column:last-child').fadeOut('fast',function() {
+              jQ('#skillsContainer').find('.column:last-child').slideUp('fast',function() {
                 jQ(this).remove();
                 skillCount -= 1;
 
@@ -662,7 +662,7 @@ var jQ = jQuery,
                 data: {'count': compCount, 'type': 'complications', 'used': sheet.data.usedComp},
                 dataType: 'html',
                 success: function(response) {
-                  jQ('#complicationsFields').append(response);
+                  jQ('#complicationsFields').append(response).find('.section:last-child').slideDown('fast');
                   if(sheet.functions.getComplications()) {
                     sheet.data.hasChanged = false;
                     sheet.functions.saveQueue('comp');
@@ -681,7 +681,7 @@ var jQ = jQuery,
               }
               break;
             case 'complicationsDown':
-              jQ('#complicationsFields').find('.section:last-child').fadeOut('fast', function() {
+              jQ('#complicationsFields').find('.section:last-child').slideUp('fast', function() {
                 jQ(this).remove();
                 compCount -= 1;
 
@@ -750,7 +750,7 @@ var jQ = jQuery,
                 data: {'count': assetCount, 'type': 'assets', 'used': sheet.data.usedAsset},
                 dataType: 'html',
                 success: function(response) {
-                  jQ('#assetsFields').append(response);
+                  jQ('#assetsFields').append(response).find('.section:last-child').slideDown('fast');
                   if(sheet.functions.getAssets()) {
                     sheet.data.hasChanged = false;
                     sheet.functions.saveQueue('asset');
@@ -765,11 +765,11 @@ var jQ = jQuery,
               $countField.text(assetCount);
 
               if(assetCount > 0 ) {
-                jQ('#assetDown').removeClass('hide');
+                jQ('#assetsDown').removeClass('hide');
               }
               break;
             case 'assetsDown':
-              jQ('#assetsFields').find('.section:last-child').fadeOut('fast', function() {
+              jQ('#assetsFields').find('.section:last-child').slideUp('fast', function() {
                 jQ(this).remove();
                 assetCount -= 1;
 

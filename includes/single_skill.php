@@ -6,7 +6,7 @@
   $fieldCntr = 0;
 ?>
 
-<div class="column skillsInput">
+<div class="column skillsInput" style="display:none;">
   <div class="skilColum_1">
     <select name="skill_<?= $skillNum; ?>" id="skill_<?= $skillNum; ?>" tabindex="-1">
     <?php

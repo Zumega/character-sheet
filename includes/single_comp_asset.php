@@ -6,7 +6,7 @@
   $used = (empty($_POST['used'])) ? array() : $_POST['used'] ;
 ?>
 
-  <div class="section">
+  <div class="section" style="display:none;">
     <div>
       <select id="typeName_<?= $number; ?>_<?= $type; ?>" name="field_<?= $number; ?>_<?= $type; ?>" tabindex="-1">
       <?php
