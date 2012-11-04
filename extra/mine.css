@@ -414,7 +414,11 @@ ul.diceSum {
   left: 0;
   height: 100%;
   width: 100%;
-  background: rgba(0,0,0,.75);
+  background-color: rgba(0,0,0,.5);
+}
+.deathOverlay {
+  background-image: url(./img/skulls.png);
+  background-position: center;
 }
 .popUp{
   background: #fff;

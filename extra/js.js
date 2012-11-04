@@ -111,6 +111,7 @@ var jQ = jQuery,
         sheet.functions.controlsNumbers();
 //        popup();
 //        unLoad();
+//        sheet.functions.signOut();
       },
       setObjects: function() {
 //        store dom in obj
@@ -290,6 +291,13 @@ var jQ = jQuery,
             sheet.data.equipment[$this.attr('id')] = $this.val();
           }
         });
+        jQ(document).find('.equipTab').each(function() {
+          var $this = jQ(this);
+
+          if($this.hasClass('active')) {
+            sheet.data.equipment.activeTab = $this.children('label').text().toLowerCase().replace(' ', '');
+          }
+        });
         return sheet.data.hasChanged;
       },
       getComplications: function() {
@@ -443,7 +451,7 @@ var jQ = jQuery,
       },
       deathCheck: function() {
         if(sheet.data.derivedTraits.lifePoints <= (sheet.data.characterInfo.woundPoints + sheet.data.characterInfo.stunPoints)) {
-          sheet.functions.popup('You DEAD!!');
+          sheet.functions.popup('You DEAD!!', 'dead');
         }
       },
       setDerivedTraits: function() {
@@ -1040,11 +1048,21 @@ var jQ = jQuery,
 
         jQ('#controlsContainer').delay(5000).trigger('click');
       },
-      popup: function(text) {
+      popup: function(text, type) {
+        type = type || '' ;
+
         if(jQ('#bgOverlay').length === 0) {
           var overlay = '<div id="bgOverlay" class="bgOverlay"><\/div>'+
                         '<div id="popUp" class="popUp"><\/div>';
           jQ('body').append(overlay);
+        }
+
+        switch(type) {
+          case 'dead':
+            jQ('#bgOverlay').addClass('deathOverlay');
+            break;
+          default:
+            jQ('#bgOverlay').removeClass('deathOverlay');
         }
 
         jQ('#bgOverlay, #popUp').show();
@@ -1081,6 +1099,16 @@ var jQ = jQuery,
           data: {'data': {'content': JSON.stringify(sheet.data) , 'saveArea': 'all' }},
           async: false
         });
+      },
+      signOut: function() {
+        jQ(document).find('.signOut').click(function(event) {
+          event.preventBubble();
+
+//          sheet.functions.unLoad();
+          window.location = jQ(this).attr('href');
+
+
+        });
       }
     }
   };
@@ -1090,5 +1118,6 @@ jQ(document).ready(function() {
 });
 
 jQ(window).unload(function() {
-  sheet.functions.unLoad();
+//  turned off for now it may fuck a users data
+//  sheet.functions.unLoad();
 });

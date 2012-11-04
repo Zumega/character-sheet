@@ -5,7 +5,9 @@ $saveArea = $_POST['data']['saveArea'];
 
 if($saveArea === 'all') {
   foreach($json as $saveArea=>$json){
-    _saveMe($saveArea, $json);
+    if(!empty($json)) {
+      _saveMe($saveArea, $json);
+    }
   }
 } else {
   _saveMe($saveArea, $json, true);
@@ -140,7 +142,7 @@ function _saveMe($saveArea, $json, $singleSave = false) {
 
   if($isGood) {
     require 'connection_Open.php';
-    
+
     if ($isMany) {
       $keys = $value = '';
       $query = 'SELECT  count(`id`) count FROM '. $dataBaseTable .' WHERE  `id` = '. $_SESSION['id'];
