@@ -42,6 +42,7 @@ var jQ = jQuery,
       usedSubSkills:  new Array(),
       equipment: {},
       allItems: '',
+      equipResize: '+=300',
       comp: {},
       asset: {},
       allCompAsset: {
@@ -89,6 +90,7 @@ var jQ = jQuery,
         sheet.functions.skillUpdater();
         sheet.functions.subSkillUpdater();
         sheet.functions.setEquipmentTabs();
+        sheet.functions.setEquipmentResizer();
 //        setEquipmentFields()
 //        updateAllItemsField()
         sheet.functions.compCountChanger();
@@ -618,6 +620,18 @@ var jQ = jQuery,
           sheet.functions.setEquipmentFields(tabid);
           sheet.data.hasChanged = false;
           sheet.functions.saveQueue('equipment');
+        });
+      },
+      setEquipmentResizer: function() {
+        jQ(document).find('.expandContract').click(function() {
+          jQ(this).toggleClass('active');
+          jQ(document).find('.equipInput textarea').each(function() {
+            jQ(this).animate({
+              'height': sheet.data.equipResize
+            },
+            500);
+          });
+          sheet.data.equipResize = (sheet.data.equipResize === '+=300') ? '-=300' : '+=300' ;
         });
       },
       setEquipmentFields: function(id) {

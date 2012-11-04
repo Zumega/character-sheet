@@ -29,6 +29,7 @@ require 'includes/connection_Close.php';
     <?php
       }
     ?>
+      <li class="expandContract"><div class="arrow"></div></li>
     </ul>
   </div>
   <div class="equipInput">

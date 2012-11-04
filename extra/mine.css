@@ -263,7 +263,7 @@ select{
 /*Equipment*/
 .equipTabs ul{
 }
-.equipTabs li{
+.equipTabs .equipTab{
   border:1px solid #000;
   border-radius: 4px 4px 0 0;
   background: #cecece;
@@ -287,7 +287,8 @@ select{
   font-weight: bold;
 }
 .equipTabs .active,
-.equipTabs .equipTab:hover{
+.equipTabs .equipTab:hover,
+.expandContract.active{
   background:#fff;
   border-bottom:none;
   padding-bottom:1px;
@@ -308,11 +309,39 @@ select{
 }
 .equipInput textarea{
   width:100%;
-  height:337px;
+  height:220px;
   display:none;
 }
 .equipInput textarea.active{
   display:block;
+}
+.expandContract{
+  float:right;
+  padding: 3px;
+  margin-top: 2px;
+  border-top: 1px solid black;
+  border-right: 1px solid black;
+  border-bottom: none;
+  border-left: 1px solid black;
+  border-radius: 3px 3px 0 0;
+  cursor: pointer;
+}
+.expandContract .arrow{
+  height: 0;
+  line-height: 0;
+  padding: 0;
+  margin: 0 0 1px 0;
+  border-top:6px solid #f00;
+  border-right:4px solid transparent;
+  border-bottom:0 none;
+  border-left:4px solid transparent;
+}
+.expandContract.active .arrow{
+  margin: 0 0 3px 0;
+  border-top:0 none;
+  border-right:4px solid transparent;
+  border-bottom:6px solid #f00;
+  border-left:4px solid transparent;
 }
 /*Equipment*/
 
