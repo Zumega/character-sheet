@@ -25,7 +25,7 @@ table, tbody, tfoot, thead, tr, th, td {
 body {
 	line-height: 1.24;
 	color: #000;
-	background: #ddd;
+	background: #ddd url(./img/ship.png) center;
   font-family: 'Krona One', sans-serif;
   font-size: 10px;
 }
@@ -227,6 +227,12 @@ select{
 /*Derived Traits*/
 
 /*Skills and Specialties*/
+.skillControles {
+  width: 160px;
+}
+.skillButtons{
+  float:right;
+}
 .skilColum_1{
   float:left;
   width: 218px;
@@ -377,6 +383,9 @@ select{
   padding-bottom: 10px;
   border-bottom:1px dashed #666;
   margin-bottom: 20px;
+}
+.compAssetButtons{
+  float: right;
 }
 .compField{
   background: red;
