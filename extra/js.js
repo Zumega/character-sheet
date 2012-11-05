@@ -1027,6 +1027,8 @@ var jQ = jQuery,
         jQ(document).find('.close').on('click', function() {
           var $element = jQ(document).find('.'+ jQ(this).parent().attr('id'));
 
+          jQ(this).toggleClass('active');
+
           if($element.css('display') === 'none') {
             $element.slideDown();
           } else {

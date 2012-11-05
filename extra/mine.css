@@ -25,7 +25,8 @@ table, tbody, tfoot, thead, tr, th, td {
 body {
 	line-height: 1.24;
 	color: #000;
-	background: #ddd url(./img/ship.png) center;
+	background: #ddd url(./img/ship.jpeg) no-repeat center fixed;
+  background-size: 100% auto;
   font-family: 'Krona One', sans-serif;
   font-size: 10px;
 }
@@ -33,7 +34,17 @@ body {
 h2{font-size: 16px; margin-bottom: 5px;position:relative;}
 ul{list-style-type: none;}
 
-input{border-bottom:1px solid #000;border-top:none;border-left:1px solid #fff;border-right:1px solid #fff;text-align:center;color:#ff0000;float: right;width: 150px;}
+input{
+  background:transparent;
+  border-bottom:1px solid #000;
+  border-top:none;
+  border-left:1px solid transparent;
+  border-right:1px solid transparent;
+  text-align:center;
+  color:#f00;
+  float: right;
+  width: 150px;
+}
 input[type="button"],input[type="radio"]{border:0px none;float:none;}
 a,input,textarea,select{outline: none;}
 textarea{border:1px solid #000;resize:none; padding:5px;}
@@ -51,7 +62,7 @@ textarea{border:1px solid #000;resize:none; padding:5px;}
 /*universal*/
 
 /*global*/
-.bodyContainer{background:#fff;width: 940px;margin: 0px auto;padding:10px;}
+.bodyContainer{background:rgba(255,255,255,.75);width: 940px;margin: 0px auto;padding:10px;}
 .smallInput{width: 30px;}
 .noFloat{float:none;}
 .column{float:left;width:50%;}
@@ -95,7 +106,6 @@ select{
   text-align: center;
   font-size: 72px;
   font-family: 'Almendra SC', serif;
-  /*margin-bottom: 10px;*/
   background: #000;
   background: -webkit-linear-gradient(top, #960 0%, #c30 40%,  #410 80%, #111 100%);
   background: -moz-linear-gradient(top, #960 0%, #c30 40%,  #410 80%, #111 100%);
@@ -122,17 +132,35 @@ select{
 .module{margin-bottom: 10px;}
 .close{
   background: #fff;
-  padding: 2px 5px;
-  color:#000;
   position:absolute;
-  left:-25px;
+  left:-20px;
   top:0px;
-  border-radius: 4px 0 0 4px;
-  font-size: 10px;
-  font-weight: bold;
-  box-shadow: -2px 1px 3px black;
+  border: 1px solid #666;
+  border-radius: 4px;
+  box-shadow: 0 0 3px #000;
   cursor: pointer;
+  display: inline-block;
+  padding: 4px  3px  3px  3px;
 }
+.close .arrow{
+  display: block;
+  height: 0;
+  width: 0;
+  line-height: 0;
+  padding: 0;
+  margin: 0 0 1px 0;
+  border-top:0 none;
+  border-right:4px solid transparent;
+  border-bottom:6px solid #f00;
+  border-left:4px solid transparent;
+}
+.close.active .arrow{
+  border-top:6px solid #f00;
+  border-right:4px solid transparent;
+  border-bottom:0 none;
+  border-left:4px solid transparent;
+}
+
 .row{float: left;margin: 3px 0px 7px;}
 .cell{float: left;width: 280px;padding-right: 20px;}
 /*section*/
@@ -167,7 +195,7 @@ select{
   float: right;
 }
 .counterBar{
-  background: #888;
+  background: rgba(0,0,0,.3);
   width: 100%;
   height: 17px;
   position: absolute;
@@ -293,8 +321,7 @@ select{
   font-weight: bold;
 }
 .equipTabs .active,
-.equipTabs .equipTab:hover,
-.expandContract.active{
+.equipTabs .equipTab:hover{
   background:#fff;
   border-bottom:none;
   padding-bottom:1px;
@@ -322,6 +349,7 @@ select{
   display:block;
 }
 .expandContract{
+  background:#fff;
   float:right;
   padding: 3px;
   margin-top: 2px;
