@@ -2,9 +2,10 @@ var sign = {
       data: {},
       init: function() {
         sign.pickForm();
-//        clearForm();
+        sign.enterSubmit();
         sign.submitForm();
 //        validateForm();
+//        clearForm();
       },
       pickForm: function() {
 //        used to bring more focus to active form
@@ -33,10 +34,22 @@ var sign = {
           sign.clearForm($this);
         });
       },
-      clearForm: function($this) {
-        if($this.val() === 'Manditory' || $this.val() === 'Still Manditory') {
-          $this.val('');
-        }
+      enterSubmit: function() {
+        jQ('#signIn, #signUp').on('keyup', 'input', function(event) {
+          if(event.keyCode === 13 && !jQ(this).hasClass('signButton')) {
+            var $this = jQ(this),
+                formId = null;
+
+            while(!$this.hasClass('signContianer')) {
+              $this = $this.parent();
+            }
+
+            formId = $this.attr('id');
+            formId = 'submit'+ formId.charAt(0).toUpperCase() + formId.slice(1);
+
+            jQ('#'+ formId).trigger('click');
+          }
+        });
       },
       submitForm: function() {
         jQ('#submitSignIn, #submitSignUp').on('click', function(event) {
@@ -83,22 +96,32 @@ var sign = {
         });
       },
       validateForm: function() {
-        var returning = true;
+        var isValid = true;
 
         jQ('#'+ sign.data.activeFormId).find('input[type!=button]').each(function() {
           var $this = jQ(this);
 
           sign.data[$this.attr('name')] = $this.val();
 
-          if($this.val() === '') {
-            $this.val('Manditory');
-            returning = false;
-          } else if ($this.val() === 'Manditory') {
-            $this.val('Still Manditory');
-            returning = false;
+          switch ($this.val()) {
+            case '':
+              $this.val('Manditory');
+              isValid = false;
+              break;
+            case 'Manditory':
+            case 'Still Manditory':
+              $this.val('Still Manditory');
+              isValid = false;
+              break;
           }
         });
-        return returning;
+
+        return isValid;
+      },
+      clearForm: function($this) {
+        if($this.val() === 'Manditory' || $this.val() === 'Still Manditory') {
+          $this.val('');
+        }
       }
     };
 
