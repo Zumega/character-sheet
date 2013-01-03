@@ -7,6 +7,7 @@ var jQ = jQuery,
       queueTimer: null
     },
     data: {
+      hash: null,
       defaultPoints: {},
       characterInfo: {},
       attributes: {},
@@ -64,6 +65,8 @@ var jQ = jQuery,
 *  commented out functions are to
 *  show where they are in the document
 **************************************** */
+        sheet.functions.getHash();
+
         sheet.functions.setObjects();
         sheet.functions.getDefalutPoints();
 
@@ -113,7 +116,10 @@ var jQ = jQuery,
         sheet.functions.controlsNumbers();
 //        popup();
 //        unLoad();
-//        sheet.functions.signOut();
+        sheet.functions.signOut();
+      },
+      getHash: function() {
+        sheet.data.hash = mykey;
       },
       setObjects: function() {
 //        store dom in obj
@@ -998,14 +1004,18 @@ var jQ = jQuery,
         jQ.ajax({
           url: sheet.settings.saveUrl,
           type: 'POST',
-          data: {'data': {'content': JSON.stringify(sheet.data[saveArea]) , 'saveArea': saveArea }},
+          data: {'data': {'content': JSON.stringify(sheet.data[saveArea]) , 'saveArea': saveArea, 'hash': sheet.data.hash}},
           dataType: 'jsonp',
           jsonpCallback: saveArea +'_callback',
           success: function(response) {
-            if(response.status !== 'done') {
-              sheet.settings.saveObj.text(response.status);
-            }else{
-              sheet.settings.saveObj.text('Saved');
+            switch (response.status) {
+              case 'done':
+                sheet.settings.saveObj.text('Saved');
+                break;
+              case 'Bad Key':
+                sheet.functions.badKey();
+              default:
+                sheet.settings.saveObj.text(response.status);
             }
 
             sheet.settings.saveObj.animate({
@@ -1018,6 +1028,12 @@ var jQ = jQuery,
             sheet.functions.ajaxError(error);
           }
         });
+      },
+      badKey: function() {
+        setTimeout(function() {
+          jQ(document).find('.signOut').trigger('click');
+        }, 5 * 1000);
+        sheet.functions.popup('Your identifacation has been compromised you will be signed out', 'badidea');
       },
       ajaxError: function(error) {
         var html = "<div class='ajaxError'>"+ error +"<\/div>";
@@ -1074,6 +1090,7 @@ var jQ = jQuery,
         }
 
         switch(type) {
+          case 'badidea':
           case 'dead':
             jQ('#bgOverlay').addClass('deathOverlay');
             break;
@@ -1088,15 +1105,17 @@ var jQ = jQuery,
           'left': (jQ(window).width() / 2) - (jQ('#popUp').width() / 2) +'px'
         });
 
-        jQ('#bgOverlay').on('click', function() {
-          jQ('#bgOverlay, #popUp').hide();
-        });
-
-        jQ(document).keyup(function(event) {
-          if(event.keyCode === 27 || event.keyCode === 13) {
+        if(type !== 'badidea') {
+          jQ('#bgOverlay').on('click', function() {
             jQ('#bgOverlay, #popUp').hide();
-          }
-        });
+          });
+
+          jQ(document).keyup(function(event) {
+            if((event.keyCode === 27 || event.keyCode === 13)) {
+              jQ('#bgOverlay, #popUp').hide();
+            }
+          });
+        }
       },
       unLoad: function() {
         sheet.functions.getCharacterInfo();
@@ -1118,12 +1137,9 @@ var jQ = jQuery,
       },
       signOut: function() {
         jQ(document).find('.signOut').click(function(event) {
-          event.preventBubble();
-
-//          sheet.functions.unLoad();
+          event.preventDefault();
+          
           window.location = jQ(this).attr('href');
-
-
         });
       }
     }
@@ -1131,9 +1147,4 @@ var jQ = jQuery,
 
 jQ(document).ready(function() {
   sheet.functions.init();
-});
-
-jQ(window).unload(function() {
-//  turned off for now it may fuck a users data
-//  sheet.functions.unLoad();
 });

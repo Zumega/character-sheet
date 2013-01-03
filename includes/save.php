@@ -1,23 +1,37 @@
 <?php
 session_start();
 $json = json_decode($_POST['data']['content'], true);
+$sessionId = $_SESSION['id'];
 $saveArea = $_POST['data']['saveArea'];
+$callBack = $_GET['callback'];
+$hashSent = $_POST['data']['hash'];
+$hashSession = $_SESSION['hash'];
 
-if($saveArea === 'all') {
-  foreach($json as $saveArea=>$json){
-    if(!empty($json)) {
-      _saveMe($saveArea, $json);
+require 'connection_Open.php';
+$query = 'SELECT  hash FROM sheet_users WHERE  `id` = '. $sessionId;
+require './query_process.php';
+$line = $result->fetch_assoc();
+require 'connection_Close.php';
+
+if ($hashSent === $hashSession && $hashSession === $line['hash']) {
+  if($saveArea === 'all') {
+    foreach($json as $saveArea=>$json){
+      if(!empty($json)) {
+        _saveMe($saveArea, $json, $sessionId, $callBack, false);
+      }
     }
+  } else {
+    _saveMe($saveArea, $json, $sessionId, $callBack, true);
   }
 } else {
-  _saveMe($saveArea, $json, true);
+  echo $callBack .'({\'status\':\'Bad Key\'})';
 }
 
 
-function _saveMe($saveArea, $json, $singleSave = false) {
+function _saveMe($saveArea, $json, $sessionId, $callBack, $singleSave) {
   $isGood = true;
 
-  switch ($saveArea){
+  switch ($saveArea) {
     case 'characterInfo':
       $isMany = false;
       $dataBaseTable = 'sheet_character_info';
@@ -145,7 +159,7 @@ function _saveMe($saveArea, $json, $singleSave = false) {
 
     if ($isMany) {
       $keys = $value = '';
-      $query = 'SELECT  count(`id`) count FROM '. $dataBaseTable .' WHERE  `id` = '. $_SESSION['id'];
+      $query = 'SELECT  count(`id`) count FROM '. $dataBaseTable .' WHERE  `id` = '. $sessionId;
       require './query_process.php';
       $line = $result->fetch_assoc();
 
@@ -156,7 +170,7 @@ function _saveMe($saveArea, $json, $singleSave = false) {
             $pairs .= $k .' = \''. $mysqli->real_escape_string(htmlspecialchars($v)) .'\', ';
           }
           unset($query, $result);
-          $query = 'UPDATE '. $dataBaseTable .' SET '. preg_replace('/, $/', '', $pairs) .' WHERE id = ' . $_SESSION['id'] . ' and intOrder = '. $num;
+          $query = 'UPDATE '. $dataBaseTable .' SET '. preg_replace('/, $/', '', $pairs) .' WHERE id = ' . $sessionId . ' and intOrder = '. $num;
           _setQuery($mysqli, $query, $singleSave);
           unset($pairs, $k, $v);
         }
@@ -168,13 +182,13 @@ function _saveMe($saveArea, $json, $singleSave = false) {
              $value .=  '\''. $mysqli->real_escape_string(htmlspecialchars($v)) .'\', ';
           }
           unset($query, $result);
-          $query = 'INSERT INTO  '. $dataBaseTable .' (  `id` ,  `intOrder`, '. preg_replace('/, $/', '', $keys) .') VALUES ( '. $_SESSION['id'] .', '. $num .', '. preg_replace('/, $/', '', $value) .' )';
+          $query = 'INSERT INTO  '. $dataBaseTable .' (  `id` ,  `intOrder`, '. preg_replace('/, $/', '', $keys) .') VALUES ( '. $sessionId .', '. $num .', '. preg_replace('/, $/', '', $value) .' )';
           _setQuery($mysqli, $query, $singleSave);
           unset($keys, $value, $k, $v);
         }
         unset($query, $result, $num, $item);
       }else{
-        $query = 'DELETE FROM '. $dataBaseTable .' WHERE id = '. $_SESSION['id'];
+        $query = 'DELETE FROM '. $dataBaseTable .' WHERE id = '. $sessionId;
         _setQuery($mysqli, $query, $singleSave);
         unset($query, $result);
 
@@ -183,7 +197,7 @@ function _saveMe($saveArea, $json, $singleSave = false) {
              $keys .=  '`'. $k .'`, ';
              $value .=  '\''. $mysqli->real_escape_string(htmlspecialchars($v)) .'\', ';
           }
-          $query = 'INSERT INTO  '. $dataBaseTable .' (  `id` ,  `intOrder`, '. preg_replace('/, $/', '', $keys) .') VALUES ( '. $_SESSION['id'] .', '. $num .', '. preg_replace('/, $/', '', $value) .' )';
+          $query = 'INSERT INTO  '. $dataBaseTable .' (  `id` ,  `intOrder`, '. preg_replace('/, $/', '', $keys) .') VALUES ( '. $sessionId .', '. $num .', '. preg_replace('/, $/', '', $value) .' )';
           _setQuery($mysqli, $query, $singleSave);
           unset($query, $result, $keys, $value);
         }
@@ -194,17 +208,17 @@ function _saveMe($saveArea, $json, $singleSave = false) {
       foreach($content as $k=>$v){
         $pairs .= $k .' = \''. $mysqli->real_escape_string(htmlspecialchars($v)) .'\', ';
       }
-      $query = 'UPDATE '. $dataBaseTable .' SET '. preg_replace('/, $/', '', $pairs) .' WHERE id = ' . $_SESSION['id'] . '';
+      $query = 'UPDATE '. $dataBaseTable .' SET '. preg_replace('/, $/', '', $pairs) .' WHERE id = ' . $sessionId . '';
       _setQuery($mysqli, $query, $singleSave);
 
       if($_POST['data']['saveArea'] === 'characterInfo') {
         $query = 'UPDATE sheet_users SET txtName = "'. $json['playerName'] .'" '.
-                 'WHERE id = ' . $_SESSION['id'] . '';
+                 'WHERE id = ' . $sessionId . '';
         _setQuery($mysqli, $query, $singleSave);
       }
     }
     if($singleSave) {
-      echo $_GET['callback'] .'({\'status\':\'done\'})';
+      echo $callBack .'({\'status\':\'done\'})';
     }
     require 'connection_Close.php';
   }

@@ -1,8 +1,5 @@
 <?php
-//phpinfo();
-//die;
-  if(!empty($_GET['callback'])){
-
+  if(!empty($_GET['callback'])) {
     $email = $_POST['email'];
     $name = $_POST['name'];
     $charName = $_POST['charName'];
@@ -24,28 +21,35 @@
         $name = $mysqli->real_escape_string(htmlspecialchars($name));
         $charName = $mysqli->real_escape_string(htmlspecialchars($charName));
 
-        $query = 'SELECT users.id, txtName, txtEmail, txtCharName '.
-  'FROM sheet_users AS users '.
-  'INNER JOIN sheet_character_info AS info ON users.id = info.id '.
-  'WHERE intDelete = 0 AND '.
-  'users.txtName = info.txtPlayerName AND '.
-  'txtEmail = "'. $email .'" AND '.
-  'txtName = "'. $name .'" AND '.
-  'txtCharName = "'. $charName .'"';
+        $query = 'SELECT *
+                  FROM sheet_users AS users
+                  INNER JOIN sheet_character_info AS info ON users.id = info.id
+                  WHERE intDelete = 0 AND
+                  users.txtName = info.txtPlayerName
+                    AND txtEmail = "'. $email .'"
+                    AND txtName = "'. $name .'"
+                    AND txtCharName = "'. $charName .'"';
 
         require '../includes/query_process.php';
         $line = $result->fetch_assoc();
 
         if(!empty($line)) {
-          $hash = md5($line['txtName'] . $line['txtEmail'] . $line['txtCharName'] . time());
+          if(empty($line['hash'])) {
+            $hash = md5($line['txtName'] . $line['txtEmail'] . $line['txtCharName'] . time());
 
-          session_start();
-          $_SESSION['id'] = $line['id'];
-          $_SESSION['hash'] = $hash;
+            session_start();
+            $_SESSION['id'] = $line['id'];
+            $_SESSION['hash'] = $hash;
 
-          echo $_GET['callback'] .'({"success":true})';
+            $query = 'UPDATE sheet_users SET hash = "'. $hash .'" WHERE id = '. $line['id'];
+            require '../includes/query_process.php';
+
+            echo $_GET['callback'] .'({"success":true})';
+          } else {
+            echo $_GET['callback'] .'({"success":false, "why":"in use", "errors":"This account has someone already logged in."})';
+          }
         } else {
-          echo $_GET['callback'] .'({"success":false, "why":"no record", "errors":"You many not have an account or you may have missed typed something."})';
+          echo $_GET['callback'] .'({"success":false, "why":"no record", "errors":"You many not have an account or maybe missed typed something."})';
         }
       require '../includes/connection_Close.php';
     } else {

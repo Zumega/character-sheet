@@ -12,7 +12,7 @@
     <script type="text/javascript" src="./extra/jQuery.js"></script>
     <script type="text/javascript" src="./extra/json2.js"></script>
     <script type="text/javascript" src="./extra/js_unmin.js"></script>
-<?php if(!$_SESSION["id"]) { ?>
+<?php if(!$_SESSION['id']) { ?>
     <link href="./extra/sign.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="./extra/sign.js"></script>
 <?php } ?>
@@ -102,5 +102,6 @@
       <a class="signOut" href="<?= $siteURL ?>signout">Sign out</a>
     </div>
     <?php } ?>
+    <script>var mykey="<?= $_SESSION['hash']; ?>";</script>
   </body>
 </html>
