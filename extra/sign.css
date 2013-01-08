@@ -13,7 +13,9 @@
   box-shadow: 0 0 10px #444;
   border-radius: 10px;
 }
-
+.signContianer h2 {
+  padding-top: 0;
+}
 .sign div {
   line-height: 2;
 }
