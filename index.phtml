@@ -17,7 +17,7 @@
     <script type="text/javascript" src="./extra/sign.js"></script>
 <?php } ?>
   </head>
-  <body>
+  <body id="top">
     <?php
     if(!$_SESSION['id']) {
       include_once './sign/readme.php';
@@ -26,52 +26,44 @@
       include_once './sign/note.php';
     } else {
       include './includes/controls.php';
+      include_once $jumpMenu;
     ?>
     <div class="bodyContainer">
       <div class="sheetTitle">
         Serenity Character Sheet
       </div>
-      <a name="top"></a>
-      <?php
-        include $jumpMenu;
-      ?>
+      <?php _jumpMenu(); ?>
       <h2 id="characterInfo"><span class="close"><span class="arrow"></span></span>Character Info:</h2>
       <?php
         include './modules/character.php';
-        include $jumpMenu;
+        _jumpMenu();
       ?>
-      <a name="attributes"></a>
       <h2 id="attributes"><span class="close"><span class="arrow"></span></span>Attributes:</h2>
       <?php
         include './modules/attributes.php';
-        include $jumpMenu;
+        _jumpMenu();
       ?>
-      <a name="derived_Traits"></a>
       <h2 id="derivedTraits"><span class="close"><span class="arrow"></span></span>Derived Traits:</h2>
       <?php
         include './modules/derived_traits.php';
-        include $jumpMenu;
+        _jumpMenu();
       ?>
-      <a name="skills_and_specialties"></a>
       <h2 id="skillsSpecialties"><span class="close"><span class="arrow"></span></span>Skills and Specialties:</h2>
       <?php
         include './modules/skills_specialties.php';
-        include $jumpMenu;
+        _jumpMenu();
       ?>
       <div class="column">
-        <a name="equipment"></a>
         <h2 id="equipment"><span class="close"><span class="arrow"></span></span>Equipment:</h2>
         <?php
           include './modules/equipment.php';
-          include $jumpMenu;
+          _jumpMenu();
         ?>
-        <a name="info"></a>
         <h2 id="info"><span class="close"><span class="arrow"></span></span>Info:</h2>
         <?php
           include './modules/info.php';
-          include $jumpMenu;
+          _jumpMenu();
         ?>
-        <a name="dice"></a>
         <h2 id="dice"><span class="close"><span class="arrow"></span></span>Dice:</h2>
         <?php
           include './modules/dice.php';
@@ -79,7 +71,6 @@
       </div>
       <div class="column">
         <div class="column">
-          <a name="complications"></a>
           <h2 class="comp_asset" id="complications"><span class="close"><span class="arrow"></span></span>Complications:</h2>
           <?php
             $comp_asset = 'complications';
@@ -87,7 +78,6 @@
           ?>
         </div>
         <div class="column">
-          <a name="assets"></a>
           <h2 class="comp_asset" id="assets"><span class="close"><span class="arrow"></span></span>Assets:</h2>
           <?php
             $comp_asset = 'assets';
@@ -95,12 +85,10 @@
           ?>
         </div>
       </div>
-      <?php
-        include $jumpMenu;
-      ?>
       <div id="saveMessage" class="saveMessage">Saved</div>
-      <a name="bottom"></a>
       <a class="signOut" href="<?= $siteURL ?>signout">Sign out</a>
+      <div id="bottom"></div>
+      <?php _jumpMenu(); ?>
     </div>
     <?php } ?>
     <script>var mykey="<?= $_SESSION['hash']; ?>";</script>

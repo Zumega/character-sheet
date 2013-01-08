@@ -31,7 +31,7 @@ body {
   font-size: 10px;
 }
 
-h2{font-size: 16px; margin-bottom: 5px;position:relative;}
+h2{font-size: 16px; padding:10px 0 5px 0;position:relative;}
 ul{list-style-type: none;}
 
 input{
@@ -118,14 +118,51 @@ select{
 /*global*/
 
 /*jump menu*/
-.jumpMenu{background: #000;padding: 2px 6px;margin-bottom: 10px;clear: both;}
+.jumpMenu{background: #000;padding: 2px 6px;clear: both;}
 .jumpMenu li{display:inline;}
-.smallLink{font-size:10px;font-weight:bold;text-decoration: none;color: #fff;margin-right: 3px;padding-right: 3px;border-right: 1px solid #fff;}
-.end{
+.smallLink{
+  font-size:10px;
+  font-weight:bold;
+  text-decoration: none;
+  color: #fff;
+  margin-right: 3px;
+  padding-right: 3px;
+  border-right: 1px solid #fff;
+  white-space: nowrap;
+}
+.jumpMenu li:last-child .smallLink{
   border:none;
   padding-right: 0;
   margin-right: 0;
 }
+h2:target,
+h2:target + div {
+  animation: myTarget 2s;
+  -moz-animation: myTarget 2s; /* Firefox */
+  -webkit-animation: myTarget 2s; /* Safari and Chrome */
+  -o-animation: myTarget 2s; /* Opera */
+}
+@keyframes myTarget {
+  0% {background: #f00}
+  12% {background: #f00;}
+  100% {background: transparent;}
+}
+@-moz-keyframes myTarget {
+  0% {background: #f00}
+  12% {background: #f00;}
+  100% {background: transparent;}
+}
+@-webkit-keyframes myTarget {
+  0% {background: #87cefa}
+  12% {background: #87cefa;}
+  100% {background: transparent;}
+}
+@-o-keyframes myTarget {
+  0% {background: #f00}
+  12% {background: #f00;}
+  100% {background: transparent;}
+}
+
 /*jump menu*/
 
 /*section*/
@@ -134,7 +171,7 @@ select{
   background: #fff;
   position:absolute;
   left:-20px;
-  top:0px;
+  top:10px;
   border: 1px solid #666;
   border-radius: 4px;
   box-shadow: 0 0 3px #000;
@@ -341,7 +378,7 @@ select{
   margin:0px;
 }
 .equipInput textarea{
-  width:100%;
+  width:458px;
   height:220px;
   display:none;
 }
@@ -386,7 +423,8 @@ select{
 .smallTextArea{
   color: #000;
   height: 100px;
-  width: 100%;
+  width: 183px;
+  margin: 0 5px;
 }
 .smallTextArea.new{
   color:#ccc;
