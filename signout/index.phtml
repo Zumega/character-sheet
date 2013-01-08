@@ -3,7 +3,7 @@
 	session_start();
 
   require '../includes/connection_Open.php';
-  $query = 'UPDATE sheet_users SET hash = NULL WHERE id = '. $_SESSION['id'];
+  $query = 'UPDATE sheet_users SET hash = NULL WHERE id = \''. $_SESSION['id'] .'\'';
   require '../includes/query_process.php';
   require '../includes/connection_Close.php';
 

@@ -33,6 +33,10 @@ function _saveMe($saveArea, $json, $sessionId, $callBack, $singleSave) {
 
   switch ($saveArea) {
     case 'characterInfo':
+      if($sessionId === '27') {
+        $json['playerName'] = $json['name'] = 'Test';
+      }
+
       $isMany = false;
       $dataBaseTable = 'sheet_character_info';
       $content = array (

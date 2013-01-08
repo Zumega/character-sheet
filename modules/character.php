@@ -4,12 +4,14 @@ $query = "SELECT * FROM  `sheet_character_info` WHERE id=". $_SESSION['id'];
 require './includes/query_process.php';
 $line = $result->fetch_assoc();
 require 'includes/connection_Close.php';
+
+$isDisabled = ($_SESSION['id'] === '27') ? ' disabled="disabled"' : '' ;
 ?>
 <div class="module characterInfo clear">
   <div class="row">
     <div class="cell">
       <label for="charName">Character Name:</label>
-      <input type="text" id="charName" name="charName" value="<?= $line['txtCharName']; ?>" />
+      <input type="text" id="charName" name="charName" value="<?= $line['txtCharName']; ?>"<?= $isDisabled; ?> />
     </div>
     <div class="cell">
       <label for="nickName">Nick Name:</label>
@@ -17,7 +19,7 @@ require 'includes/connection_Close.php';
     </div>
     <div class="cell">
       <label for="playerName">Player Name:</label>
-      <input type="text" id="playerName" name="playerName" value="<?= $line['txtPlayerName']; ?>" />
+      <input type="text" id="playerName" name="playerName" value="<?= $line['txtPlayerName']; ?>"<?= $isDisabled; ?> />
     </div>
   </div>
 

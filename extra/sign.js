@@ -6,6 +6,7 @@ var sign = {
         sign.submitForm();
 //        validateForm();
 //        clearForm();
+        sign.note();
       },
       pickForm: function() {
 //        used to bring more focus to active form
@@ -122,6 +123,27 @@ var sign = {
         if($this.val() === 'Manditory' || $this.val() === 'Still Manditory') {
           $this.val('');
         }
+      },
+      note: function() {
+        jQ('#submitNote').on('click', function(event) {
+          event.preventDefault();
+
+          jQ(this).parent().fadeOut('fast');
+
+          jQ('#inEmail').val('test@test.com').focus();
+          setTimeout(function() {
+            jQ('#inName').val('Test').focus();
+          }, .5 * 1000);
+          setTimeout(function() {
+            jQ('#inCharName').val('Test').focus();
+          }, 1.25 * 1000);
+          setTimeout(function() {
+            jQ('#submitSignIn').focus();
+          }, 1.5 * 1000);
+          setTimeout(function() {
+            jQ('#submitSignIn').trigger('click');
+          }, 2.25 * 1000);
+        });
       }
     };
 
