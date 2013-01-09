@@ -1117,28 +1117,17 @@ var jQ = jQuery,
           });
         }
       },
-      unLoad: function() {
-        sheet.functions.getCharacterInfo();
-        sheet.functions.getAttributes();
-        sheet.functions.getDerivedTraits();
-        sheet.functions.getRolledTraits();
-        sheet.functions.getSkills();
-        sheet.functions.getEquipment();
-        sheet.functions.getComplications();
-        sheet.functions.getAssets();
-        sheet.functions.getDice();
-
+      unload: function() {
         jQ.ajax({
-          url: sheet.settings.saveUrl,
+          url: './signout/',
           type: 'POST',
-          data: {'data': {'content': JSON.stringify(sheet.data) , 'saveArea': 'all' }},
-          async: false
+          data: {'data': 'unload'}
         });
       },
       signOut: function() {
         jQ(document).find('.signOut').click(function(event) {
           event.preventDefault();
-          
+
           window.location = jQ(this).attr('href');
         });
       }

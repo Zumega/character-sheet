@@ -8,5 +8,8 @@
   require '../includes/connection_Close.php';
 
 	session_destroy();
-	header("location:../");
+
+  if($_POST['data'] !== 'unload') {
+    header("location:../");
+  }
 ?>

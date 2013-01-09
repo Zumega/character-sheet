@@ -91,6 +91,13 @@
       <?php _jumpMenu(); ?>
     </div>
     <?php } ?>
-    <script>var mykey="<?= $_SESSION['hash']; ?>";</script>
+    <script>
+      var mykey="<?= $_SESSION['hash']; ?>";
+<?php if($_SESSION['id'] === '27') { ?>
+      jQ(window).on('beforeunload', function() {
+        sheet.functions.unload();
+      });
+<?php }?>
+    </script>
   </body>
 </html>

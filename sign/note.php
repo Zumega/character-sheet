@@ -5,5 +5,6 @@
     <div class="noteButton">
       <input type="button" class="signButton" id="submitNote" name="submitNote" value="Click Me" tabindex="-1" />
     </div>
+    <p>Don't forget to sign out when you are done.</p>
   </div>
 </div>
