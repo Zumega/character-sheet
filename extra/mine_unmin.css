@@ -146,13 +146,13 @@ h2:target + div {
   -o-animation: myTarget 2s; /* Opera */
 }
 @keyframes myTarget {
-  0% {background: #f00}
-  12% {background: #f00;}
+  0% {background: #87cefa}
+  12% {background: #87cefa;}
   100% {background: transparent;}
 }
 @-moz-keyframes myTarget {
-  0% {background: #f00}
-  12% {background: #f00;}
+  0% {background: #87cefa}
+  12% {background: #87cefa;}
   100% {background: transparent;}
 }
 @-webkit-keyframes myTarget {
@@ -161,8 +161,8 @@ h2:target + div {
   100% {background: transparent;}
 }
 @-o-keyframes myTarget {
-  0% {background: #f00}
-  12% {background: #f00;}
+  0% {background: #87cefa}
+  12% {background: #87cefa;}
   100% {background: transparent;}
 }
 
