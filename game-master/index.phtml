@@ -1,0 +1,49 @@
+<?php
+  require_once './includes/variables.php';
+  include_once $jumpMenu;
+?>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset=UTF-8">
+    <title>Game Master</title>
+    <link href="http://fonts.googleapis.com/css?family=Almendra+SC|Krona+One" rel="stylesheet" type="text/css">
+    <link href="../extra/universal.css" rel="stylesheet" type="text/css" />
+    <link href="./extra/game_master.css" rel="stylesheet" type="text/css" />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script type="text/javascript" src="../extra/json2.js"></script>
+    <script type="text/javascript" src="./extra/game_master.js"></script>
+  </head>
+  <body id="top">
+    <div class="bodyContainer">
+      <div class="sheetTitle">
+        Serenity Game Master
+      </div>
+      <?php _jumpMenu(); ?>
+      <div id="players">
+        <h2>Players</h2>
+        <?php
+          require_once './modules/playerInfo.php';
+        ?>
+      </div>
+      <?php _jumpMenu(); ?>
+      <div id="npcs">
+        <h2>NPC's</h2>
+        <?php
+          require_once './modules/npcInfo.php';
+        ?>
+      </div>
+
+      <!--
+
+        <?php _jumpMenu(); ?>
+      <div id="gmNotes">a place fro the gm to put notes</div>
+      <?php _jumpMenu(); ?>
+      <div id="gmSettings">place to put settings</div>
+-->
+      <div id="bottom"></div>
+      <?php _jumpMenu(); ?>
+
+    </div>
+  </body>
+</html>

@@ -1,0 +1,169 @@
+/*universal*/
+html, body,
+header, footer, nav,
+div, span,
+h1, h2, h3, h4, h5, h6,
+p, pre, q, blockquote,
+a, img,
+dl, dt, dd, ol, ul, li, menu,
+caption, label, legend, fieldset, form,
+input, select, textarea,
+em, bold, strong, i, small, b, sub, sup, tt,
+object, iframe, applet,
+abbr, acronym, address, big, cite, code,
+del, dfn, ins, kbd, samp, var,
+table, tbody, tfoot, thead, tr, th, td {
+	border: 0 none;
+	font-weight: inherit;
+	font-style: inherit;
+	font-family: inherit;
+	vertical-align: baseline;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+	line-height: 1.24;
+	color: #000;
+	background: #ddd url(./img/ship.jpeg) no-repeat center fixed;
+  background-size: 100% auto;
+  font-family: 'Krona One', sans-serif;
+  font-size: 10px;
+}
+
+h2{font-size: 16px; padding:10px 0 5px 0;position:relative;}
+ul{list-style-type: none;}
+
+input{
+  background:transparent;
+  border-bottom:1px solid #000;
+  border-top:none;
+  border-left:1px solid transparent;
+  border-right:1px solid transparent;
+  text-align:center;
+  color:#f00;
+  float: right;
+  width: 150px;
+}
+input[type="button"],input[type="radio"]{border:0px none;float:none;}
+a,input,textarea,select{outline: none;}
+textarea{border:1px solid #000;resize:none; padding:5px;}
+
+.clear:after {
+    clear: both;
+    content: ' ';
+    display: block;
+    font-size: 0;
+    line-height: 0;
+    visibility: hidden;
+    width: 0;
+    height: 0
+}
+/*universal*/
+
+/*global*/
+.bodyContainer{background:rgba(255,255,255,.75);width: 940px;margin: 0px auto;padding:10px;}
+.smallInput{width: 30px;}
+.noFloat{float:none;}
+.column{float:left;width:50%;}
+.column2{float:left;width:46%;}
+.rightAlign,.rightAlign div{text-align: right;}
+.btnUpDown{cursor:pointer; height: 11px; width: 10px;}
+.btnUp{background: transparent url(./img/up_down.png) no-repeat left top;}
+.btnDown{background: transparent url(./img/up_down.png) no-repeat right top;}
+.hide {visibility:hidden;}
+.noEdit{color:#000;}
+select{
+  border: 1px solid #222;
+  border-radius: 4px;
+}
+.saveMessage{
+  position: fixed;
+  top: 0;
+  left: 0;
+  margin-top: -50px;
+  border-bottom: 1px solid #000;
+  border-right: 1px solid #000;
+  border-radius: 0 0 8px 0;
+  background: #fff;
+  background: -webkit-linear-gradient(top, #eee, #bbb);
+  background: -moz-linear-gradient(top, #eee, #bbb);
+  background: -ms-linear-gradient(top, #eee, #bbb);
+  background: -o-linear-gradient(top, #eee, #bbb);
+  color: #000;
+  font-weight: bold;
+  padding: 4px;
+}
+.ajaxError{
+  display:none;
+}
+.signOut {
+  position: fixed;
+  bottom: 0px;
+  right: 0px;
+  background: #fff;
+  padding: 10px;
+  border-radius: 10px 0 0 0;
+}
+.sheetTitle{
+  text-align: center;
+  font-size: 72px;
+  font-family: 'Almendra SC', serif;
+  background: #000;
+  background: -webkit-linear-gradient(top, #960 0%, #c30 40%,  #410 80%, #111 100%);
+  background: -moz-linear-gradient(top, #960 0%, #c30 40%,  #410 80%, #111 100%);
+  background: -ms-linear-gradient(top, #960 0%, #c30 40%,  #410 80%, #111 100%);
+  background: -o-linear-gradient(top, #960 0%, #c30 40%,  #410 80%, #111 100%);
+  text-shadow: 0 0 2px #000, 0 0 10px #fff, 0 0 20px #fff;
+  border-radius: 5px 5px 0 0;
+  color:#fff;
+}
+/*global*/
+
+/*jump menu*/
+.jumpMenu{background: #000;padding: 2px 6px;clear: both;}
+.jumpMenu li{display:inline;}
+.smallLink{
+  font-size:10px;
+  font-weight:bold;
+  text-decoration: none;
+  color: #fff;
+  margin-right: 3px;
+  padding-right: 3px;
+  border-right: 1px solid #fff;
+  white-space: nowrap;
+}
+.jumpMenu li:last-child .smallLink{
+  border:none;
+  padding-right: 0;
+  margin-right: 0;
+}
+h2:target,
+h2:target + div {
+  animation: myTarget 2s;
+  -moz-animation: myTarget 2s; /* Firefox */
+  -webkit-animation: myTarget 2s; /* Safari and Chrome */
+  -o-animation: myTarget 2s; /* Opera */
+}
+@keyframes myTarget {
+  0% {background: #87cefa}
+  12% {background: #87cefa;}
+  100% {background: transparent;}
+}
+@-moz-keyframes myTarget {
+  0% {background: #87cefa}
+  12% {background: #87cefa;}
+  100% {background: transparent;}
+}
+@-webkit-keyframes myTarget {
+  0% {background: #87cefa}
+  12% {background: #87cefa;}
+  100% {background: transparent;}
+}
+@-o-keyframes myTarget {
+  0% {background: #87cefa}
+  12% {background: #87cefa;}
+  100% {background: transparent;}
+}
+
+/*jump menu*/

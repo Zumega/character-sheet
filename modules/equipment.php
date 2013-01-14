@@ -24,7 +24,7 @@ require 'includes/connection_Close.php';
         $classValue = ($forValue === $line['tnytxtActiveTab']) ? ' active' : '' ;
       ?>
       <li class="equipTab<?= $classValue; ?>">
-        <label for="<?= $forValue; ?>" class=""><?= $value; ?></label>
+        <label for="<?= $forValue; ?>"><?= $value; ?></label>
       </li>
     <?php
       }

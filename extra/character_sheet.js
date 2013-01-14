@@ -535,8 +535,7 @@ var jQ = jQuery,
               thisId = $this.attr('id'),
               activeValue = $this.val(),
               options = {};
-          activeValue = activeValue.replace(/[ ]/gi, '_');
-          activeValue = activeValue.replace(/\.|\*/gi, '');
+          activeValue = activeValue.replace(/[ ]/gi, '_').replace(/\.|\*/gi, '');
 
           if(sheet.functions.getSkills()) {
 //            get new options
