@@ -34,7 +34,7 @@
         $line = $result->fetch_assoc();
 
         if(!empty($line)) {
-          if(empty($line['hash'])) {
+//          if(empty($line['hash'])) {
             $hash = md5($line['txtName'] . $line['txtEmail'] . $line['txtCharName'] . time());
 
             session_start();
@@ -45,9 +45,9 @@
             require '../includes/query_process.php';
 
             echo $_GET['callback'] .'({"success":true})';
-          } else {
-            echo $_GET['callback'] .'({"success":false, "why":"in use", "errors":"This account has someone already logged in."})';
-          }
+//          } else {
+//            echo $_GET['callback'] .'({"success":false, "why":"in use", "errors":"This account has someone already logged in."})';
+//          }
         } else {
           echo $_GET['callback'] .'({"success":false, "why":"no record", "errors":"You many not have an account or maybe missed typed something."})';
         }

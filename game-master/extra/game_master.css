@@ -1,6 +1,6 @@
 /*character tabs*/
-.playerTabs {}
-.playerTabs .playerTab {
+.characterTabs {}
+.characterTabs .characterTab {
   float:left;
   border: 1px solid #000;
   padding: 4px;
@@ -8,52 +8,106 @@
   background: #fff;
   cursor: pointer;
 }
-.playerTab.active{
+.characterTab.active{
   background: #f00;
 }
 /*character tabs*/
 
 /*character info*/
-#characterInfoContainer {
+#playerInfo {
   height: 400px;
-  overflow: scroll;
 }
-.charactersInfo {
-  float:left;
+#npcInfo {
+  height: 200px;
+}
+.characterInfoContainer {
+  overflow: scroll;
+  margin-bottom: 10px;
+}
+.characterStats {
+  float: left;
   display: block;
 }
 .characterInfo.inactive {
   display: none;
 }
-.charactersInfo ul {
+.characterStats ul {
   margin-bottom: 10px;
 }
-.charactersInfo li {
+.characterStats li {
   display: block;
   overflow: hidden;
   line-height: 1.6
 }
-.charactersInfo li:nth-child(even) {
+.characterStats li:nth-child(even) {
   background-color: rgba(0, 0, 0, .1);
 }
-.charactersInfo li span {
+.characterStats li span {
   float: left;
   padding: 0 5px;
   /*width: 50%;*/
   /*display: block;*/
 }
-.charactersInfo li span:last-child {
+.characterStats li span:last-child {
   float: right;
 }
-.charactersInfo ul ul {
+.characterStats ul ul {
   width: 100%;
 }
-.charactersInfo ul ul li {
+.characterStats ul ul li {
   background-color: transparent;
   width: 100%;
 }
-.charactersInfo li.statHeader {
+.characterStats li.statHeader {
   font-size: 12px;
   font-weight: bold;
 }
 /*character info*/
+
+/*npc settings*/
+.npcSettings {}
+.npcSettings .menuItem {
+  float:left;
+}
+.npcSettings div {
+  border: 1px solid #000;
+}
+/*npc settings*/
+
+/*create npcs*/
+.createNPC {
+  margin-bottom: 20px;
+  background: #fff;
+}
+.deleteNPC {
+  float: right;
+}
+.newNPC {
+  background: lightseagreen;
+}
+.row {
+  float: left;
+  margin: 3px 0px 7px;
+}
+.cell {
+  float: left;
+  width: 168px;
+  padding-right: 20px;
+}
+.cell:first-child {
+  font-size: 12px;
+}
+.npcDice input {
+  float: left;
+}
+.rollDice input {
+  border: 1px solid #000;
+}
+
+.npcNameInput input {
+  float: none;
+  text-align: left;
+  width: 90px;
+}
+
+/*create npcs*/

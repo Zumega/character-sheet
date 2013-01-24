@@ -19,6 +19,7 @@ $query = 'SELECT
           INNER JOIN sheet_dice as dice
           ON info.id = dice.id
           WHERE info.id = '. $playerID;
+
 require '../../includes/query_process.php';
 $results = $result->fetch_array(MYSQLI_ASSOC);
 
@@ -88,92 +89,64 @@ require '../../includes/connection_Close.php';
 
 //echo json_encode($data);
 
+$html = '<div class="characterStats '. strtolower($data['characterInfo']['Player Name']) .'_'. $userId .'" data-id="'. $userId .'">';
+foreach($data as $key => $content) {
+  $html .= '<ul class="'. $key .'">';
+  $html .= '<li class="statHeader">';
+  $html .= (array_key_exists($key, $queryLableNames)) ? $queryLableNames[$key] : $key ;
+  $html .= '</li>';
 
-?>
-<div class="charactersInfo <?= strtolower($data['characterInfo']['Player Name']) .'_'. $userId; ?>">
-    <?php
-    foreach($data as $key => $content) {
-      ?>
-    <ul class="<?= $key; ?>">
-      <li class="statHeader">
-        <?= (array_key_exists($key, $queryLableNames)) ? $queryLableNames[$key] : $key ; ?>
-      </li>
-      <?php
-        foreach($content as $label => $value) {
-          $label = (array_key_exists($label, $queryLableNames)) ? $queryLableNames[$label] : $label ;
-          ?>
-      <li>
-        <span>
-        <?php
-          if(strrpos($label, 'Dice') === false) {
-            echo (is_numeric($label)) ? $label + 1 : $label ;
-          } else {
-            ?>
-            &nbsp;
-            <?php
-          }
-        ?>
-        </span>
-        <span>
-          <?php
-            if(empty($value)) {
-              ?>
-              &nbsp;
-              <?php
-            } else {
-              if(is_array($value)) {
-                ?>
-              <ul>
-                <?php
-                  foreach($value as $k => $val) {
-                    ?>
-                <li>
-                  <?php
-                    if(array_key_exists(_firstCase($val), $arySkills)) {
-                      echo _firstCase($val);
-                    } else {
-                      if(strrpos($k, 'SubSkill_') > 0) {
-                        echo (is_numeric($val)) ? 'N/A' : _firstCase($val) ;
-                      } elseif(strrpos($k, 'MajorMinor') > 0) {
-                        switch($val) {
-                          case 4:
-                            echo 'Major';
-                            break;
-                          case 2:
-                            echo 'Minor';
-                            break;
-                          default:
-                            echo 'Unchecked';
-                        }
-                      } else {
-                        echo _firstCase($val);
-                      }
-                    }
-                  ?>
-                </li>
-                    <?php
-                  }
-                ?>
-              </ul>
-                <?php
-              } else {
-                echo $value;
-              }
-            }
-          ?>
-        </span>
-      </li>
-          <?php
-        }
-      ?>
-    </ul>
-      <?php
+  foreach($content as $label => $value) {
+    $label = (array_key_exists($label, $queryLableNames)) ? $queryLableNames[$label] : $label ;
+    $html .= '<li><span>';
+    if(strrpos($label, 'Dice') === false) {
+      $html .= (is_numeric($label)) ? $label + 1 : $label ;
+    } else {
+      $html .= '&nbsp';
     }
-    ?>
-  </div>
-</div>
+    $html .= '</span><span>';
+    if(empty($value)) {
+      $html .= '&nbsp';
+    } else {
+      if(is_array($value)) {
+        $html .= '<ul>';
+        foreach($value as $k => $val) {
+          $html .= '<li>';
+          if(array_key_exists(_firstCase($val), $arySkills)) {
+            $html .= _firstCase($val);
+          } else {
+            if(strrpos($k, 'SubSkill_') > 0) {
+              $html .= (is_numeric($val)) ? 'N/A' : _firstCase($val) ;
+            } elseif(strrpos($k, 'MajorMinor') > 0) {
+              switch($val) {
+                case 4:
+                  $html .= 'Major';
+                  break;
+                case 2:
+                  $html .= 'Minor';
+                  break;
+                default:
+                  $html .= 'Unchecked';
+              }
+            } else {
+            $html .= _firstCase($val);
+            }
+          }
+          $html .= '</li>';
+        }
+      $html .= '</ul>';
+      } else {
+        $html .= $value;
+      }
+    }
+    $html .= '</span></li>';
+  }
+  $html .= '</ul>';
+}
+$html .= '</div>';
 
-<?php
+echo json_encode(array('type'=>'player', 'userId'=>$userId, 'html'=>$html));
+
 function _firstCase($data) {
   $data = explode(' ', str_replace('_', ' ', $data));
 

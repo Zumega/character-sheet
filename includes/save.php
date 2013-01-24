@@ -13,7 +13,7 @@ require './query_process.php';
 $line = $result->fetch_assoc();
 require 'connection_Close.php';
 
-if ($hashSent === $hashSession && $hashSession === $line['hash']) {
+//if ($hashSent === $hashSession && $hashSession === $line['hash']) {
   if($saveArea === 'all') {
     foreach($json as $saveArea=>$json){
       if(!empty($json)) {
@@ -23,9 +23,9 @@ if ($hashSent === $hashSession && $hashSession === $line['hash']) {
   } else {
     _saveMe($saveArea, $json, $sessionId, $callBack, true);
   }
-} else {
-  echo $callBack .'({\'status\':\'Bad Key\'})';
-}
+//} else {
+//  echo $callBack .'({\'status\':\'Bad Key\'})';
+//}
 
 
 function _saveMe($saveArea, $json, $sessionId, $callBack, $singleSave) {

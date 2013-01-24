@@ -32,6 +32,14 @@
     'blbGear' => 'Gear',
     'blbArmor' => 'Armor',
     'blbMoney' => 'Money',
-    'blbNotes' => 'Notes'
+    'blbNotes' => 'Notes',
+    'txtType' => 'Type',
+    'tnyintHitPoints' => 'Hit Points',
+    'tnyintWoundPoints' => 'Wound Points',
+    'tnyintStunPoints' => 'Stun Points',
+    'tnyintStrength' => 'Strength',
+    'tnyintInitiative' => 'Initiative',
+    'tnyintEndurance' => 'Endurance',
+    'varResistance' => 'Resistance'
   );
 ?>
