@@ -1,15 +1,23 @@
 var jQ = jQuery,
     gm = {
-      data: {
-        npc:{}
-      },
+      data: {},
       functions: {
         init:function() {
-//          gm.functions.getCharacters();
-//          gm.functions.groupCharacters();
-////          gm.functions.moveCharacters();
+          gm.functions.getCharacters();
+          gm.functions.groupCharacters();
+//          gm.functions.moveCharacters();
 
             gm.functions.getCreateNPC();
+//            gm.functions.createNPCs.init();
+//            gm.functions.createNPCs.setBaseStats();
+//            gm.functions.createNPCs.setRollButtons();
+//            gm.functions.createNPCs.setNpcName();
+//            gm.functions.createNPCs.rollAllDice();
+//            gm.functions.createNPCs.diceButton();
+//            gm.functions.createNPCs.calcDice();
+//            gm.functions.createNPCs.moreNPCs();
+//            gm.functions.createNPCs.getSaveData();
+//            gm.functions.createNPCs.saveNPC();
         },
         getCharacters: function() {
           gm.data.playerIDs = playerIds;
@@ -121,9 +129,7 @@ var jQ = jQuery,
           }
         },
         getCreateNPC: function() {
-//          jQ('#newNPCs').on("click", function(e) {
-//            e.preventDefault();
-
+          jQ('#newNPCs').on("click", function() {
             jQ.ajax({
               url: './includes/createNPC.php',
               type: 'POST',
@@ -136,28 +142,33 @@ var jQ = jQuery,
   //                sheet.functions.ajaxError(error);
               }
             });
-//          });
+          });
         },
         createNPCs: {
           init: function() {
-            jQ(document).find('.chooseBaseStats').on("change", function() {
-              var $this = jQ(this);
+            if(typeof gm.data.npc === 'undefined') { gm.data.npc = {}; }
+            if(typeof gm.data.npc.saveData === 'undefined') { gm.data.npc.saveData = {}; }
 
-              gm.data.npc.rawDice = $this.find(':selected').data('npcstats').split(','),
-              gm.data.npc.dice = new Array(),
+            gm.functions.createNPCs.moreNPCs();
+            gm.functions.createNPCs.saveNPC();
+
+            jQ(document).find('.chooseBaseStats').on("change", function() {
+              var $this = jQ(this),
+                  rawDice = $this.find(':selected').data('npcstats').split(',');
+
+              gm.data.npc.dice = new Array();
               gm.data.npc.id = $this.parent().parent().attr('id');
 
-              for(id in gm.data.npc.rawDice){
-                gm.data.npc.dice[id] = gm.data.npc.rawDice[id].split('|');
+              for(id in rawDice){
+                gm.data.npc.dice[id] = rawDice[id].split('|');
               }
 
               gm.functions.createNPCs.setBaseStats();
               gm.functions.createNPCs.setRollButtons();
               gm.functions.createNPCs.setNpcName();
 
-              gm.functions.createNPCs.getRolls();
-
-              gm.functions.createNPCs.rollDice();
+              gm.functions.createNPCs.rollAllDice();
+              gm.functions.createNPCs.diceButton();
             });
           },
           setBaseStats: function() {
@@ -195,7 +206,6 @@ var jQ = jQuery,
               var $this = jQ(this);
 
               if(index === 0) {
-                $this.data('dice', gm.data.npc.rawDice);
                 $this.removeAttr('disabled');
 
                 if (parseInt(gm.data.npc.dice[index]) === 0) {
@@ -218,7 +228,7 @@ var jQ = jQuery,
                 }
                 btnTxt += newVal.join(" + ");
 
-                $this.val(btnTxt);
+                $this.val(btnTxt).data('dice', currentVal);
               }
             });
           },
@@ -232,50 +242,126 @@ var jQ = jQuery,
 
             jQ('#'+ gm.data.npc.id).find('.npcNameInput input').val(thisName);
           },
-          getRolls: function() {
+          rollAllDice: function() {
             jQ('#'+ gm.data.npc.id).find('.npcValues div').each(function(index) {
               if(index > 0) {
                 var $this = jQ(this),
-                    rolledValue = 0,
-                    currentDice = gm.data.npc.dice[index -1],
-                    min = currentDice.length,
-                    max = 12;
+                    currentDice = gm.data.npc.dice[index -1];
 
-
-                switch(currentDice.length) {
-                  case 1:
-                    max = parseInt(currentDice[0]);
-                    break;
-                  case 2:
-                    max = parseInt(currentDice[0]) + parseInt(currentDice[1]);
-                    break;
-                  case 3:
-                    max = parseInt(currentDice[0]) + parseInt(currentDice[1]) + parseInt(currentDice[2]);
-                    break;
-                  case 4:
-                    max = parseInt(currentDice[0]) + parseInt(currentDice[1]) + parseInt(currentDice[2]) + parseInt(currentDice[3]);
-                    break;
-                }
-
-                if(max > min) {
-                  while (rolledValue < min || rolledValue > max) {
-                    rolledValue = Math.round(Math.random() * max);
-                  }
-                }
-
-                $this.text(rolledValue);
+                $this.text(gm.functions.createNPCs.calcDice(currentDice));
               }
             });
 
 
           },
-          rollDice: function() {
+          diceButton: function() {
             jQ('#'+ gm.data.npc.id).find('.rollDice').on("click", 'input', function(e) {
               e.preventDefault();
-
               var $this = jQ(this);
 
-              console.log($this.val());
+              if(typeof $this.data('dice') === 'undefined') {
+                gm.functions.createNPCs.rollAllDice();
+              } else {
+                var rollVal = gm.functions.createNPCs.calcDice($this.data('dice'));
+
+                jQ('#'+ gm.data.npc.id).find('.npc'+ $this.data('id')).text(rollVal);
+              }
+            });
+          },
+          calcDice: function(currentDice) {
+            var rolledValue = 0,
+                min = currentDice.length,
+                max = 12;
+
+            switch(currentDice.length) {
+              case 1:
+                max = parseInt(currentDice[0]);
+                break;
+              case 2:
+                max = parseInt(currentDice[0]) + parseInt(currentDice[1]);
+                break;
+              case 3:
+                max = parseInt(currentDice[0]) + parseInt(currentDice[1]) + parseInt(currentDice[2]);
+                break;
+              case 4:
+                max = parseInt(currentDice[0]) + parseInt(currentDice[1]) + parseInt(currentDice[2]) + parseInt(currentDice[3]);
+                break;
+            }
+
+            if(max > min) {
+              while (rolledValue < min || rolledValue > max) {
+                rolledValue = Math.round(Math.random() * max);
+              }
+            }
+
+            return rolledValue;
+          },
+          moreNPCs: function() {
+            jQ("#moreNPCs").on("click", function(e) {
+              e.preventDefault();
+
+              var $clone = jQ(document).find('.createNPC:last').clone(true),
+                  cloneIndex = parseInt($clone.data('index')) + 1;
+
+              $clone.attr('id', 'npc_'+ cloneIndex).data('index', cloneIndex);
+
+              $clone.insertBefore(jQ(this));
+            });
+          },
+          getSaveData: function() {
+            jQ(document).find('.createNPC').each(function(index) {
+              var $this = jQ(this),
+                  dice = {},
+                  name = '',
+                  hp = '',
+                  rolls = {};
+
+              $this.find('.rollDice input').each(function(index) {
+                if(index > 0) {
+                  var diceData = jQ(this).data('dice');
+                  dice[index] = diceData.join('|');
+                }
+              });
+
+              $this.find('.npcValues div').each(function(index) {
+                if(index === 0) {
+                  name = jQ(this).find('input').val();
+                  hp = jQ(this).find('span').text();
+                } else {
+                  rolls[index] = jQ(this).text();
+                }
+              });
+
+              gm.data.npc.saveData[$this.attr('id')] = {
+                dice: dice,
+                name: name,
+                hp: hp,
+                rolls: rolls
+              };
+            });
+
+            return true;
+          },
+          saveNPC: function() {
+            jQ(document).on("click", "#saveNPCs", function() {
+              if (gm.functions.createNPCs.getSaveData()) {
+                jQ.ajax({
+                  url: './includes/saveNPC.php',
+                  type: 'POST',
+                  data:  {data: JSON.stringify(gm.data.npc.saveData)},
+                  dataType: 'json',
+                  success: function(response) {
+                    jQ(document).find('.createNPC').slideUp('slow', function() {
+                      jQ(this).replaceWith('');
+                    });
+                  },
+                  error: function(one, text, error) {
+//console.log(one);
+//console.log(text);
+//console.log(error);
+                  }
+                });
+              }
             });
           }
         }

@@ -222,7 +222,7 @@ function _saveMe($saveArea, $json, $sessionId, $callBack, $singleSave) {
       }
     }
     if($singleSave) {
-      echo $callBack .'({\'status\':\'done\'})';
+      echo $callBack .'({"status":"done"})';
     }
     require 'connection_Close.php';
   }
@@ -230,7 +230,7 @@ function _saveMe($saveArea, $json, $sessionId, $callBack, $singleSave) {
 
 function _setQuery($mysqli, $query, $singleSave) {
   if (!$mysqli->query($query) && $singleSave) {
-    echo $_POST['callback'] .'({"\status":"'. $mysqli->errno .' :: '. $mysqli->error .'"})';
+    echo $_POST['callback'] .'({"status":"'. $mysqli->errno .' :: '. $mysqli->error .'"})';
   }
 }
 ?>

@@ -10,7 +10,7 @@ require '../../includes/connection_Close.php';
 
 ?>
 
-<div class="createNPC clear" id="npc_1">
+<div class="createNPC clear" id="npc_1" data-index="1">
   <div class="deleteNPC">DELETE</div>
   <div>
     Use predefined stats?
@@ -44,11 +44,11 @@ require '../../includes/connection_Close.php';
       <div class="cell"><input type="text" value="D0" /></div>
     </div>
     <div class="row rollDice">
-      <div class="cell"><input type="button" disabled="disabled" data-dice="0" value="Roll all dice" /></div>
-      <div class="cell"><input type="button" disabled="disabled" value="Roll a D0" /></div>
-      <div class="cell"><input type="button" disabled="disabled" value="Roll a D0" /></div>
-      <div class="cell"><input type="button" disabled="disabled" value="Roll a D0" /></div>
-      <div class="cell"><input type="button" disabled="disabled" value="Roll a D0" /></div>
+      <div class="cell"><input type="button" disabled="disabled" value="Roll all dice" /></div>
+      <div class="cell"><input type="button" disabled="disabled" data-dice="0" data-id="Strength" value="Roll a D0" /></div>
+      <div class="cell"><input type="button" disabled="disabled" data-dice="0" data-id="Initiative" value="Roll a D0" /></div>
+      <div class="cell"><input type="button" disabled="disabled" data-dice="0" data-id="Endurance" value="Roll a D0" /></div>
+      <div class="cell"><input type="button" disabled="disabled" data-dice="0" data-id="Resistance" value="Roll a D0" /></div>
     </div>
     <div class="row npcValues">
       <div class="cell npcNameInput"><input type="text" value="" class="active" /> -  HP: <span class="npcHP">0</span></div>
@@ -58,6 +58,6 @@ require '../../includes/connection_Close.php';
       <div class="cell npcResistance">0</div>
     </div>
   </div>
-
 </div>
-<input class="editNPCs" type="button" value="More NPCs" /><input class="editNPCs" type="button" value="Save" />
+<input class="editNPCs" id="moreNPCs" type="button" value="More NPCs" />
+<input class="editNPCs" id="saveNPCs" type="button" value="Save" />

@@ -1,37 +1,50 @@
 <?php
 require '../includes/connection_Open.php';
 $query = 'SELECT
-          IF(varName IS NULL, txtType, varName) as name, intId
+          varName, intId
           FROM sheet_npc_active AS act
-          INNER JOIN sheet_npc_type AS type
-          ON act.tnyintType = type.tnyintType
           WHERE intGameId = 1 AND act.tnyintDead = 0
-          ORDER BY tnyintInitiative;';
+          ORDER BY tnyintInitiative DESC, varName';
 require '../includes/query_process.php';
 require '../includes/connection_Close.php';
+
+$npcCount = $sqlInfo->num_rows();
 
 require_once './includes/npcSettings.php';
 ?>
 
 <div class="characterTabs clear">
   <ul id="npcs">
-    <li class="characterTab" data-characterid="all_0">ALL</li>
     <?php
+    if ($npcCount > 0) {
+      ?>
+    <li class="characterTab" data-characterid="all_0">ALL</li>
+      <?php
+    }
+
     $counters = array();
     $ids = array();
 
     while($row = $result->fetch_assoc()) {
       $ids[count($ids)] = $row['intId'];
-      $counters[$row['name']] = (empty($counters[$row['name']])) ? 1 :  $counters[$row['name']] + 1;
+      $counters[$row['varName']] = (empty($counters[$row['varName']])) ? 1 :  $counters[$row['varName']] + 1;
       ?>
-    <li class="characterTab" data-characterid="<?= strtolower($row['name']) .'_'. $row['intId'] ?>"><?= strtoupper($row['name']); ?></li>
+    <li class="characterTab" data-characterid="<?= strtolower($row['varName']) .'_'. $row['intId'] ?>"><?= strtoupper($row['varName']); ?></li>
       <?php
     }
     ?>
     <li class="expandContract"><div class="arrow"></div></li>
   </ul>
 </div>
-<div id="npcInfo" class="characterInfoContainer">LOADING...</div>
+<div id="npcInfo" class="characterInfoContainer">
+  <?php
+  if ($npcCount > 0) {
+    ?>
+    LOADING...
+    <?php
+  }
+  ?>
+</div>
 <script>
   var npcIds = <?= json_encode($ids); ?>;
 </script>

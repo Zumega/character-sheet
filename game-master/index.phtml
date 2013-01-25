@@ -1,11 +1,15 @@
 <?php
   require_once './includes/variables.php';
+
+  session_start();
+  $_SESSION['id'] = 1; //game id
+
   include_once $jumpMenu;
 ?>
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset=UTF-8">
+    <meta charset="UTF-8">
     <title>Game Master</title>
     <link href="http://fonts.googleapis.com/css?family=Almendra+SC|Krona+One" rel="stylesheet" type="text/css">
     <link href="../extra/universal.css" rel="stylesheet" type="text/css" />

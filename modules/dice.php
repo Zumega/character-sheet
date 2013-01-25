@@ -23,6 +23,13 @@ for($i=$inputCount; $i<14; $i+=1){
 ?>
 <div class="module dice clear">
   <input type="hidden" name="area" value="dice" />
+  <ul class="diceSum">
+    <li class="diceSumLabel">Sum of rolls:</li>
+    <li>two rolls: <span id="diceNum_2" class="diceSumArea"><?= $aryMath[0] + $aryMath[1]; ?></span></li>
+    <li>three rolls: <span id="diceNum_3" class="diceSumArea"><?= $aryMath[0] + $aryMath[1] + $aryMath[2]; ?></span></li>
+    <li>four rolls: <span id="diceNum_4" class="diceSumArea"><?= $aryMath[0] + $aryMath[1] + $aryMath[2] + $aryMath[3]; ?></span></li>
+    <li>five rolls: <span id="diceNum_5" class="diceSumArea"><?= $aryMath[0] + $aryMath[1] + $aryMath[2] + $aryMath[3] + $aryMath[4]; ?></span></li>
+  </ul>
   <ul class="diceUI clear">
     <li><span data-dice="0">Clear the dice</span></li>
     <?php
@@ -30,13 +37,6 @@ for($i=$inputCount; $i<14; $i+=1){
         echo '<li><span data-dice="'. $i .'">D'. $i .'</span></li>';
       }
     ?>
-  </ul>
-  <ul class="diceSum">
-    <li class="diceSumLabel">Sum of rolls:</li>
-    <li>two rolls: <span id="diceNum_2" class="diceSumArea"><?= $aryMath[0] + $aryMath[1]; ?></span></li>
-    <li>three rolls: <span id="diceNum_3" class="diceSumArea"><?= $aryMath[0] + $aryMath[1] + $aryMath[2]; ?></span></li>
-    <li>four rolls: <span id="diceNum_4" class="diceSumArea"><?= $aryMath[0] + $aryMath[1] + $aryMath[2] + $aryMath[3]; ?></span></li>
-    <li>five rolls: <span id="diceNum_5" class="diceSumArea"><?= $aryMath[0] + $aryMath[1] + $aryMath[2] + $aryMath[3] + $aryMath[4]; ?></span></li>
   </ul>
   <div id="diceDisplay"><?= $diceDisplay; ?></div>
 </div>
