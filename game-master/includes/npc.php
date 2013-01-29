@@ -3,10 +3,9 @@ $npcID = $_REQUEST['npcId'];
 require_once './variables.php';
 
 require '../../includes/connection_Open.php';
-$query = 'SELECT type.txtType, act.intId, act.tnyintHitPoints, act.tnyintWoundPoints, act.tnyintStunPoints, act.tnyintStrength, act.tnyintInitiative, act.tnyintEndurance
+$query = 'SELECT
+          varName, intId, tnyintHitPoints, tnyintWoundPoints, tnyintStunPoints, tnyintStrength, tnyintInitiative, tnyintEndurance, tnyintResistance
           FROM sheet_npc_active AS act
-          INNER JOIN sheet_npc_type AS type
-          ON act.tnyintType = type.tnyintType
           WHERE intId = '. $npcID .'
           AND act.tnyintDead = 0';
 require '../../includes/query_process.php';
@@ -16,7 +15,7 @@ require '../../includes/connection_Close.php';
 //print_r($data);
 //die;
 
-$html = '<div class="characterStats '. strtolower($results['txtType']) .'_'. $results['intId'] .'"><ul>';
+$html = '<div class="characterStats '. strtolower($results['varName']) .'_'. $results['intId'] .'" data-id="'. $results['intId'] .'"><ul>';
 foreach($results as $key => $content) {
   if($key != 'intId') {
     switch($key) {

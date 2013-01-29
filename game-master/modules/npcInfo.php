@@ -1,16 +1,16 @@
 <?php
-require '../includes/connection_Open.php';
+require '../../includes/connection_Open.php';
 $query = 'SELECT
           varName, intId
           FROM sheet_npc_active AS act
           WHERE intGameId = 1 AND act.tnyintDead = 0
-          ORDER BY tnyintInitiative DESC, varName';
-require '../includes/query_process.php';
-require '../includes/connection_Close.php';
+          ORDER BY tnyintInitiative, varName';
+require '../../includes/query_process.php';
+require '../../includes/connection_Close.php';
 
 $npcCount = $sqlInfo->num_rows();
 
-require_once './includes/npcSettings.php';
+require_once '../includes/npcSettings.php';
 ?>
 
 <div class="characterTabs clear">

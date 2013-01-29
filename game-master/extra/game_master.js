@@ -3,11 +3,13 @@ var jQ = jQuery,
       data: {},
       functions: {
         init:function() {
-          gm.functions.getCharacters();
+          gm.functions.getNpcInfo();
+//          gm.functions.getCharacters();
           gm.functions.groupCharacters();
 //          gm.functions.moveCharacters();
 
             gm.functions.getCreateNPC();
+//            gm.functions.getNpcCount();
 //            gm.functions.createNPCs.init();
 //            gm.functions.createNPCs.setBaseStats();
 //            gm.functions.createNPCs.setRollButtons();
@@ -19,6 +21,20 @@ var jQ = jQuery,
 //            gm.functions.createNPCs.getSaveData();
 //            gm.functions.createNPCs.saveNPC();
         },
+        getNpcInfo: function() {
+          jQ.ajax({
+            url: './modules/npcInfo.php',
+            type: 'POST',
+            dataType: 'html',
+            success: function(response) {
+              jQ('#npcs').append(response);
+              gm.functions.getCharacters();
+            },
+            error: function(one, text, error) {
+//                sheet.functions.ajaxError(error);
+            }
+          });
+        },
         getCharacters: function() {
           gm.data.playerIDs = playerIds;
           gm.data.playerCount = 0;
@@ -26,13 +42,7 @@ var jQ = jQuery,
             gm.data.playerCount += 1;
           }
           gm.data.activePlayerCount = gm.data.playerCount
-
-          gm.data.npcIDs = npcIds;
-          gm.data.npcCount = 0;
-          for(i in npcIds) {
-            gm.data.npcCount += 1;
-          }
-          gm.data.activeNpcCount = gm.data.npcCount
+          gm.functions.getNpcCount();
 
           var types = new Array('player', 'npc');
 
@@ -53,20 +63,17 @@ var jQ = jQuery,
                 data: data,
                 dataType: 'json',
                 success: function(response) {
-                  var type = (response.type === 'player') ? 'Player' : 'NPC' ,
-                      $infoObj = jQ('#'+ type.toLowerCase() +'Info'),
+                  var type = response.type,
+                      $infoObj = jQ('#'+ type +'Info'),
                       counter = 0;
 
                   $infoObj.append(response.html);
                   $infoObj.find('.characterStats').css({
-                    'width': (100 / gm.data[type.toLowerCase() +'Count']) +'%'
+                    'width': (100 / gm.data[type +'Count']) +'%'
                   });
 
-                  if(jQ('#playerInfo').find('.characterStats').length === gm.data.playerCount) {
-                    gm.functions.moveCharacters('player');
-                  }
-                  if(jQ('#npcInfo').find('.characterStats').length === gm.data.npcCount) {
-                    gm.functions.moveCharacters('npc');
+                  if(jQ('#'+ type +'Info').find('.characterStats').length === gm.data[type +'Count']) {
+                    gm.functions.moveCharacters(type);
                   }
                 },
                 error: function(one, text, error) {
@@ -75,6 +82,16 @@ var jQ = jQuery,
               });
             }
           }
+        },
+        getNpcCount: function() {
+          if (typeof gm.data.npcIDs === "undefined") {
+            gm.data.npcIDs = npcIds;
+          }
+          gm.data.npcCount = 0;
+          for(i in gm.data.npcIDs) {
+            gm.data.npcCount += 1;
+          }
+          gm.data.activeNpcCount = gm.data.npcCount
         },
         groupCharacters: function() {
           var allCheck = function (activeCount, objID) {
@@ -86,7 +103,7 @@ var jQ = jQuery,
           },
           ucFirst = function(string) {
             return string.charAt(0).toUpperCase() + string.slice(1);
-          }
+          };
 
           jQ('#players, #npcs').find('li').on("click", function() {
             var $this = jQ(this),
@@ -125,11 +142,12 @@ var jQ = jQuery,
         },
         moveCharacters: function(type) {
           for(id in gm.data[type +'IDs']) {
+            console.log(gm.data[type +'IDs'][id]);
             jQ('#'+ type +'Info').append(jQ('#'+ type +'Info').find('.characterStats[data-id="'+ gm.data[type +'IDs'][id] +'"]'));
           }
         },
         getCreateNPC: function() {
-          jQ('#newNPCs').on("click", function() {
+          jQ(document).on("click", "#newNPCs", function() {
             jQ.ajax({
               url: './includes/createNPC.php',
               type: 'POST',
@@ -351,8 +369,12 @@ var jQ = jQuery,
                   data:  {data: JSON.stringify(gm.data.npc.saveData)},
                   dataType: 'json',
                   success: function(response) {
+                    gm.data.npcIDs = response.npcIDs;
+                    gm.functions.getNpcCount();
+
                     jQ(document).find('.createNPC').slideUp('slow', function() {
                       jQ(this).replaceWith('');
+                      gm.functions.getCharacters();
                     });
                   },
                   error: function(one, text, error) {

@@ -34,12 +34,13 @@
     'blbMoney' => 'Money',
     'blbNotes' => 'Notes',
     'txtType' => 'Type',
+    'varName' => 'NPC Name',
     'tnyintHitPoints' => 'Hit Points',
     'tnyintWoundPoints' => 'Wound Points',
     'tnyintStunPoints' => 'Stun Points',
     'tnyintStrength' => 'Strength',
     'tnyintInitiative' => 'Initiative',
     'tnyintEndurance' => 'Endurance',
-    'varResistance' => 'Resistance'
+    'tnyintResistance' => 'Resistance'
   );
 ?>

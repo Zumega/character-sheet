@@ -13,7 +13,20 @@ foreach($data as $k => $npc) {
     echo '{"status":"'. $mysqli->errno .' :: '. $mysqli->error .'"}';
   }
 }
+
+$query = 'SELECT
+          intId
+          FROM sheet_npc_active AS act
+          WHERE intGameId = 1 AND act.tnyintDead = 0
+          ORDER BY tnyintInitiative, varName';
+require '../../includes/query_process.php';
+
+$npcIds = array();
+while($row = $result->fetch_assoc()) {
+  $npcIds[count($npcIds)] = $row['intId'];
+}
+
 require '../../includes/connection_Close.php';
 
-echo '{"status":"success"}';
+echo '{"status":"success", "npcIDs":'. json_encode($npcIds) .'}';
 ?>
