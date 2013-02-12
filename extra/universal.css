@@ -62,7 +62,7 @@ textarea{border:1px solid #000;resize:none; padding:5px;}
 /*universal*/
 
 /*global*/
-.bodyContainer{background:rgba(255,255,255,.75);width: 940px;margin: 0px auto;padding:10px;}
+.bodyContainer{background:#fff;background:rgba(255,255,255,.75);width: 940px;margin: 0px auto;padding:10px;}
 .smallInput{width: 30px;}
 .noFloat{float:none;}
 .column{float:left;width:50%;}
