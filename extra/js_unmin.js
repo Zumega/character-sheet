@@ -82,8 +82,6 @@ var jQ = jQuery,
 //        getDiceRoll()
 //        getLastRolls()
 
-        sheet.data.hasChanged = false;
-
         sheet.functions.setStunWoundClicks();
         sheet.functions.ouchCheck();
 //        deathCheck()
@@ -1104,9 +1102,10 @@ var jQ = jQuery,
           'top': '20%',
           'left': (jQ(window).width() / 2) - (jQ('#popUp').width() / 2) +'px'
         });
-
+        
         if(type !== 'badidea') {
-          jQ('#bgOverlay').on('click', function() {
+          jQ('#bgOverlay, #popUp').on('click', function() {
+            console.log(0);
             jQ('#bgOverlay, #popUp').hide();
           });
 
@@ -1138,7 +1137,7 @@ var jQ = jQuery,
       signOut: function() {
         jQ(document).find('.signOut').click(function(event) {
           event.preventDefault();
-          
+
           window.location = jQ(this).attr('href');
         });
       }
